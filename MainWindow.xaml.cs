@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -23,6 +24,23 @@ namespace exel_for_mfc
         public MainWindow()
         {
             InitializeComponent();
+        }
+
+
+
+
+
+
+
+
+
+
+        //Метод хэширования вводимого пароля
+        private string MD5Hash(string input)
+        {
+            var md5 = MD5.Create();
+            var hash = md5.ComputeHash(Encoding.UTF8.GetBytes(input));
+            return Convert.ToBase64String(hash);
         }
     }
 }
