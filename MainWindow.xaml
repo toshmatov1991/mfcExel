@@ -18,30 +18,36 @@
             <RowDefinition/>
             <RowDefinition/>
         </Grid.RowDefinitions>
-        <TextBlock Text="Логин"/>
-        <TextBlock Text="Пароль"/>
-        <TextBox Grid.Row="1"
+        <TextBlock Text="Логин"
+                   Grid.Row="0"
+                   Grid.Column="0"
+                   VerticalAlignment="Center"
+                   HorizontalAlignment="Right"
+                   FontSize="22"/>
+        <TextBlock Text="Пароль"
+                   Grid.Row="1"
+                   Grid.Column="0"
+                   VerticalAlignment="Center"
+                   HorizontalAlignment="Right"
+                   FontSize="22"/>
+        <TextBox Grid.Row="0"
                  Grid.Column="1"
                  FontSize="17"
-                 VerticalAlignment="Center"
+                 VerticalAlignment="Top"
                  VerticalContentAlignment="Center"
-                 Width="150"/>
+                 Height="30"
+                 Margin="30,23,171,0" Grid.ColumnSpan="2"/>
         <PasswordBox PasswordChar="*"
-                     Grid.Row="2"
+                     Grid.Row="1"
                      Grid.Column="1"
-                     FontSize="17"
-                     VerticalAlignment="Center"
+                     FontSize="19"
+                     VerticalAlignment="Top"
                      VerticalContentAlignment="Center"
-                     Width="150"/>
+                     Height="30" Margin="30,23,171,0" Grid.ColumnSpan="2"/>
         <Button Content="Войти"
                 Grid.Column="1"
-                Grid.RowSpan="2"
-                Grid.Row="3"
-                Height="45"
-                Width="130"
+                Grid.Row="2"
                 Background="AliceBlue"
-                FontSize="17"/>
-
-
+                FontSize="17" Margin="42,14,7,10"/>
     </Grid>
 </Window>
