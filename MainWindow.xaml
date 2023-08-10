@@ -18,36 +18,34 @@
             <RowDefinition/>
             <RowDefinition/>
         </Grid.RowDefinitions>
+        <Image Margin="29,58,1,0" Source="/Resources/123.jpg" Stretch="Fill" Grid.ColumnSpan="2" Grid.RowSpan="4" Grid.Column="1"/>
         <TextBlock Text="Логин"
-                   Grid.Row="0"
-                   Grid.Column="0"
                    VerticalAlignment="Center"
-                   HorizontalAlignment="Right"
-                   FontSize="22"/>
+                   HorizontalAlignment="Left"
+                   FontSize="22" Margin="71,0,0,0"/>
         <TextBlock Text="Пароль"
                    Grid.Row="1"
-                   Grid.Column="0"
                    VerticalAlignment="Center"
-                   HorizontalAlignment="Right"
-                   FontSize="22"/>
+                   HorizontalAlignment="Left"
+                   FontSize="22" Margin="64,0,0,0"/>
         <TextBox Grid.Row="0"
-                 Grid.Column="1"
                  FontSize="17"
                  VerticalAlignment="Top"
                  VerticalContentAlignment="Center"
                  Height="30"
-                 Margin="30,23,171,0" Grid.ColumnSpan="2"/>
+                 Margin="166,23,35,0"
+                 x:Name="login_text" Grid.ColumnSpan="2"/>
         <PasswordBox PasswordChar="*"
                      Grid.Row="1"
-                     Grid.Column="1"
                      FontSize="19"
                      VerticalAlignment="Top"
                      VerticalContentAlignment="Center"
-                     Height="30" Margin="30,23,171,0" Grid.ColumnSpan="2"/>
+                     Height="30"
+                     Margin="166,23,35,0"
+                     x:Name="password_text" Grid.ColumnSpan="2"/>
         <Button Content="Войти"
-                Grid.Column="1"
                 Grid.Row="2"
                 Background="AliceBlue"
-                FontSize="17" Margin="42,14,7,10"/>
+                FontSize="17" Margin="180,7,52,17" Click="Button_Click" Grid.ColumnSpan="2"/>
     </Grid>
 </Window>
