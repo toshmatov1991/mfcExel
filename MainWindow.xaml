@@ -18,7 +18,7 @@
             <RowDefinition/>
             <RowDefinition/>
         </Grid.RowDefinitions>
-        <Image Margin="29,58,1,0" Source="/Resources/123.jpg" Stretch="Fill" Grid.ColumnSpan="2" Grid.RowSpan="4" Grid.Column="1"/>
+        <Image Margin="92,10,1,0" Source="/Resources/123.jpg" Stretch="Fill" Grid.ColumnSpan="2" Grid.RowSpan="3" Grid.Column="1" Grid.Row="1"/>
         <TextBlock Text="Логин"
                    VerticalAlignment="Center"
                    HorizontalAlignment="Left"
@@ -34,7 +34,7 @@
                  VerticalContentAlignment="Center"
                  Height="30"
                  Margin="166,23,35,0"
-                 x:Name="login_text" Grid.ColumnSpan="2"/>
+                 x:Name="login_text" Grid.ColumnSpan="2" MouseEnter="Bo"/>
         <PasswordBox PasswordChar="*"
                      Grid.Row="1"
                      FontSize="19"
@@ -42,7 +42,7 @@
                      VerticalContentAlignment="Center"
                      Height="30"
                      Margin="166,23,35,0"
-                     x:Name="password_text" Grid.ColumnSpan="2"/>
+                     x:Name="password_text" Grid.ColumnSpan="2" MouseEnter="Pa"/>
         <Button Content="Войти"
                 Grid.Row="2"
                 Background="AliceBlue"

@@ -23,6 +23,7 @@ namespace exel_for_mfc
         public MainWindow()
         {
             InitializeComponent();
+            login_text.Focus();
         }
         
 
@@ -39,17 +40,18 @@ namespace exel_for_mfc
             {
                 MessageBox.Show("Не заполнено одно или несколько полей");
                 if (string.IsNullOrWhiteSpace(login_text.Text))
-                    Keyboard.ClearFocus();
-           
+                    login_text.BorderBrush = Brushes.Red;
+
+
                 if (string.IsNullOrWhiteSpace(password_text.Password))
-                    Keyboard.ClearFocus();
-                
+                    password_text.BorderBrush = Brushes.Red;
+
             }
             else
             {
                 using (PassContext db = new())
                 {
-                    var GetAllLogPass = await db.Passwords.ToListAsync();
+                    var GetAllLogPass = await db.Passwords.Where(u => u.Id == 1).ToListAsync();
                     int temp = 0;
                     foreach (var item in GetAllLogPass)
                     {
@@ -91,6 +93,16 @@ namespace exel_for_mfc
             var md5 = MD5.Create();
             var hash = md5.ComputeHash(Encoding.UTF8.GetBytes(input));
             return Convert.ToBase64String(hash);
+        }
+
+        private void Pa(object sender, MouseEventArgs e)
+        {
+            password_text.BorderBrush = Brushes.Black;
+        }
+
+        private void Bo(object sender, MouseEventArgs e)
+        {
+            login_text.BorderBrush = Brushes.Black;
         }
     }
 }
