@@ -1,20 +1,12 @@
 ﻿using exel_for_mfc.PassModels;
 using Microsoft.EntityFrameworkCore;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace exel_for_mfc
 {
@@ -23,9 +15,8 @@ namespace exel_for_mfc
         public MainWindow()
         {
             InitializeComponent();
-            login_text.Focus();
-        }
-        
+            Start();
+        }  
 
         private async void Button_Click(object sender, RoutedEventArgs e)
         {
@@ -49,43 +40,34 @@ namespace exel_for_mfc
             }
             else
             {
+                int temp = 0;
                 using (PassContext db = new())
                 {
-                    var GetAllLogPass = await db.Passwords.Where(u => u.Id == 1).ToListAsync();
-                    int temp = 0;
-                    foreach (var item in GetAllLogPass)
+                    var GetUserLogPass = await db.Passwords.Where(u => u.Id == 1).FirstOrDefaultAsync();
+                   
+                    if (GetUserLogPass.Login == login_text.Text && GetUserLogPass.Pass == MD5Hash(password_text.Password) && GetUserLogPass.Id == 1)
                     {
-                        if (item.Login == login_text.Text && item.Pass == password_text.Password)
+                        MessageBox.Show("Пользователь");
+                        temp = 1;
+                    }
+
+                    if(temp == 0)
+                    {
+                        var GetAdminLogPass = await db.Passwords.Where(u => u.Id == 2).FirstOrDefaultAsync();
+                        if (GetAdminLogPass.Login == login_text.Text && GetAdminLogPass.Pass == MD5Hash(password_text.Password) && GetAdminLogPass.Id == 2)
                         {
-                            //temp++;
-                            //User user = new($"{item.Firstname} {item.Name} {item.Lastname}", (int)item.Id);
-                            //user.Show();
-                            //Close();
-                            //break;
+                            MessageBox.Show("Админ");
+                            temp = 1;
                         }
                     }
+
                     if (temp == 0)
                     {
-                        MessageBox.Show("Повторите попытку", "Неправильный логин или пароль", MessageBoxButton.OK, MessageBoxImage.Stop);
+                        MessageBox.Show("Повторите попытку", "Неправильный логин или пароль", MessageBoxButton.OK);
                     }
                 }
             }
         }
-
-        //private void GoOpen(object sender, KeyEventArgs e)
-        //{
-        //    if (e.Key == Key.Enter)
-        //        Button_Click(sender, e);
-        //}
-
-        //private void GoOpenLog(object sender, KeyEventArgs e)
-        //{
-        //    if (e.Key == Key.Enter)
-        //        Button_Click(sender, e);
-        //}
-
-
-
 
         //Метод хэширования вводимого пароля
         private string MD5Hash(string input)
@@ -95,6 +77,22 @@ namespace exel_for_mfc
             return Convert.ToBase64String(hash);
         }
 
+
+
+        //Метод хорошего старта
+        private async void Start()
+        {
+            using (PassContext db = new())
+            {
+                var start = await db.Passwords.ToListAsync();
+                foreach (var item in start) { }
+            }
+            login_text.Focus();
+        }
+
+
+
+        //Методы подсвечивают рамки красным при неправильном вводе
         private void Pa(object sender, MouseEventArgs e)
         {
             password_text.BorderBrush = Brushes.Black;
@@ -103,6 +101,19 @@ namespace exel_for_mfc
         private void Bo(object sender, MouseEventArgs e)
         {
             login_text.BorderBrush = Brushes.Black;
+        }
+
+
+        private void Log(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Enter)
+                Button_Click(sender, e);
+        }
+
+        private void Pas(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Enter)
+                Button_Click(sender, e);
         }
     }
 }
