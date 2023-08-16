@@ -7,7 +7,7 @@
         mc:Ignorable="d"
         Title="Главное окно" Height="450" Width="800">
     <Grid>
-        <DataGrid x:Name="dataGrid" CanUserAddRows="False"  AutoGenerateColumns="False" CellEditEnding="dataGrid_CellEditEnding">
+        <DataGrid x:Name="dataGrid" CanUserAddRows="True"  AutoGenerateColumns="False" CellEditEnding="dataGrid_CellEditEnding" MouseDoubleClick="Interes">
             <DataGrid.Columns>
                 <DataGridTextColumn Binding="{Binding Id, UpdateSourceTrigger=PropertyChanged}" IsReadOnly="True" Header="№п/п"/>
                 <DataGridTextColumn Binding="{Binding Login, UpdateSourceTrigger=PropertyChanged}" Header="ФИО"/>

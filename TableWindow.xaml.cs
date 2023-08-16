@@ -1,4 +1,5 @@
 ﻿using exel_for_mfc.PassModels;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -31,45 +32,75 @@ namespace exel_for_mfc
 
 
         //Получаем измененные данные после редактирования ячейки
-        private void dataGrid_CellEditEnding(object sender, DataGridCellEditEndingEventArgs e)
+        private async void dataGrid_CellEditEnding(object sender, DataGridCellEditEndingEventArgs e)
         {
-            Password p = e.Row.Item as Password;
-            if (p.Id != 0)
+            try
             {
-                if (flagfix)
+                Password p = e.Row.Item as Password;
+                if (p.Id != 0)
                 {
-                    var customer = db.Passwords
-                   .Where(c => c.Id == p.Id)
-                   .FirstOrDefault();
-                    customer.Id = p.Id;
-                    customer.Login = p.Login;
-                    customer.Pass = p.Pass;
-                    db.SaveChanges();
-                    flagfix = false;
-                    dataGrid.CancelEdit();
-                    dataGrid.CancelEdit();
+                    //Редактирование
+                    if (flagfix)
+                    {
+                        var customer = await db.Passwords
+                       .Where(c => c.Id == p.Id)
+                       .FirstOrDefaultAsync();
+                        customer.Login = p.Login;
+                        customer.Pass = p.Pass;
+                        await db.SaveChangesAsync();
+                        await Task.Delay(100);
+                        flagfix = false;
+                        dataGrid.ItemsSource = db.Passwords.ToList();
+                        dataGrid.Items.Refresh();
+                        dataGrid.CancelEdit();
+
+                    }
                     flagfix = true;
-                    dataGrid.Items.Refresh();
+                }
+
+                else if (p.Id == 0)
+                {
+                    //Добавление новой записи
+                    if (flagfix)
+                    {
+                        Password password = new();
+
+                        if (p.Login != null)
+                            password.Login = p.Login;
+                        else
+                            password.Login = "";
+
+                        if (p.Pass != null)
+                            password.Pass = p.Pass;
+                        else
+                            password.Pass = "";
+                        await db.AddAsync(password);
+                        await db.SaveChangesAsync();
+                        await Task.Delay(100);
+                        flagfix = false;
+                        dataGrid.ItemsSource = db.Passwords.ToList();
+                        dataGrid.Items.Refresh();
+                        dataGrid.CancelEdit();
+                    }
+                    flagfix = true;
                 }
             }
-
-            else if(p.Id == 0)
+            catch (Exception ex)
             {
-                 Password password = new();
-                    password.Login = p.Login;
-                    password.Pass = p.Pass;
-                    db.Add(password);
-                    db.SaveChanges();
-                    flagfix = false;
-                    dataGrid.CancelEdit();
-                    dataGrid.CancelEdit();
-                    flagfix = true;
-                    dataGrid.Items.Refresh();
-             
-              
+                Password p = e.Row.Item as Password;
+                p.Id = 0;
+                p.Login = null;
+                p.Pass = null;
+                MessageBox.Show(ex.Message);
             }
-           
+          
         }
 
+
+        //Двойной клик, обработка множественного нажатия мыши, чтоб не вылетала программа
+        private void Interes(object sender, MouseButtonEventArgs e)
+        {
+            return;
+        }
     }
 }
