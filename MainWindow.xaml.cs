@@ -15,7 +15,10 @@ namespace exel_for_mfc
         public MainWindow()
         {
             InitializeComponent();
-            Start();
+            TableWindow tableWindow = new();
+            tableWindow.Show();
+            Close();
+            //Start();
         }  
 
         private async void Button_Click(object sender, RoutedEventArgs e)
