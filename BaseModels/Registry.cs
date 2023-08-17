@@ -7,7 +7,7 @@ public partial class Registry
 {
     public int Id { get; set; }
 
-    public int? ApplicantFk { get; set; }
+    public string? Applicant { get; set; }
 
     public string? Snils { get; set; }
 
@@ -15,7 +15,7 @@ public partial class Registry
 
     public int? LocalityFk { get; set; }
 
-    public int? AddressFk { get; set; }
+    public string? Address { get; set; }
 
     public int? PrivilegesFk { get; set; }
 
@@ -30,10 +30,6 @@ public partial class Registry
     public string? Trek { get; set; }
 
     public DateTime? MailingDate { get; set; }
-
-    public virtual Adress? AddressFkNavigation { get; set; }
-
-    public virtual Fio? ApplicantFkNavigation { get; set; }
 
     public virtual Area? AreaFkNavigation { get; set; }
 

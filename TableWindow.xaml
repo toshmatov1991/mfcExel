@@ -10,8 +10,18 @@
         <DataGrid x:Name="dataGrid" CanUserAddRows="True"  AutoGenerateColumns="False" CellEditEnding="dataGrid_CellEditEnding" MouseDoubleClick="Interes">
             <DataGrid.Columns>
                 <DataGridTextColumn Binding="{Binding Id, UpdateSourceTrigger=PropertyChanged}" IsReadOnly="True" Header="№п/п"/>
-                <DataGridTextColumn Binding="{Binding Login, UpdateSourceTrigger=PropertyChanged}" Header="ФИО"/>
+                <DataGridTextColumn Binding="{Binding Firstname, UpdateSourceTrigger=PropertyChanged}" Header="Фамилия"/>
+                <DataGridTextColumn Binding="{Binding Name, UpdateSourceTrigger=PropertyChanged}" Header="Имя"/>
+                <DataGridTextColumn Binding="{Binding Lastname, UpdateSourceTrigger=PropertyChanged}" Header="Отчество"/>
                 <DataGridTextColumn Binding="{Binding Pass, UpdateSourceTrigger=PropertyChanged}" Header="Снилс"/>
+                <DataGridComboBoxColumn ItemsSource="{Binding CompanyItems}"  Header="Район"/>
+                <DataGridComboBoxColumn ItemsSource="{Binding CompanyItems}"  Header="Населенный пункт"/>
+                <DataGridTextColumn Binding="{Binding Pass, UpdateSourceTrigger=PropertyChanged}" Header="Адрес">
+                    
+                </DataGridTextColumn>
+
+
+
             </DataGrid.Columns>
         </DataGrid>
     </Grid>

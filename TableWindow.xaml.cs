@@ -1,4 +1,5 @@
-﻿using exel_for_mfc.PassModels;
+﻿using exel_for_mfc.Models;
+using exel_for_mfc.PassModels;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -23,11 +24,14 @@ namespace exel_for_mfc
         public TableWindow()
         {
             InitializeComponent();
-     
-
+            ExelDbContext exelDb = new();
+            var str = exelDb.Registries.ToList();
+            foreach (var item in str)
+            {
+                MessageBox.Show(item.Applicant + " " + item.Trek);
+            }
+           
             dataGrid.ItemsSource = db.Passwords.ToList();
-
-
         }
 
 
@@ -36,24 +40,21 @@ namespace exel_for_mfc
         {
             try
             {
-                Password p = e.Row.Item as Password;
+                Password? p = e.Row.Item as Password;
                 if (p.Id != 0)
                 {
                     //Редактирование
                     if (flagfix)
                     {
-                        var customer = await db.Passwords
-                       .Where(c => c.Id == p.Id)
-                       .FirstOrDefaultAsync();
+                        var customer = await db.Passwords.Where(c => c.Id == p.Id).FirstOrDefaultAsync();
+
                         customer.Login = p.Login;
                         customer.Pass = p.Pass;
                         await db.SaveChangesAsync();
-                        await Task.Delay(100);
                         flagfix = false;
-                        dataGrid.ItemsSource = db.Passwords.ToList();
+                        dataGrid.ItemsSource = await db.Passwords.ToListAsync();
                         dataGrid.Items.Refresh();
                         dataGrid.CancelEdit();
-
                     }
                     flagfix = true;
                 }
@@ -76,9 +77,8 @@ namespace exel_for_mfc
                             password.Pass = "";
                         await db.AddAsync(password);
                         await db.SaveChangesAsync();
-                        await Task.Delay(100);
                         flagfix = false;
-                        dataGrid.ItemsSource = db.Passwords.ToList();
+                        dataGrid.ItemsSource = await db.Passwords.ToListAsync();
                         dataGrid.Items.Refresh();
                         dataGrid.CancelEdit();
                     }
@@ -87,13 +87,8 @@ namespace exel_for_mfc
             }
             catch (Exception ex)
             {
-                Password p = e.Row.Item as Password;
-                p.Id = 0;
-                p.Login = null;
-                p.Pass = null;
                 MessageBox.Show(ex.Message);
             }
-          
         }
 
 

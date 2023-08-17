@@ -15,13 +15,9 @@ public partial class ExelDbContext : DbContext
     {
     }
 
-    public virtual DbSet<Adress> Adresses { get; set; }
-
     public virtual DbSet<Area> Areas { get; set; }
 
     public virtual DbSet<CertificateSolution> CertificateSolutions { get; set; }
-
-    public virtual DbSet<Fio> Fios { get; set; }
 
     public virtual DbSet<Locality> Localities { get; set; }
 
@@ -33,24 +29,14 @@ public partial class ExelDbContext : DbContext
 
     public virtual DbSet<StatusEx> Statusexes { get; set; }
 
+    //protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+    //    => optionsBuilder.UseSqlServer("Data Source=192.168.155.170;Initial Catalog=ExelDB;Persist Security Info=True;TrustServerCertificate=True;User ID=SA;Password=QWEasd123");
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        => optionsBuilder.UseSqlServer("Data Source=192.168.155.170;Initial Catalog=ExelDB;Persist Security Info=True;TrustServerCertificate=True;User ID=SA;Password=QWEasd123");
+        => optionsBuilder.UseSqlServer(@"Data Source=localhost\SQLEXPRESS;Database=ExelDB;Trusted_connection=True;TrustServerCertificate=True");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.Entity<Adress>(entity =>
-        {
-            entity.HasKey(e => e.Id).HasName("PK__Adress__3214EC07C253EE32");
-
-            entity.ToTable("Adress");
-
-            entity.Property(e => e.DomOrStr).HasMaxLength(10);
-            entity.Property(e => e.NameStreet).HasMaxLength(150);
-            entity.Property(e => e.UlMkr)
-                .HasMaxLength(15)
-                .HasColumnName("Ul_Mkr");
-        });
-
+       
         modelBuilder.Entity<Area>(entity =>
         {
             entity.HasKey(e => e.Id).HasName("PK__Area__3214EC072DC7B601");
@@ -68,17 +54,6 @@ public partial class ExelDbContext : DbContext
 
             entity.Property(e => e.DateDecision).HasColumnType("date");
             entity.Property(e => e.NumberDecision).HasMaxLength(110);
-        });
-
-        modelBuilder.Entity<Fio>(entity =>
-        {
-            entity.HasKey(e => e.Id).HasName("PK__FIO__3214EC07E78AB2C4");
-
-            entity.ToTable("FIO");
-
-            entity.Property(e => e.Firstname).HasMaxLength(100);
-            entity.Property(e => e.Lastname).HasMaxLength(100);
-            entity.Property(e => e.Middlename).HasMaxLength(100);
         });
 
         modelBuilder.Entity<Locality>(entity =>
@@ -112,8 +87,8 @@ public partial class ExelDbContext : DbContext
 
             entity.ToTable("Registry");
 
-            entity.Property(e => e.AddressFk).HasColumnName("AddressFK");
-            entity.Property(e => e.ApplicantFk).HasColumnName("ApplicantFK");
+            entity.Property(e => e.Address).HasMaxLength(200);
+            entity.Property(e => e.Applicant).HasMaxLength(500);
             entity.Property(e => e.AreaFk).HasColumnName("AreaFK");
             entity.Property(e => e.CertificateSolutionFk).HasColumnName("CertificateSolutionFK");
             entity.Property(e => e.LocalityFk).HasColumnName("LocalityFK");
@@ -125,15 +100,6 @@ public partial class ExelDbContext : DbContext
             entity.Property(e => e.StatusSertFk).HasColumnName("StatusSertFK");
             entity.Property(e => e.Trek).HasMaxLength(120);
 
-            entity.HasOne(d => d.AddressFkNavigation).WithMany(p => p.Registries)
-                .HasForeignKey(d => d.AddressFk)
-                .OnDelete(DeleteBehavior.SetNull)
-                .HasConstraintName("FK__Registry__Addres__5441852A");
-
-            entity.HasOne(d => d.ApplicantFkNavigation).WithMany(p => p.Registries)
-                .HasForeignKey(d => d.ApplicantFk)
-                .OnDelete(DeleteBehavior.SetNull)
-                .HasConstraintName("FK__Registry__Applic__5165187F");
 
             entity.HasOne(d => d.AreaFkNavigation).WithMany(p => p.Registries)
                 .HasForeignKey(d => d.AreaFk)
