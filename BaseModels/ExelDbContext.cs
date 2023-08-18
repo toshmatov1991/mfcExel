@@ -29,8 +29,8 @@ public partial class ExelDbContext : DbContext
 
     public virtual DbSet<StatusEx> Statusexes { get; set; }
 
-    //protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-    //    => optionsBuilder.UseSqlServer("Data Source=192.168.155.170;Initial Catalog=ExelDB;Persist Security Info=True;TrustServerCertificate=True;User ID=SA;Password=QWEasd123");
+   // protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+   //     => optionsBuilder.UseSqlServer("Data Source=192.168.155.170;Initial Catalog=ExelDB;Persist Security Info=True;TrustServerCertificate=True;User ID=SA;Password=QWEasd123");
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         => optionsBuilder.UseSqlServer(@"Data Source=localhost\SQLEXPRESS;Database=ExelDB;Trusted_connection=True;TrustServerCertificate=True");
 

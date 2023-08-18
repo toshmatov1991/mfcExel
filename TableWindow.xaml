@@ -3,25 +3,24 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:exel_for_mfc"
         mc:Ignorable="d"
         Title="Главное окно" Height="450" Width="800">
     <Grid>
-        <DataGrid x:Name="dataGrid" CanUserAddRows="True"  AutoGenerateColumns="False" CellEditEnding="dataGrid_CellEditEnding" MouseDoubleClick="Interes">
+        <DataGrid x:Name="dataGrid" CanUserAddRows="True"  AutoGenerateColumns="True" CellEditEnding="dataGrid_CellEditEnding" MouseDoubleClick="Interes">
             <DataGrid.Columns>
                 <DataGridTextColumn Binding="{Binding Id, UpdateSourceTrigger=PropertyChanged}" IsReadOnly="True" Header="№п/п"/>
-                <DataGridTextColumn Binding="{Binding Firstname, UpdateSourceTrigger=PropertyChanged}" Header="Фамилия"/>
-                <DataGridTextColumn Binding="{Binding Name, UpdateSourceTrigger=PropertyChanged}" Header="Имя"/>
-                <DataGridTextColumn Binding="{Binding Lastname, UpdateSourceTrigger=PropertyChanged}" Header="Отчество"/>
+                <DataGridTextColumn Binding="{Binding FIO, UpdateSourceTrigger=PropertyChanged}" Header="ФИО Заявителя"/>
                 <DataGridTextColumn Binding="{Binding Pass, UpdateSourceTrigger=PropertyChanged}" Header="Снилс"/>
-                <DataGridComboBoxColumn ItemsSource="{Binding CompanyItems}"  Header="Район"/>
+                <DataGridComboBoxColumn ItemsSource="{Binding CompanyItems}"  SelectedItemBinding="{Binding Path=PostscriptLat}"  Header="Район"/>
                 <DataGridComboBoxColumn ItemsSource="{Binding CompanyItems}"  Header="Населенный пункт"/>
-                <DataGridTextColumn Binding="{Binding Pass, UpdateSourceTrigger=PropertyChanged}" Header="Адрес">
-                    
-                </DataGridTextColumn>
-
-
-
+                <DataGridTextColumn x:Name="gfh" Binding="{Binding Pass, UpdateSourceTrigger=PropertyChanged}" Header="Адрес"/>
+                <DataGridComboBoxColumn ItemsSource="{Binding CompanyIte}"  Header="Льгота"/>
+                <DataGridTextColumn Binding="{Binding Pass, UpdateSourceTrigger=PropertyChanged}" Header="Серия и № сертификата"/>
+                <DataGridComboBoxColumn ItemsSource="{Binding CompanyIte}"  Header="Размер выплаты"/>
+                <DataGridTextColumn Binding="{Binding Pass, UpdateSourceTrigger=PropertyChanged}" Header="Статус сертификата"/>
+                <DataGridTextColumn Binding="{Binding Pass, UpdateSourceTrigger=PropertyChanged}" Header="Решение по сертификату"/>
+                <DataGridTextColumn Binding="{Binding Pass, UpdateSourceTrigger=PropertyChanged}" Header="Трек"/>
+                <DataGridTextColumn Binding="{Binding Pass, UpdateSourceTrigger=PropertyChanged}" Header="Дата отправки почтой"/>
             </DataGrid.Columns>
         </DataGrid>
     </Grid>

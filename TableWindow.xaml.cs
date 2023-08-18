@@ -24,14 +24,14 @@ namespace exel_for_mfc
         public TableWindow()
         {
             InitializeComponent();
-            ExelDbContext exelDb = new();
-            var str = exelDb.Registries.ToList();
-            foreach (var item in str)
-            {
-                MessageBox.Show(item.Applicant + " " + item.Trek);
-            }
+            //ExelDbContext exelDb = new();
+            //var str = exelDb.Registries.ToList();
+            //foreach (var item in str)
+            //{
+            //    MessageBox.Show(item.Applicant + " " + item.Trek);
+            //}
            
-            dataGrid.ItemsSource = db.Passwords.ToList();
+            //dataGrid.ItemsSource = db.Passwords.ToList();
         }
 
 
