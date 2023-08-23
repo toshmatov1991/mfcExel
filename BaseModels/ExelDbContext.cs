@@ -54,6 +54,8 @@ public partial class ExelDbContext : DbContext
 
             entity.Property(e => e.DateDecision).HasColumnType("date");
             entity.Property(e => e.NumberDecision).HasMaxLength(110);
+            entity.Property(e => e.TypeSolution).HasMaxLength(150);
+            entity.Property(e => e.Comments).HasMaxLength(450);
         });
 
         modelBuilder.Entity<Locality>(entity =>

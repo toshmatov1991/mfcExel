@@ -11,5 +11,9 @@ public partial class CertificateSolution
 
     public string? NumberDecision { get; set; }
 
+    public string? TypeSolution { get; set; }
+
+    public string? Comments { get; set; }
+
     public virtual ICollection<Registry> Registries { get; set; } = new List<Registry>();
 }
