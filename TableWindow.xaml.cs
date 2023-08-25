@@ -23,19 +23,21 @@ namespace exel_for_mfc
         public TableWindow()
         {
             InitializeComponent();
+            SuperStart();
+
             //ExelDbContext exelDb = new();
             //var str = exelDb.Registries.ToList();
             //foreach (var item in str)
             //{
             //    MessageBox.Show(item.Applicant + " " + item.Trek);
             //}
-           
+
             //dataGrid.ItemsSource = db.Passwords.ToList();
         }
 
 
         //Получаем измененные данные после редактирования ячейки
-        private async void dataGrid_CellEditEnding(object sender, DataGridCellEditEndingEventArgs e)
+        private void dataGrid_CellEditEnding(object sender, DataGridCellEditEndingEventArgs e)
         {
             return;
             //try
@@ -98,6 +100,24 @@ namespace exel_for_mfc
             return;
         }
 
+
+
+        private async void SuperStart()
+        {
+            try
+            {
+                //await StartToComboBox();
+                await Start();
+            }
+            catch (Exception ex)
+            {
+
+                MessageBox.Show(ex.Message);
+            }
+          
+        }
+
+
         //Запрос для заполнения таблицы
         //Комментарий чтоб появлялся при наведении
         async Task Start()
@@ -131,8 +151,11 @@ namespace exel_for_mfc
                                 trek = reg.Trek,
                                 mail = reg.MailingDate
                               };
-
-                dataGrid.ItemsSource = getlist;
+                Dispatcher.Invoke(() =>
+                {
+                    dataGrid.ItemsSource = getlist;
+                });
+               
             };
         }
 
@@ -141,24 +164,59 @@ namespace exel_for_mfc
         {
             using (ExDbContext db = new())
             {
-                // Размер выплат
-                var razvip = await db.PayAmounts.ToListAsync();
-                foreach (var item in collection)
+                
+                List<decimal> str1 = new();
+                List<string> str2 = new();
+                List<string> str3 = new();
+                List<string> str4 = new();
+                List<string> str5 = new();
+
+                var razvip = await db.PayAmounts.AsNoTracking().ToListAsync();
+                var typresh = await db.SolutionTypes.AsNoTracking().ToListAsync();
+                var areas = await db.Areas.AsNoTracking().ToListAsync();
+                var localy = await db.Localities.AsNoTracking().ToListAsync();
+                var privi = await db.Privileges.AsNoTracking().ToListAsync();
+                await Task.Run(() =>
                 {
+                    // Размер выплат
+                    foreach (var item in razvip)
+                    {
+                        str1.Add((decimal)item.Pay);
+                    }
 
-                }
-                // Тип решения
-                var typresh = await db.SolutionTypes.ToListAsync();
+                    // Тип решения
+                    foreach (var item in typresh)
+                    {
+                        str2.Add(item.SolutionName);
+                    }
 
-                // Район
-                var areas = await db.Areas.ToListAsync();
+                    // Район
+                    foreach (var item in areas)
+                    {
+                        str3.Add(item.AreaName);
+                    }
 
-                // Населенный пункт
-                var localy = await db.Localities.ToListAsync();
+                    // Населенный пункт
+                    foreach (var item in localy)
+                    {
+                        str4.Add(item.LocalName);
+                    }
 
-                // Льготы
-                var privi = await db.Privileges.ToListAsync();
+                    // Льготы
+                    foreach (var item in privi)
+                    {
+                        str5.Add(item.PrivilegesName);
+                    }
 
+                    Dispatcher.Invoke(() =>
+                    {
+                        //pay_Xaml.ItemsSource = str1;
+                        //sol_Xaml.ItemsSource = str2;
+                        //area_Xaml.ItemsSource = str3;
+                        //loc_Xaml.ItemsSource = str4;
+                        //lgota_Xaml.ItemsSource = str5;
+                    });
+                });
             }
         }
     }

@@ -13,17 +13,17 @@
                 <DataGridTextColumn Binding="{Binding name, UpdateSourceTrigger=PropertyChanged}" Header="Имя"/>
                 <DataGridTextColumn Binding="{Binding lastnam, UpdateSourceTrigger=PropertyChanged}" Header="Отчество"/>
                 <DataGridTextColumn Binding="{Binding snils, UpdateSourceTrigger=PropertyChanged}" Header="Снилс"/>
-                <DataGridComboBoxColumn ItemsSource="{Binding CompanyItems}"  SelectedItemBinding="{Binding Path=area}" Header="Район"/>
-                <DataGridComboBoxColumn ItemsSource="{Binding CompanyItems}" SelectedItemBinding="{Binding Path=loc}" Header="Населенный пункт"/>
+                <DataGridComboBoxColumn Header="Район"/>
+                <!--<DataGridComboBoxColumn x:Name="area_Xaml"   x:Name="loc_Xaml" SelectedItemBinding="{Binding Path=loc}" Header="Населенный пункт"/>
                 <DataGridTextColumn Binding="{Binding adres, UpdateSourceTrigger=PropertyChanged}" Header="Адрес"/>
-                <DataGridComboBoxColumn ItemsSource="{Binding CompanyIte}" SelectedItemBinding="{Binding Path=privel}" Header="Льгота"/>
+                <DataGridComboBoxColumn x:Name="lgota_Xaml" SelectedItemBinding="{Binding Path=privel}" Header="Льгота"/>
                 <DataGridTextColumn Binding="{Binding sernumb, UpdateSourceTrigger=PropertyChanged}" Header="Серия и № сертификата"/>
                 <DataGridTextColumn Binding="{Binding dategetsert, UpdateSourceTrigger=PropertyChanged}" Header="Дата выдачи"/>
-                <DataGridTextColumn Binding="{Binding pays, UpdateSourceTrigger=PropertyChanged}" Header="Размер выплаты"/>
-                <DataGridTextColumn Binding="{Binding solnam, UpdateSourceTrigger=PropertyChanged}" Header="Тип решения"/>
+                <DataGridComboBoxColumn x:Name="pay_Xaml" SelectedItemBinding="{Binding Path=pays}" Header="Размер выплаты"/>
+                <DataGridComboBoxColumn x:Name="sol_Xaml" SelectedItemBinding="{Binding Path=solnam}" Header="Тип решения"/>
                 <DataGridTextColumn Binding="{Binding datenumsol, UpdateSourceTrigger=PropertyChanged}" Header="Дата и номер решения"/>
                 <DataGridTextColumn Binding="{Binding trek, UpdateSourceTrigger=PropertyChanged}" Header="Трек"/>
-                <DataGridTextColumn Binding="{Binding mail, UpdateSourceTrigger=PropertyChanged}" Header="Дата отправки почтой"/>
+                <DataGridTextColumn Binding="{Binding mail, UpdateSourceTrigger=PropertyChanged}" Header="Дата отправки почтой"/>-->
             </DataGrid.Columns>
         </DataGrid>
     </Grid>
