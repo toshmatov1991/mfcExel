@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace exel_for_mfc.Models;
+namespace exel_for_mfc;
 
-public partial class StatusEx
+public partial class SolutionType
 {
     public int Id { get; set; }
 
-    public string? StatusName { get; set; }
+    public string? SolutionName { get; set; }
 
     public virtual ICollection<Registry> Registries { get; set; } = new List<Registry>();
 }

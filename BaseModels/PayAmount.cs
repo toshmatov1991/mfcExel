@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace exel_for_mfc.Models;
+namespace exel_for_mfc;
 
 public partial class PayAmount
 {

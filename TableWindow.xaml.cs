@@ -1,5 +1,4 @@
-﻿using exel_for_mfc.Models;
-using exel_for_mfc.PassModels;
+﻿using exel_for_mfc.PassModels;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;

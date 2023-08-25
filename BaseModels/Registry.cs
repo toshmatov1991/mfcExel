@@ -1,45 +1,33 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace exel_for_mfc.Models;
+namespace exel_for_mfc;
 
 public partial class Registry
 {
     public int Id { get; set; }
 
-    public string? Applicant { get; set; }
+    public int? ApplicantFk { get; set; }
 
-    public string? Snils { get; set; }
+    public string? SerialAndNumberSert { get; set; }
 
-    public int? AreaFk { get; set; }
+    public DateTime? DateGetSert { get; set; }
 
-    public int? LocalityFk { get; set; }
+    public int? PayAmountFk { get; set; }
 
-    public string? Address { get; set; }
+    public int? SolutionFk { get; set; }
 
-    public int? PrivilegesFk { get; set; }
+    public string? DateAndNumbSolutionSert { get; set; }
 
-    public string? SerialNumberOldSert { get; set; }
-
-    public int? PaymentAmountFk { get; set; }
-
-    public int? StatusSertFk { get; set; }
-
-    public int? CertificateSolutionFk { get; set; }
+    public string? Comment { get; set; }
 
     public string? Trek { get; set; }
 
     public DateTime? MailingDate { get; set; }
 
-    public virtual Area? AreaFkNavigation { get; set; }
+    public virtual Applicant? ApplicantFkNavigation { get; set; }
 
-    public virtual CertificateSolution? CertificateSolutionFkNavigation { get; set; }
+    public virtual PayAmount? PayAmountFkNavigation { get; set; }
 
-    public virtual Locality? LocalityFkNavigation { get; set; }
-
-    public virtual PayAmount? PaymentAmountFkNavigation { get; set; }
-
-    public virtual Privilege? PrivilegesFkNavigation { get; set; }
-
-    public virtual StatusEx? StatusSertFkNavigation { get; set; }
+    public virtual SolutionType? SolutionFkNavigation { get; set; }
 }

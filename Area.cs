@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace exel_for_mfc.Models;
+namespace exel_for_mfc;
 
 public partial class Area
 {
@@ -9,5 +9,5 @@ public partial class Area
 
     public string? AreaName { get; set; }
 
-    public virtual ICollection<Registry> Registries { get; set; } = new List<Registry>();
+    public virtual ICollection<Applicant> Applicants { get; set; } = new List<Applicant>();
 }
