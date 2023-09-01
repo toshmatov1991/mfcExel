@@ -6,15 +6,24 @@
         mc:Ignorable="d" Icon="Resources\logomfc.png" WindowStartupLocation="CenterScreen"
         Title="Главное окно" Height="700" Width="1300">
     <Grid>
-        <DataGrid x:Name="dataGrid" CanUserAddRows="True"  AutoGenerateColumns="True" CellEditEnding="dataGrid_CellEditEnding" MouseDoubleClick="Interes" Margin="0,0,105,0">
+        <DataGrid x:Name="dataGrid" CanUserAddRows="True"  AutoGenerateColumns="False" CellEditEnding="dataGrid_CellEditEnding" MouseDoubleClick="Interes" Margin="0,0,105,0">
             <DataGrid.Columns>
                 <DataGridTextColumn Binding="{Binding id, UpdateSourceTrigger=PropertyChanged}" IsReadOnly="True" Header="№п/п"/>
                 <DataGridTextColumn Binding="{Binding family, UpdateSourceTrigger=PropertyChanged}" Header="Фамилия"/>
                 <DataGridTextColumn Binding="{Binding name, UpdateSourceTrigger=PropertyChanged}" Header="Имя"/>
                 <DataGridTextColumn Binding="{Binding lastnam, UpdateSourceTrigger=PropertyChanged}" Header="Отчество"/>
                 <DataGridTextColumn Binding="{Binding snils, UpdateSourceTrigger=PropertyChanged}" Header="Снилс"/>
-                <DataGridComboBoxColumn Header="Район"/>
-                <!--<DataGridComboBoxColumn x:Name="area_Xaml"   x:Name="loc_Xaml" SelectedItemBinding="{Binding Path=loc}" Header="Населенный пункт"/>
+                <DataGridTemplateColumn Header="Район">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <ComboBox   ItemsSource="{Binding Path=srt, RelativeSource={RelativeSource AncestorType={x:Type Window}}}"
+                                        DisplayMemberPath="AreaName"
+                                        SelectedIndex="1"
+                                       />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <!--<DataGridComboBoxColumn x:Name="test" SelectedValueBinding="{Binding XPath=loc}" DisplayMemberPath="loc"  Header="Населенный пункт"/>
                 <DataGridTextColumn Binding="{Binding adres, UpdateSourceTrigger=PropertyChanged}" Header="Адрес"/>
                 <DataGridComboBoxColumn x:Name="lgota_Xaml" SelectedItemBinding="{Binding Path=privel}" Header="Льгота"/>
                 <DataGridTextColumn Binding="{Binding sernumb, UpdateSourceTrigger=PropertyChanged}" Header="Серия и № сертификата"/>

@@ -19,11 +19,15 @@ namespace exel_for_mfc
     public partial class TableWindow : Window
     {
         PassContext db = new();
+        public List<Area> srt = new();
         private bool flagfix = true;
         public TableWindow()
         {
+            
             InitializeComponent();
-            SuperStart();
+            ERT();
+            Start();
+            
 
             //ExelDbContext exelDb = new();
             //var str = exelDb.Registries.ToList();
@@ -102,29 +106,16 @@ namespace exel_for_mfc
 
 
 
-        private async void SuperStart()
-        {
-            try
-            {
-                //await StartToComboBox();
-                await Start();
-            }
-            catch (Exception ex)
-            {
-
-                MessageBox.Show(ex.Message);
-            }
-          
-        }
+      
 
 
         //Запрос для заполнения таблицы
         //Комментарий чтоб появлялся при наведении
-        async Task Start()
+        async void Start()
         {
             using (ExDbContext db = new()) 
             {
-                var getlist = from reg in await db.Registries.AsNoTracking().ToListAsync()
+                 var getlist = from reg in await db.Registries.AsNoTracking().ToListAsync()
                               join appl in await db.Applicants.AsNoTracking().ToListAsync() on reg.ApplicantFk equals appl.Id
                               join area in await db.Areas.AsNoTracking().ToListAsync() on appl.AreaFk equals area.Id
                               join local in await db.Localities.AsNoTracking().ToListAsync() on appl.LocalityFk equals local.Id
@@ -138,7 +129,7 @@ namespace exel_for_mfc
                                 name = appl.Middlename,
                                 lastnam = appl.Lastname,
                                 snils = appl.Snils,
-                                area = area.AreaName,
+                                area = area.Id,
                                 loc = local.LocalName,
                                 adres = appl.Adress,
                                 privel = priv.PrivilegesName,
@@ -151,13 +142,27 @@ namespace exel_for_mfc
                                 trek = reg.Trek,
                                 mail = reg.MailingDate
                               };
+               
                 Dispatcher.Invoke(() =>
                 {
-                    dataGrid.ItemsSource = getlist;
+                   
+                    dataGrid.ItemsSource = getlist.ToList();
+                    
                 });
                
             };
         }
+
+
+        void ERT()
+        {
+            using(ExDbContext db = new())
+            {
+                srt = db.Areas.ToList();
+            }
+           
+        }
+
 
         //Заполнить Comboboxы
         async Task StartToComboBox()
