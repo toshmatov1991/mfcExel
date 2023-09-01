@@ -17,8 +17,10 @@
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <ComboBox   ItemsSource="{Binding Path=srt, RelativeSource={RelativeSource AncestorType={x:Type Window}}}"
-                                        DisplayMemberPath="AreaName"
-                                        SelectedIndex="1"
+                                         IsSynchronizedWithCurrentItem="False"
+                                         DisplayMemberPath="AreaName"
+                                         SelectedValuePath="area"
+                                         SelectedItem="{Binding AreaName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                        />
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>

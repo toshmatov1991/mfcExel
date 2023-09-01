@@ -19,7 +19,8 @@ namespace exel_for_mfc
     public partial class TableWindow : Window
     {
         PassContext db = new();
-        public List<Area> srt = new();
+        public static List<Area> srt { get; set; }
+
         private bool flagfix = true;
         public TableWindow()
         {
