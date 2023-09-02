@@ -150,11 +150,11 @@ namespace exel_for_mfc
         }
 
 
-        void ERT()
+       async void ERT()
         {
             using(ExDbContext db = new())
             {
-                srt = db.Areas.ToList();
+                srt = await db.Areas.ToListAsync();
             }
         }
 
@@ -220,21 +220,5 @@ namespace exel_for_mfc
             }
         }
 
-        //private void ComboAreaLoaded(object sender, RoutedEventArgs e)
-        //{
-        //    ComboBox cmb = (ComboBox)sender;
-        //    List<string> strings = new List<string>();
-        //    using (ExDbContext db = new())
-        //    {
-        //        var ser = db.Areas.ToList();
-        //        foreach (var item in ser)
-        //        {
-        //            strings.Add(item.AreaName);
-        //        }
-
-
-        //    }
-        //    cmb.ItemsSource = strings;
-        //}
     }
 }
