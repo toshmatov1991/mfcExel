@@ -20,8 +20,11 @@ namespace exel_for_mfc
 {
     public partial class TableWindow : Window
     {
-        PassContext db = new();
-        public static List<Area>? srt { get; set; }
+        public static List<Area>? AreaCombobox { get; set; }
+        public static List<Locality>? LocalCombobox { get; set; }
+        public static List<PayAmount>? PayCombobox { get; set; }
+        public static List<Privilege>? PrivelCombobox { get; set; }
+        public static List<SolutionType>? SolCombobox { get; set; }
 
 
         private bool flagfix = true;
@@ -30,7 +33,7 @@ namespace exel_for_mfc
             
             InitializeComponent();
             Start();
-            ERT();
+            ComboboxGO();
 
         }
 
@@ -93,11 +96,7 @@ namespace exel_for_mfc
         }
 
 
-        //Двойной клик, обработка множественного нажатия мыши, чтоб не вылетала программа
-        private void Interes(object sender, MouseButtonEventArgs e)
-        {
-            return;
-        }
+      
 
 
 
@@ -126,19 +125,18 @@ namespace exel_for_mfc
                                             lastnam = appl.Lastname,
                                             snils = appl.Snils,
                                             area = area.Id - 1,
-                                            loc = local.LocalName,
+                                            loc = local.Id - 1,
                                             adres = appl.Adress,
-                                            privel = priv.PrivilegesName,
-                                            pays = pay.Pay,
+                                            privel = priv.Id - 1,
+                                            pays = pay.Id - 1,
                                             sernumb = reg.SerialAndNumberSert,
                                             dategetsert = reg.DateGetSert,
-                                            solnam = sol.SolutionName,
+                                            solnam = sol.Id - 1,
                                             datenumsol = reg.DateAndNumbSolutionSert,
                                             com = reg.Comment,
                                             trek = reg.Trek,
                                             mail = reg.MailingDate
                                         };
-
 
 
                 Dispatcher.Invoke(() =>
@@ -150,75 +148,24 @@ namespace exel_for_mfc
         }
 
 
-       async void ERT()
+       async void ComboboxGO()
         {
             using(ExDbContext db = new())
             {
-                srt = await db.Areas.ToListAsync();
+                AreaCombobox = await db.Areas.AsNoTracking().ToListAsync();
+                LocalCombobox = await db.Localities.AsNoTracking().ToListAsync();
+                PayCombobox = await db.PayAmounts.AsNoTracking().ToListAsync();
+                PrivelCombobox = await db.Privileges.AsNoTracking().ToListAsync();
+                SolCombobox = await db.SolutionTypes.AsNoTracking().ToListAsync();
             }
         }
 
-
-        //Заполнить Comboboxы
-        async Task StartToComboBox()
+        //Двойной клик, обработка множественного нажатия мыши, чтоб не вылетала программа
+        private void Interes(object sender, MouseButtonEventArgs e)
         {
-            using (ExDbContext db = new())
-            {
-                
-                List<decimal> str1 = new();
-                List<string> str2 = new();
-                List<string> str3 = new();
-                List<string> str4 = new();
-                List<string> str5 = new();
-
-                var razvip = await db.PayAmounts.AsNoTracking().ToListAsync();
-                var typresh = await db.SolutionTypes.AsNoTracking().ToListAsync();
-                var areas = await db.Areas.AsNoTracking().ToListAsync();
-                var localy = await db.Localities.AsNoTracking().ToListAsync();
-                var privi = await db.Privileges.AsNoTracking().ToListAsync();
-                await Task.Run(() =>
-                {
-                    // Размер выплат
-                    foreach (var item in razvip)
-                    {
-                        str1.Add((decimal)item.Pay);
-                    }
-
-                    // Тип решения
-                    foreach (var item in typresh)
-                    {
-                        str2.Add(item.SolutionName);
-                    }
-
-                    // Район
-                    foreach (var item in areas)
-                    {
-                        str3.Add(item.AreaName);
-                    }
-
-                    // Населенный пункт
-                    foreach (var item in localy)
-                    {
-                        str4.Add(item.LocalName);
-                    }
-
-                    // Льготы
-                    foreach (var item in privi)
-                    {
-                        str5.Add(item.PrivilegesName);
-                    }
-
-                    Dispatcher.Invoke(() =>
-                    {
-                        //pay_Xaml.ItemsSource = str1;
-                        //sol_Xaml.ItemsSource = str2;
-                        //area_Xaml.ItemsSource = str3;
-                        //loc_Xaml.ItemsSource = str4;
-                        //lgota_Xaml.ItemsSource = str5;
-                    });
-                });
-            }
+            return;
         }
+
 
     }
 }
