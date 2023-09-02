@@ -97,12 +97,6 @@ namespace exel_for_mfc
 
 
       
-
-
-
-      
-
-
         //Запрос для заполнения таблицы
         //Комментарий чтоб появлялся при наведении
         async void Start()
@@ -138,7 +132,6 @@ namespace exel_for_mfc
                                             mail = reg.MailingDate
                                         };
 
-
                 Dispatcher.Invoke(() =>
                 {
                     dataGrid.ItemsSource = MyList;
@@ -148,6 +141,8 @@ namespace exel_for_mfc
         }
 
 
+        
+        //Заполняем ComboBoxes
        async void ComboboxGO()
         {
             using(ExDbContext db = new())
