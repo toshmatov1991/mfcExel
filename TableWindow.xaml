@@ -3,8 +3,10 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:exel_for_mfc"
         mc:Ignorable="d" Icon="Resources\logomfc.png" WindowStartupLocation="CenterScreen"
         Title="Главное окно" Height="700" Width="1300">
+
     <Grid>
         <DataGrid x:Name="dataGrid" CanUserAddRows="True"  AutoGenerateColumns="False" CellEditEnding="dataGrid_CellEditEnding" MouseDoubleClick="Interes" Margin="0,0,105,0">
             <DataGrid.Columns>
@@ -13,15 +15,22 @@
                 <DataGridTextColumn Binding="{Binding name, UpdateSourceTrigger=PropertyChanged}" Header="Имя"/>
                 <DataGridTextColumn Binding="{Binding lastnam, UpdateSourceTrigger=PropertyChanged}" Header="Отчество"/>
                 <DataGridTextColumn Binding="{Binding snils, UpdateSourceTrigger=PropertyChanged}" Header="Снилс"/>
+                <!--<DataGridComboBoxColumn Header="Привет мир" 
+                                    x:Name="cbc_LowerComparer"
+                                    SelectedValueBinding="{Binding area, NotifyOnSourceUpdated=True, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                    SelectedValuePath="Id"
+                                    DisplayMemberPath="AreaName"
+                                    Width="30"/>-->
+
                 <DataGridTemplateColumn Header="Район">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <ComboBox   ItemsSource="{Binding Path=srt, RelativeSource={RelativeSource AncestorType={x:Type Window}}}"
-                                         IsSynchronizedWithCurrentItem="False"
-                                         DisplayMemberPath="AreaName"
-                                         SelectedValuePath="area"
-                                         SelectedItem="{Binding AreaName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                       />
+                            <ComboBox 
+                                      x:Name="ComboArea"
+                                      Loaded="ComboAreaLoaded"
+                                      SelectedIndex="{Binding area, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
+                                      >
+                            </ComboBox>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>

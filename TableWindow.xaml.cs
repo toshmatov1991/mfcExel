@@ -1,7 +1,9 @@
 ﻿using exel_for_mfc.PassModels;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.VisualBasic;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -19,25 +21,17 @@ namespace exel_for_mfc
     public partial class TableWindow : Window
     {
         PassContext db = new();
-        public static List<Area> srt { get; set; }
+        public static List<Area>? srt { get; set; }
+
 
         private bool flagfix = true;
         public TableWindow()
         {
             
             InitializeComponent();
-            ERT();
             Start();
-            
+           // ERT();
 
-            //ExelDbContext exelDb = new();
-            //var str = exelDb.Registries.ToList();
-            //foreach (var item in str)
-            //{
-            //    MessageBox.Show(item.Applicant + " " + item.Trek);
-            //}
-
-            //dataGrid.ItemsSource = db.Passwords.ToList();
         }
 
 
@@ -116,41 +110,42 @@ namespace exel_for_mfc
         {
             using (ExDbContext db = new()) 
             {
-                 var getlist = from reg in await db.Registries.AsNoTracking().ToListAsync()
-                              join appl in await db.Applicants.AsNoTracking().ToListAsync() on reg.ApplicantFk equals appl.Id
-                              join area in await db.Areas.AsNoTracking().ToListAsync() on appl.AreaFk equals area.Id
-                              join local in await db.Localities.AsNoTracking().ToListAsync() on appl.LocalityFk equals local.Id
-                              join priv in await db.Privileges.AsNoTracking().ToListAsync() on appl.PrivilegesFk equals priv.Id
-                              join pay in await db.PayAmounts.AsNoTracking().ToListAsync() on reg.PayAmountFk equals pay.Id
-                              join sol in await db.SolutionTypes.AsNoTracking().ToListAsync() on reg.SolutionFk equals sol.Id
-                              select new
-                              {
-                                id = reg.Id,
-                                family = appl.Firstname,
-                                name = appl.Middlename,
-                                lastnam = appl.Lastname,
-                                snils = appl.Snils,
-                                area = area.Id,
-                                loc = local.LocalName,
-                                adres = appl.Adress,
-                                privel = priv.PrivilegesName,
-                                pays = pay.Pay,
-                                sernumb = reg.SerialAndNumberSert,
-                                dategetsert = reg.DateGetSert,
-                                solnam = sol.SolutionName,
-                                datenumsol = reg.DateAndNumbSolutionSert,
-                                com = reg.Comment,
-                                trek = reg.Trek,
-                                mail = reg.MailingDate
-                              };
-               
+
+                var MyList = from reg in await db.Registries.AsNoTracking().ToListAsync()
+                                        join appl in await db.Applicants.AsNoTracking().ToListAsync() on reg.ApplicantFk equals appl.Id
+                                        join area in await db.Areas.AsNoTracking().ToListAsync() on appl.AreaFk equals area.Id
+                                        join local in await db.Localities.AsNoTracking().ToListAsync() on appl.LocalityFk equals local.Id
+                                        join priv in await db.Privileges.AsNoTracking().ToListAsync() on appl.PrivilegesFk equals priv.Id
+                                        join pay in await db.PayAmounts.AsNoTracking().ToListAsync() on reg.PayAmountFk equals pay.Id
+                                        join sol in await db.SolutionTypes.AsNoTracking().ToListAsync() on reg.SolutionFk equals sol.Id
+                                        select new
+                                        {
+                                            id = reg.Id,
+                                            family = appl.Firstname,
+                                            name = appl.Middlename,
+                                            lastnam = appl.Lastname,
+                                            snils = appl.Snils,
+                                            area = area.Id,
+                                            loc = local.LocalName,
+                                            adres = appl.Adress,
+                                            privel = priv.PrivilegesName,
+                                            pays = pay.Pay,
+                                            sernumb = reg.SerialAndNumberSert,
+                                            dategetsert = reg.DateGetSert,
+                                            solnam = sol.SolutionName,
+                                            datenumsol = reg.DateAndNumbSolutionSert,
+                                            com = reg.Comment,
+                                            trek = reg.Trek,
+                                            mail = reg.MailingDate
+                                        };
+
+
+
                 Dispatcher.Invoke(() =>
                 {
-                   
-                    dataGrid.ItemsSource = getlist.ToList();
-                    
+                    dataGrid.ItemsSource = MyList;
                 });
-               
+
             };
         }
 
@@ -159,9 +154,16 @@ namespace exel_for_mfc
         {
             using(ExDbContext db = new())
             {
-                srt = db.Areas.ToList();
+                
+                //var ser = db.Areas.ToList();
+                //foreach (var item in ser)
+                //{
+                //    strings.Add(item.AreaName);
+                //}
+                //cbc_LowerComparer.ItemsSource = db.Areas.ToList();
+
+
             }
-           
         }
 
 
@@ -224,6 +226,24 @@ namespace exel_for_mfc
                     });
                 });
             }
+        }
+
+        private void ComboAreaLoaded(object sender, RoutedEventArgs e)
+        {
+            ComboBox cmb = (ComboBox)sender;
+            List<string> strings = new List<string>();
+            using (ExDbContext db = new())
+            {
+               
+                var ser = db.Areas.ToList();
+                foreach (var item in ser)
+                {
+                    strings.Add(item.AreaName);
+                }
+
+
+            }
+            cmb.ItemsSource = strings;
         }
     }
 }
