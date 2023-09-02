@@ -25,15 +25,28 @@
                 <DataGridTemplateColumn Header="Район">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <ComboBox 
-                                      x:Name="ComboArea"
-                                      Loaded="ComboAreaLoaded"
-                                      SelectedIndex="{Binding area, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
-                                      >
+                            <ComboBox ItemsSource="{Binding Path=srt, RelativeSource={RelativeSource AncestorType={x:Type Window}}}"
+                                      DisplayMemberPath="AreaName"
+                                      SelectedIndex="{Binding area, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}">
                             </ComboBox>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
+
+
+                <!--<DataGridTemplateColumn Header="Район">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <ComboBox ItemsSource="{Binding Path=PhonebookEntries}"
+                                      x:Name="ComboArea"
+                                      Loaded="ComboAreaLoaded"
+                                      SelectedIndex="{Binding area, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}">
+                            </ComboBox>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>-->
+
+
                 <!--<DataGridComboBoxColumn x:Name="test" SelectedValueBinding="{Binding XPath=loc}" DisplayMemberPath="loc"  Header="Населенный пункт"/>
                 <DataGridTextColumn Binding="{Binding adres, UpdateSourceTrigger=PropertyChanged}" Header="Адрес"/>
                 <DataGridComboBoxColumn x:Name="lgota_Xaml" SelectedItemBinding="{Binding Path=privel}" Header="Льгота"/>

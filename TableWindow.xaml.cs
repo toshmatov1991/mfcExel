@@ -30,7 +30,7 @@ namespace exel_for_mfc
             
             InitializeComponent();
             Start();
-           // ERT();
+            ERT();
 
         }
 
@@ -125,7 +125,7 @@ namespace exel_for_mfc
                                             name = appl.Middlename,
                                             lastnam = appl.Lastname,
                                             snils = appl.Snils,
-                                            area = area.Id,
+                                            area = area.Id - 1,
                                             loc = local.LocalName,
                                             adres = appl.Adress,
                                             privel = priv.PrivilegesName,
@@ -154,15 +154,7 @@ namespace exel_for_mfc
         {
             using(ExDbContext db = new())
             {
-                
-                //var ser = db.Areas.ToList();
-                //foreach (var item in ser)
-                //{
-                //    strings.Add(item.AreaName);
-                //}
-                //cbc_LowerComparer.ItemsSource = db.Areas.ToList();
-
-
+                srt = db.Areas.ToList();
             }
         }
 
@@ -228,22 +220,21 @@ namespace exel_for_mfc
             }
         }
 
-        private void ComboAreaLoaded(object sender, RoutedEventArgs e)
-        {
-            ComboBox cmb = (ComboBox)sender;
-            List<string> strings = new List<string>();
-            using (ExDbContext db = new())
-            {
-               
-                var ser = db.Areas.ToList();
-                foreach (var item in ser)
-                {
-                    strings.Add(item.AreaName);
-                }
+        //private void ComboAreaLoaded(object sender, RoutedEventArgs e)
+        //{
+        //    ComboBox cmb = (ComboBox)sender;
+        //    List<string> strings = new List<string>();
+        //    using (ExDbContext db = new())
+        //    {
+        //        var ser = db.Areas.ToList();
+        //        foreach (var item in ser)
+        //        {
+        //            strings.Add(item.AreaName);
+        //        }
 
 
-            }
-            cmb.ItemsSource = strings;
-        }
+        //    }
+        //    cmb.ItemsSource = strings;
+        //}
     }
 }
