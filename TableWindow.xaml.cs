@@ -1,5 +1,4 @@
-﻿using exel_for_mfc.PassModels;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.VisualBasic;
 using System;
 using System.Collections.Generic;
@@ -103,7 +102,6 @@ namespace exel_for_mfc
         {
             using (ExDbContext db = new()) 
             {
-
                 var MyList = from reg in await db.Registries.AsNoTracking().ToListAsync()
                                         join appl in await db.Applicants.AsNoTracking().ToListAsync() on reg.ApplicantFk equals appl.Id
                                         join area in await db.Areas.AsNoTracking().ToListAsync() on appl.AreaFk equals area.Id
@@ -131,17 +129,10 @@ namespace exel_for_mfc
                                             trek = reg.Trek,
                                             mail = reg.MailingDate
                                         };
-
-                Dispatcher.Invoke(() =>
-                {
-                    dataGrid.ItemsSource = MyList;
-                });
-
+                dataGrid.ItemsSource = MyList;
             };
         }
 
-
-        
         //Заполняем ComboBoxes
        async void ComboboxGO()
         {
