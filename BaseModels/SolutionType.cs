@@ -8,6 +8,8 @@ public partial class SolutionType
     public int Id { get; set; }
 
     public string? SolutionName { get; set; }
+    public string? Login { get; set; }
+    public string? Passwords { get; set; }
 
     public virtual ICollection<Registry> Registries { get; set; } = new List<Registry>();
 }

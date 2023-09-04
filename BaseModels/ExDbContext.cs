@@ -138,6 +138,10 @@ public partial class ExDbContext : DbContext
             entity.ToTable("SolutionType");
 
             entity.Property(e => e.SolutionName).HasMaxLength(50);
+
+            entity.Property(e => e.Login).HasMaxLength(30);
+
+            entity.Property(e => e.Passwords).HasMaxLength(30);
         });
 
         OnModelCreatingPartial(modelBuilder);

@@ -33,67 +33,33 @@ namespace exel_for_mfc
             InitializeComponent();
             Start();
             ComboboxGO();
-
+           
         }
-
 
         //Получаем измененные данные после редактирования ячейки
         private void dataGrid_CellEditEnding(object sender, DataGridCellEditEndingEventArgs e)
         {
-            return;
-            //try
+
+            //Password? p = e.Row.Item as Password;
+            //if (p.Id != 0)
             //{
-            //    Password? p = e.Row.Item as Password;
-            //    if (p.Id != 0)
+            //    //Редактирование
+            //    if (flagfix)
             //    {
-            //        //Редактирование
-            //        if (flagfix)
-            //        {
-            //            var customer = await db.Passwords.Where(c => c.Id == p.Id).FirstOrDefaultAsync();
+            //        var customer = await db.Passwords.Where(c => c.Id == p.Id).FirstOrDefaultAsync();
 
-            //            customer.Login = p.Login;
-            //            customer.Pass = p.Pass;
-            //            await db.SaveChangesAsync();
-            //            flagfix = false;
-            //            dataGrid.ItemsSource = await db.Passwords.ToListAsync();
-            //            dataGrid.Items.Refresh();
-            //            dataGrid.CancelEdit();
-            //        }
-            //        flagfix = true;
+            //        customer.Login = p.Login;
+            //        customer.Pass = p.Pass;
+            //        await db.SaveChangesAsync();
+            //        flagfix = false;
+            //        dataGrid.ItemsSource = await db.Passwords.ToListAsync();
+            //        dataGrid.Items.Refresh();
+            //        dataGrid.CancelEdit();
             //    }
-
-            //    else if (p.Id == 0)
-            //    {
-            //        //Добавление новой записи
-            //        if (flagfix)
-            //        {
-            //            Password password = new();
-
-            //            if (p.Login != null)
-            //                password.Login = p.Login;
-            //            else
-            //                password.Login = "";
-
-            //            if (p.Pass != null)
-            //                password.Pass = p.Pass;
-            //            else
-            //                password.Pass = "";
-            //            await db.AddAsync(password);
-            //            await db.SaveChangesAsync();
-            //            flagfix = false;
-            //            dataGrid.ItemsSource = await db.Passwords.ToListAsync();
-            //            dataGrid.Items.Refresh();
-            //            dataGrid.CancelEdit();
-            //        }
-            //        flagfix = true;
-            //    }
+            //    flagfix = true;
             //}
-            //catch (Exception ex)
-            //{
-            //    MessageBox.Show(ex.Message);
-            //}
+
         }
-
 
       
         //Запрос для заполнения таблицы
@@ -152,6 +118,28 @@ namespace exel_for_mfc
             return;
         }
 
+    }
 
+
+    //Вспомогательный класс для обхода строк в таблице
+    internal class SClass
+    {
+          int IdReg { get; set;}
+          string? Family { get; set; }
+          string? Name { get; set; }
+          string? Lastname { get; set; }
+          string? Snils { get; set; }
+          string? Area { get; set; }
+          string? Local { get; set; }
+          string? Adress { get; set; }
+          string? Lgota { get; set; } // privel
+          decimal? Pay { get; set; }
+          string? Sernumb { get; set; }
+          DateTime? DateGetSert { get; set; }
+          string? Solution { get; set; } //Тип решения
+          string? DateAndNumbSolutionSert { get; set; } //Дата и номер решения по серту
+          string? Comment { get; set; }
+          string? Trek { get; set; }
+          DateTime? MailingDate { get; set; }
     }
 }
