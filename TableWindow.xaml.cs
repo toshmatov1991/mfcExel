@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.VisualBasic;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -25,20 +26,34 @@ namespace exel_for_mfc
         public static List<Privilege>? PrivelCombobox { get; set; }
         public static List<SolutionType>? SolCombobox { get; set; }
 
+        bool flagfix = true;
 
-        private bool flagfix = true;
+
         public TableWindow()
         {
             
             InitializeComponent();
+           // Test();
             Start();
-            ComboboxGO();
+            //ComboboxGO();
            
         }
 
         //Получаем измененные данные после редактирования ячейки
         private void dataGrid_CellEditEnding(object sender, DataGridCellEditEndingEventArgs e)
         {
+
+            //Registry? r = e.Row.Item as Registry;
+
+            SClass? a = e.Row.Item as SClass;
+            
+
+            MessageBox.Show(a.Adress + "  " + a.Name);
+            // List<object>? list = e.Row.Item as List<object>;
+
+            //dataGrid.Items.Refresh();
+            //dataGrid.CancelEdit();           
+
 
             //Password? p = e.Row.Item as Password;
             //if (p.Id != 0)
@@ -64,40 +79,57 @@ namespace exel_for_mfc
       
         //Запрос для заполнения таблицы
         //Комментарий чтоб появлялся при наведении
-        async void Start()
+        void Start()
         {
             using (ExDbContext db = new()) 
             {
-                var MyList = from reg in await db.Registries.AsNoTracking().ToListAsync()
-                                        join appl in await db.Applicants.AsNoTracking().ToListAsync() on reg.ApplicantFk equals appl.Id
-                                        join area in await db.Areas.AsNoTracking().ToListAsync() on appl.AreaFk equals area.Id
-                                        join local in await db.Localities.AsNoTracking().ToListAsync() on appl.LocalityFk equals local.Id
-                                        join priv in await db.Privileges.AsNoTracking().ToListAsync() on appl.PrivilegesFk equals priv.Id
-                                        join pay in await db.PayAmounts.AsNoTracking().ToListAsync() on reg.PayAmountFk equals pay.Id
-                                        join sol in await db.SolutionTypes.AsNoTracking().ToListAsync() on reg.SolutionFk equals sol.Id
-                                        select new
+                           var MyList = from reg in  db.Registries
+                                        join appl in  db.Applicants on reg.ApplicantFk equals appl.Id
+                                        join area in  db.Areas on appl.AreaFk equals area.Id
+                                        join local in  db.Localities on appl.LocalityFk equals local.Id
+                                        join priv in  db.Privileges on appl.PrivilegesFk equals priv.Id
+                                        join pay in  db.PayAmounts on reg.PayAmountFk equals pay.Id
+                                        join sol in  db.SolutionTypes on reg.SolutionFk equals sol.Id
+                                        select new SClass
                                         {
-                                            id = reg.Id,
-                                            family = appl.Firstname,
-                                            name = appl.Middlename,
-                                            lastnam = appl.Lastname,
-                                            snils = appl.Snils,
-                                            area = area.Id - 1,
-                                            loc = local.Id - 1,
-                                            adres = appl.Adress,
-                                            privel = priv.Id - 1,
-                                            pays = pay.Id - 1,
-                                            sernumb = reg.SerialAndNumberSert,
-                                            dategetsert = reg.DateGetSert,
-                                            solnam = sol.Id - 1,
-                                            datenumsol = reg.DateAndNumbSolutionSert,
-                                            com = reg.Comment,
-                                            trek = reg.Trek,
-                                            mail = reg.MailingDate
+                                            IdReg = reg.Id,
+                                            Family = appl.Firstname,
+                                            Name = appl.Middlename,
+                                            Lastname = appl.Lastname,
+                                            Snils = appl.Snils,
+                                            Area = area.Id - 1,
+                                            Local = local.Id - 1,
+                                            Adress = appl.Adress,
+                                            Lgota = priv.Id - 1,
+                                            Pay = pay.Id - 1,
+                                            Sernumb = reg.SerialAndNumberSert,
+                                            DateGetSert = reg.DateGetSert,
+                                            Solution = sol.Id - 1,
+                                            DateAndNumbSolutionSert = reg.DateAndNumbSolutionSert,
+                                            Comment = reg.Comment,
+                                            Trek = reg.Trek,
+                                            MailingDate = reg.MailingDate
                                         };
-                dataGrid.ItemsSource = MyList;
+
+              dataGrid.ItemsSource = MyList.ToList();
             };
         }
+
+
+        //Тестовый запрос, что то неработает редактирование
+        async void Test()
+        {
+            using (ExDbContext db = new())
+            {
+                var Str = await db.Applicants.AsNoTracking().ToListAsync();
+
+                dataGrid.ItemsSource = Str;
+            }
+        }
+
+
+
+
 
         //Заполняем ComboBoxes
        async void ComboboxGO()
@@ -113,33 +145,6 @@ namespace exel_for_mfc
         }
 
         //Двойной клик, обработка множественного нажатия мыши, чтоб не вылетала программа
-        private void Interes(object sender, MouseButtonEventArgs e)
-        {
-            return;
-        }
 
-    }
-
-
-    //Вспомогательный класс для обхода строк в таблице
-    internal class SClass
-    {
-          int IdReg { get; set;}
-          string? Family { get; set; }
-          string? Name { get; set; }
-          string? Lastname { get; set; }
-          string? Snils { get; set; }
-          string? Area { get; set; }
-          string? Local { get; set; }
-          string? Adress { get; set; }
-          string? Lgota { get; set; } // privel
-          decimal? Pay { get; set; }
-          string? Sernumb { get; set; }
-          DateTime? DateGetSert { get; set; }
-          string? Solution { get; set; } //Тип решения
-          string? DateAndNumbSolutionSert { get; set; } //Дата и номер решения по серту
-          string? Comment { get; set; }
-          string? Trek { get; set; }
-          DateTime? MailingDate { get; set; }
     }
 }

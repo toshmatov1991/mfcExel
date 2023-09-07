@@ -8,13 +8,13 @@
         Title="Главное окно" Height="700" Width="1300">
 
     <Grid>
-        <DataGrid x:Name="dataGrid" CanUserAddRows="True"  AutoGenerateColumns="False" CellEditEnding="dataGrid_CellEditEnding" MouseDoubleClick="Interes" Margin="0,0,105,0">
+        <DataGrid x:Name="dataGrid" AutoGenerateColumns="False" CellEditEnding="dataGrid_CellEditEnding" Margin="0,0,105,0">
             <DataGrid.Columns>
-                <DataGridTextColumn Binding="{Binding id, UpdateSourceTrigger=PropertyChanged}" IsReadOnly="True" Header="№п/п"/>
-                <DataGridTextColumn Binding="{Binding family, UpdateSourceTrigger=PropertyChanged}" Header="Фамилия"/>
-                <DataGridTextColumn Binding="{Binding name, UpdateSourceTrigger=PropertyChanged}" Header="Имя"/>
-                <DataGridTextColumn Binding="{Binding lastnam, UpdateSourceTrigger=PropertyChanged}" Header="Отчество"/>
-                <DataGridTextColumn Binding="{Binding snils, UpdateSourceTrigger=PropertyChanged}" Header="Снилс"/>
+                <DataGridTextColumn Binding="{Binding IdReg, UpdateSourceTrigger=PropertyChanged}" IsReadOnly="True" Header="№п/п"/>
+                <DataGridTextColumn Binding="{Binding Family, UpdateSourceTrigger=PropertyChanged}" Header="Фамилия"/>
+                <DataGridTextColumn Binding="{Binding Name, UpdateSourceTrigger=PropertyChanged}" Header="Имя"/>
+                <DataGridTextColumn Binding="{Binding Lastname, UpdateSourceTrigger=PropertyChanged}" Header="Отчество"/>
+                <!--<DataGridTextColumn Binding="{Binding snils, UpdateSourceTrigger=PropertyChanged}" Header="Снилс"/>
                 <DataGridTemplateColumn Header="Район">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
@@ -70,7 +70,7 @@
                 </DataGridTemplateColumn>
                 <DataGridTextColumn Binding="{Binding datenumsol, UpdateSourceTrigger=PropertyChanged}" Header="Дата и номер решения"/>
                 <DataGridTextColumn Binding="{Binding trek, UpdateSourceTrigger=PropertyChanged}" Header="Трек"/>
-                <DataGridTextColumn Binding="{Binding mail, UpdateSourceTrigger=PropertyChanged}" Header="Дата отправки почтой"/>
+                <DataGridTextColumn Binding="{Binding mail, UpdateSourceTrigger=PropertyChanged}" Header="Дата отправки почтой"/>-->
             </DataGrid.Columns>
         </DataGrid>
     </Grid>
