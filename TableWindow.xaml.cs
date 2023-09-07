@@ -34,10 +34,6 @@ namespace exel_for_mfc
             
             InitializeComponent();
             Start();
-            ComboboxGO();
-
-
-
 
         }
 
@@ -73,16 +69,11 @@ namespace exel_for_mfc
         //Запрос для заполнения таблицы
         //Комментарий чтоб появлялся при наведении
          void Start()
-        {
+         {
             using (ExDbContext db = new()) 
             {
                            var MyList =(from reg in db.Registries
                                         join appl in  db.Applicants on reg.ApplicantFk equals appl.Id
-                                        join area in  db.Areas on appl.AreaFk equals area.Id
-                                        join local in  db.Localities on appl.LocalityFk equals local.Id
-                                        join priv in  db.Privileges on appl.PrivilegesFk equals priv.Id
-                                        join pay in  db.PayAmounts on reg.PayAmountFk equals pay.Id
-                                        join sol in  db.SolutionTypes on reg.SolutionFk equals sol.Id
                                         select new SClass
                                         {
                                             IdReg = reg.Id,
@@ -90,14 +81,14 @@ namespace exel_for_mfc
                                             Name = appl.Middlename,
                                             Lastname = appl.Lastname,
                                             Snils = appl.Snils,
-                                            Area = area.Id - 1,
-                                            Local = local.Id - 1,
+                                            Area = appl.AreaFk - 1,
+                                            Local = appl.LocalityFk - 1,
                                             Adress = appl.Adress,
-                                            Lgota = priv.Id - 1,
+                                            Lgota = appl.PrivilegesFk - 1,
                                             Pay = reg.PayAmountFk - 1,
                                             Sernumb = reg.SerialAndNumberSert,
                                             DateGetSert = reg.DateGetSert,
-                                            Solution = sol.Id - 1,
+                                            Solution = reg.SolutionFk - 1,
                                             DateAndNumbSolutionSert = reg.DateAndNumbSolutionSert,
                                             Comment = reg.Comment,
                                             Trek = reg.Trek,
@@ -106,21 +97,18 @@ namespace exel_for_mfc
                                         }).AsNoTracking().ToList();
 
               dataGrid.ItemsSource = MyList;
-            };
-        }
 
-        //Заполняем ComboBoxes
-        void ComboboxGO()
-        {
-            using(ExDbContext db = new())
-            {
-                AreaCombobox =  db.Areas.AsNoTracking().ToList();
-                LocalCombobox =  db.Localities.AsNoTracking().ToList();
+
+                AreaCombobox = db.Areas.AsNoTracking().ToList();
+                LocalCombobox = db.Localities.AsNoTracking().ToList();
                 PayCombobox = db.PayAmounts.AsNoTracking().ToList();
                 PrivelCombobox = db.Privileges.AsNoTracking().ToList();
-                SolCombobox =  db.SolutionTypes.AsNoTracking().ToList();
-            }
-        }
+                SolCombobox = db.SolutionTypes.AsNoTracking().ToList();
+            };
+         }
+
+
+
 
         //Двойной клик, обработка множественного нажатия мыши, чтоб не вылетала программа
 
