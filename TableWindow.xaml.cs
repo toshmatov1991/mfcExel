@@ -31,10 +31,8 @@ namespace exel_for_mfc
 
         public TableWindow()
         {
-            
             InitializeComponent();
             Start();
-
         }
 
         //Получаем измененные данные после редактирования ячейки
@@ -97,7 +95,6 @@ namespace exel_for_mfc
                                         }).AsNoTracking().ToList();
 
               dataGrid.ItemsSource = MyList;
-
 
                 AreaCombobox = db.Areas.AsNoTracking().ToList();
                 LocalCombobox = db.Localities.AsNoTracking().ToList();
