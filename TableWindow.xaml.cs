@@ -33,10 +33,12 @@ namespace exel_for_mfc
         {
             
             InitializeComponent();
-           // Test();
             Start();
             ComboboxGO();
-           
+
+
+
+
         }
 
         //Получаем измененные данные после редактирования ячейки
@@ -76,14 +78,15 @@ namespace exel_for_mfc
 
         }
 
+     
       
         //Запрос для заполнения таблицы
         //Комментарий чтоб появлялся при наведении
-        void Start()
+         void Start()
         {
             using (ExDbContext db = new()) 
             {
-                           var MyList = from reg in  db.Registries
+                           var MyList =(from reg in db.Registries
                                         join appl in  db.Applicants on reg.ApplicantFk equals appl.Id
                                         join area in  db.Areas on appl.AreaFk equals area.Id
                                         join local in  db.Localities on appl.LocalityFk equals local.Id
@@ -101,7 +104,7 @@ namespace exel_for_mfc
                                             Local = local.Id - 1,
                                             Adress = appl.Adress,
                                             Lgota = priv.Id - 1,
-                                            Pay = pay.Id - 1,
+                                            Pay = reg.PayAmountFk,
                                             Sernumb = reg.SerialAndNumberSert,
                                             DateGetSert = reg.DateGetSert,
                                             Solution = sol.Id - 1,
@@ -110,9 +113,9 @@ namespace exel_for_mfc
                                             Trek = reg.Trek,
                                             MailingDate = reg.MailingDate,
                                             IdApplicant = appl.Id
-                                        };
+                                        }). ToList();
 
-              dataGrid.ItemsSource = MyList.ToList();
+              dataGrid.ItemsSource = MyList;
             };
         }
 
@@ -133,15 +136,15 @@ namespace exel_for_mfc
 
 
         //Заполняем ComboBoxes
-       async void ComboboxGO()
+        void ComboboxGO()
         {
             using(ExDbContext db = new())
             {
-                AreaCombobox = db.Areas.ToList();
-                LocalCombobox = await db.Localities.AsNoTracking().ToListAsync();
-                PayCombobox = await db.PayAmounts.AsNoTracking().ToListAsync();
-                PrivelCombobox = await db.Privileges.AsNoTracking().ToListAsync();
-                SolCombobox = await db.SolutionTypes.AsNoTracking().ToListAsync();
+                AreaCombobox =  db.Areas.AsNoTracking().ToList();
+                LocalCombobox =  db.Localities.AsNoTracking().ToList();
+                PayCombobox = db.PayAmounts.AsNoTracking().ToList();
+                PrivelCombobox = db.Privileges.AsNoTracking().ToList();
+                SolCombobox =  db.SolutionTypes.AsNoTracking().ToList();
             }
         }
 
