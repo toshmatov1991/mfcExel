@@ -14,13 +14,13 @@
                 <DataGridTextColumn Binding="{Binding Family, UpdateSourceTrigger=PropertyChanged}" Header="Фамилия"/>
                 <DataGridTextColumn Binding="{Binding Name, UpdateSourceTrigger=PropertyChanged}" Header="Имя"/>
                 <DataGridTextColumn Binding="{Binding Lastname, UpdateSourceTrigger=PropertyChanged}" Header="Отчество"/>
-                <!--<DataGridTextColumn Binding="{Binding snils, UpdateSourceTrigger=PropertyChanged}" Header="Снилс"/>
+                <DataGridTextColumn Binding="{Binding Snils, UpdateSourceTrigger=PropertyChanged}" Header="Снилс"/>
                 <DataGridTemplateColumn Header="Район">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <ComboBox ItemsSource="{Binding Path=AreaCombobox, RelativeSource={RelativeSource AncestorType={x:Type Window}}}"
                                       DisplayMemberPath="AreaName"
-                                      SelectedIndex="{Binding area, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}">
+                                      SelectedIndex="{Binding Area, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}">
                             </ComboBox>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
@@ -30,30 +30,30 @@
                         <DataTemplate>
                             <ComboBox ItemsSource="{Binding Path=LocalCombobox, RelativeSource={RelativeSource AncestorType={x:Type Window}}}"
                                       DisplayMemberPath="LocalName"
-                                      SelectedIndex="{Binding loc, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}">
+                                      SelectedIndex="{Binding Local, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}">
                             </ComboBox>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
-                <DataGridTextColumn Binding="{Binding adres, UpdateSourceTrigger=PropertyChanged}" Header="Адрес"/>
+                <DataGridTextColumn Binding="{Binding Adress, UpdateSourceTrigger=PropertyChanged}" Header="Адрес"/>
                 <DataGridTemplateColumn Header="Льгота">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <ComboBox ItemsSource="{Binding Path=PrivelCombobox, RelativeSource={RelativeSource AncestorType={x:Type Window}}}"
                                       DisplayMemberPath="PrivilegesName"
-                                      SelectedIndex="{Binding privel, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}">
+                                      SelectedIndex="{Binding Lgota, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}">
                             </ComboBox>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
-                <DataGridTextColumn Binding="{Binding sernumb, UpdateSourceTrigger=PropertyChanged}" Header="Серия и № сертификата"/>
-                <DataGridTextColumn Binding="{Binding dategetsert, UpdateSourceTrigger=PropertyChanged}" Header="Дата выдачи"/>
+                <DataGridTextColumn Binding="{Binding Sernumb, UpdateSourceTrigger=PropertyChanged}" Header="Серия и № сертификата"/>
+                <DataGridTextColumn Binding="{Binding DateGetSert, UpdateSourceTrigger=PropertyChanged}" Header="Дата выдачи"/>
                 <DataGridTemplateColumn Header="Размер выплаты">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <ComboBox ItemsSource="{Binding Path=PayCombobox, RelativeSource={RelativeSource AncestorType={x:Type Window}}}"
                                       DisplayMemberPath="Pay"
-                                      SelectedIndex="{Binding pays, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}">
+                                      SelectedIndex="{Binding Pay, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}">
                             </ComboBox>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
@@ -63,14 +63,14 @@
                         <DataTemplate>
                             <ComboBox ItemsSource="{Binding Path=SolCombobox, RelativeSource={RelativeSource AncestorType={x:Type Window}}}"
                                       DisplayMemberPath="SolutionName"
-                                      SelectedIndex="{Binding solnam, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}">
+                                      SelectedIndex="{Binding Solution, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}">
                             </ComboBox>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
-                <DataGridTextColumn Binding="{Binding datenumsol, UpdateSourceTrigger=PropertyChanged}" Header="Дата и номер решения"/>
-                <DataGridTextColumn Binding="{Binding trek, UpdateSourceTrigger=PropertyChanged}" Header="Трек"/>
-                <DataGridTextColumn Binding="{Binding mail, UpdateSourceTrigger=PropertyChanged}" Header="Дата отправки почтой"/>-->
+                <DataGridTextColumn Binding="{Binding DateAndNumbSolutionSert, UpdateSourceTrigger=PropertyChanged}" Header="Дата и номер решения"/>
+                <DataGridTextColumn Binding="{Binding Trek, UpdateSourceTrigger=PropertyChanged}" Header="Трек"/>
+                <DataGridTextColumn Binding="{Binding MailingDate, UpdateSourceTrigger=PropertyChanged}" Header="Дата отправки почтой"/>
             </DataGrid.Columns>
         </DataGrid>
     </Grid>

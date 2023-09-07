@@ -14,7 +14,7 @@ namespace exel_for_mfc
         public string? Name { get; set; }
         public string? Lastname { get; set; }
         public string? Snils { get; set; }
-        public dynamic? Area { get; set; }
+        public int? Area { get; set; }
         public dynamic? Local { get; set; }
         public string? Adress { get; set; }
         public dynamic? Lgota { get; set; } // privel
@@ -26,5 +26,6 @@ namespace exel_for_mfc
         public string? Comment { get; set; }
         public string? Trek { get; set; }
         public DateTime? MailingDate { get; set; }
+        public int? IdApplicant { get; set; }
     }
 }

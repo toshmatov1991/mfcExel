@@ -35,7 +35,7 @@ namespace exel_for_mfc
             InitializeComponent();
            // Test();
             Start();
-            //ComboboxGO();
+            ComboboxGO();
            
         }
 
@@ -108,7 +108,8 @@ namespace exel_for_mfc
                                             DateAndNumbSolutionSert = reg.DateAndNumbSolutionSert,
                                             Comment = reg.Comment,
                                             Trek = reg.Trek,
-                                            MailingDate = reg.MailingDate
+                                            MailingDate = reg.MailingDate,
+                                            IdApplicant = appl.Id
                                         };
 
               dataGrid.ItemsSource = MyList.ToList();
@@ -136,7 +137,7 @@ namespace exel_for_mfc
         {
             using(ExDbContext db = new())
             {
-                AreaCombobox = await db.Areas.AsNoTracking().ToListAsync();
+                AreaCombobox = db.Areas.ToList();
                 LocalCombobox = await db.Localities.AsNoTracking().ToListAsync();
                 PayCombobox = await db.PayAmounts.AsNoTracking().ToListAsync();
                 PrivelCombobox = await db.Privileges.AsNoTracking().ToListAsync();
