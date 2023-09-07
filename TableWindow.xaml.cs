@@ -44,18 +44,8 @@ namespace exel_for_mfc
         //Получаем измененные данные после редактирования ячейки
         private void dataGrid_CellEditEnding(object sender, DataGridCellEditEndingEventArgs e)
         {
-
-            //Registry? r = e.Row.Item as Registry;
-
             SClass? a = e.Row.Item as SClass;
-            
-
-            MessageBox.Show(a.Adress + "  " + a.Name);
-            // List<object>? list = e.Row.Item as List<object>;
-
-            //dataGrid.Items.Refresh();
-            //dataGrid.CancelEdit();           
-
+            MessageBox.Show(a.Adress + "  " + a.Name + " " + "id заявителя --> " + a.IdApplicant);
 
             //Password? p = e.Row.Item as Password;
             //if (p.Id != 0)
@@ -104,7 +94,7 @@ namespace exel_for_mfc
                                             Local = local.Id - 1,
                                             Adress = appl.Adress,
                                             Lgota = priv.Id - 1,
-                                            Pay = reg.PayAmountFk,
+                                            Pay = reg.PayAmountFk - 1,
                                             Sernumb = reg.SerialAndNumberSert,
                                             DateGetSert = reg.DateGetSert,
                                             Solution = sol.Id - 1,
@@ -113,27 +103,11 @@ namespace exel_for_mfc
                                             Trek = reg.Trek,
                                             MailingDate = reg.MailingDate,
                                             IdApplicant = appl.Id
-                                        }). ToList();
+                                        }).AsNoTracking().ToList();
 
               dataGrid.ItemsSource = MyList;
             };
         }
-
-
-        //Тестовый запрос, что то неработает редактирование
-        async void Test()
-        {
-            using (ExDbContext db = new())
-            {
-                var Str = await db.Applicants.AsNoTracking().ToListAsync();
-
-                dataGrid.ItemsSource = Str;
-            }
-        }
-
-
-
-
 
         //Заполняем ComboBoxes
         void ComboboxGO()
