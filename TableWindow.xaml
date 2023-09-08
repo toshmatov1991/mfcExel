@@ -3,12 +3,11 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:exel_for_mfc"
         mc:Ignorable="d" Icon="Resources\logomfc.png" WindowStartupLocation="CenterScreen"
         Title="Главное окно" Height="700" Width="1300">
 
     <Grid>
-        <DataGrid x:Name="dataGrid" AutoGenerateColumns="False" CellEditEnding="dataGrid_CellEditEnding" Margin="0,0,105,0">
+        <DataGrid x:Name="dataGrid" AutoGenerateColumns="False" CanUserAddRows="False" CellEditEnding="dataGrid_CellEditEnding" Margin="0,0,105,0">
             <DataGrid.Columns>
                 <DataGridTextColumn Binding="{Binding IdReg, UpdateSourceTrigger=PropertyChanged}" IsReadOnly="True" Header="№п/п"/>
                 <DataGridTextColumn Binding="{Binding Family, UpdateSourceTrigger=PropertyChanged}" Header="Фамилия"/>

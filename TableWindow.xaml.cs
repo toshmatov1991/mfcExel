@@ -36,10 +36,51 @@ namespace exel_for_mfc
         }
 
         //Получаем измененные данные после редактирования ячейки
-        private void dataGrid_CellEditEnding(object sender, DataGridCellEditEndingEventArgs e)
+        private async void dataGrid_CellEditEnding(object sender, DataGridCellEditEndingEventArgs e)
         {
+            //Считывание строки
             SClass? a = e.Row.Item as SClass;
-            MessageBox.Show(a.Adress + "  " + a.Name + " " + "id заявителя --> " + a.IdApplicant);
+
+            //Непосредственно редактирование ячейки
+            using(ExDbContext db = new())
+            {
+                //Обновление таблицы Заявитель
+                int ApplicantUpdated = await db.Database.ExecuteSqlRawAsync("UPDATE Applicant SET Firstname = {0}, Middlename = {1}, Lastname = {2}, Area_FK = {3}, Locality_FK = {4}, Adress = {5}, Snils = {6}, Privileges_FK = {7} WHERE Id = {8}", a.Family, a.Name, a.Lastname, ReturnIdAreaAsync(a.Area), ReturnIdLocalAsync(a.Local), a.Adress, a.Snils, ReturnIdPrivelAsync(a.Lgota), a.IdApplicant);
+
+                //Обновление таблицы Регистр
+                int RegistrUpdated = await db.Database.ExecuteSqlRawAsync("UPDATE Applicant SET Firstname = {0}, Middlename = {1}, Lastname = {2}, Area_FK = {3}, Locality_FK = {4}, Adress = {5}, Snils = {6}, Privileges_FK = {7} WHERE Id = {8}", a.Family, a.Name, a.Lastname, ReturnIdAreaAsync(a.Area), ReturnIdLocalAsync(a.Local), a.Adress, a.Snils, ReturnIdPrivelAsync(a.Lgota), a.IdApplicant);
+            }
+
+
+            //Вернуть идентификатор Района
+            static async Task<int> ReturnIdAreaAsync(string _area)
+            {
+               using(ExDbContext db = new())
+               {
+                    var IdArea = await db.Areas.Where(u => u.AreaName == _area).AsNoTracking().FirstOrDefaultAsync();
+                    return IdArea.Id;  
+               }
+            }
+
+            //Вернуть идентификатор Населенного пункта
+            static async Task<int> ReturnIdLocalAsync(string _loc)
+            {
+                using (ExDbContext db = new())
+                {
+                    var IdLoc = await db.Localities.Where(u => u.LocalName == _loc).AsNoTracking().FirstOrDefaultAsync();
+                    return IdLoc.Id;
+                }
+            }
+
+            //Вернуть идентификатор Льготы
+            static async Task<int> ReturnIdPrivelAsync(string _priv)
+            {
+                using (ExDbContext db = new())
+                {
+                    var IdPriv = await db.Privileges.Where(u => u.PrivilegesName == _priv).AsNoTracking().FirstOrDefaultAsync();
+                    return IdPriv.Id;
+                }
+            }
 
             //Password? p = e.Row.Item as Password;
             //if (p.Id != 0)
@@ -103,9 +144,6 @@ namespace exel_for_mfc
                 SolCombobox = db.SolutionTypes.AsNoTracking().ToList();
             };
          }
-
-
-
 
         //Двойной клик, обработка множественного нажатия мыши, чтоб не вылетала программа
 
