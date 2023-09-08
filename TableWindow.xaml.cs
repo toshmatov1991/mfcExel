@@ -41,14 +41,11 @@ namespace exel_for_mfc
             //Считывание строки
             SClass? a = e.Row.Item as SClass;
 
-            //Непосредственно редактирование ячейки
+            //Непосредственно редактирование ячейки (Обновление строки) - Заявитель
             using(ExDbContext db = new())
             {
                 //Обновление таблицы Заявитель
                 int ApplicantUpdated = await db.Database.ExecuteSqlRawAsync("UPDATE Applicant SET Firstname = {0}, Middlename = {1}, Lastname = {2}, Area_FK = {3}, Locality_FK = {4}, Adress = {5}, Snils = {6}, Privileges_FK = {7} WHERE Id = {8}", a.Family, a.Name, a.Lastname, ReturnIdAreaAsync(a.Area), ReturnIdLocalAsync(a.Local), a.Adress, a.Snils, ReturnIdPrivelAsync(a.Lgota), a.IdApplicant);
-
-                //Обновление таблицы Регистр
-                int RegistrUpdated = await db.Database.ExecuteSqlRawAsync("UPDATE Applicant SET Firstname = {0}, Middlename = {1}, Lastname = {2}, Area_FK = {3}, Locality_FK = {4}, Adress = {5}, Snils = {6}, Privileges_FK = {7} WHERE Id = {8}", a.Family, a.Name, a.Lastname, ReturnIdAreaAsync(a.Area), ReturnIdLocalAsync(a.Local), a.Adress, a.Snils, ReturnIdPrivelAsync(a.Lgota), a.IdApplicant);
             }
 
 
@@ -81,6 +78,37 @@ namespace exel_for_mfc
                     return IdPriv.Id;
                 }
             }
+
+            //Непосредственно редактирование ячейки (Обновление строки) - Регистр
+            using (ExDbContext db = new())
+            {
+                //Обновление таблицы Регистр
+                int RegistrUpdated = await db.Database.ExecuteSqlRawAsync("UPDATE Registry SET Applicant_FK = {0}, SerialAndNumberSert = {1}, DateGetSert = {2}, PayAmount_FK = {3}, Solution_FK = {4}, DateAndNumbSolutionSert = {5}, Comment = {6}, Trek = {7}, MailingDate = {8} WHERE Id = {9}",
+                                                               a.IdApplicant, a.Sernumb, a.DateGetSert, ReturnIdPaylAsync(a.Pay), ReturnIdSolutionAsync(a.Solution), a.DateAndNumbSolutionSert, a.Comment, a.Trek, a.MailingDate, a.IdReg);
+            }
+
+            //Вернуть идентификатор Выплаты
+            static async Task<decimal> ReturnIdPaylAsync(decimal _pay)
+            {
+                using (ExDbContext db = new())
+                {
+                    var IdPay = await db.PayAmounts.Where(u => u.Pay == _pay).AsNoTracking().FirstOrDefaultAsync();
+                    return IdPay.Id;
+                }
+            }
+
+            //Вернуть идентификатор Решения
+            static async Task<decimal> ReturnIdSolutionAsync(string _sol)
+            {
+                using (ExDbContext db = new())
+                {
+                    var IdSol = await db.SolutionTypes.Where(u => u.SolutionName == _sol).AsNoTracking().FirstOrDefaultAsync();
+                    return IdSol.Id;
+                }
+            }
+
+            //Сделать заполнение комментария отдельным окном? типо реализовать mvvm
+
 
             //Password? p = e.Row.Item as Password;
             //if (p.Id != 0)
