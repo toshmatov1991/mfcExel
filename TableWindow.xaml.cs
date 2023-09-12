@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -26,7 +27,8 @@ namespace exel_for_mfc
         public static List<Privilege>? PrivelCombobox { get; set; }
         public static List<SolutionType>? SolCombobox { get; set; }
 
-        private bool flagfix = true;
+        //Thread myThread = new Thread(Print);
+        //myThread.Start();
 
         public TableWindow()
         {
@@ -37,30 +39,23 @@ namespace exel_for_mfc
         //Получаем измененные данные после редактирования ячейки
         private async void dataGrid_CellEditEnding(object sender, DataGridCellEditEndingEventArgs e)
         {
-             //Считывание строки
-             SClass? a = e.Row.Item as SClass;
-
             //Сделать заполнение комментария отдельным окном? типо реализовать mvvm
             try
             {
-                if (flagfix)
+              //Непосредственно редактирование ячейки (Обновление строки) - Заявитель - Регистр
+                using (ExDbContext db = new())
                 {
-                    //Непосредственно редактирование ячейки (Обновление строки) - Заявитель - Регистр
-                    using (ExDbContext db = new())
-                    {
-                        //Обновление таблицы Заявитель
-                        await db.Database.ExecuteSqlRawAsync("UPDATE Applicant SET Firstname = {0}, Middlename = {1}, Lastname = {2}, Adress = {3}, Snils = {4} WHERE Id = {5}", a.Family, a.Name, a.Lastname, a.Adress, a.Snils, a.IdApplicant);
+                    //Считывание строки
+                    SClass? a = e.Row.Item as SClass;
 
-                        //Обновление таблицы Регистр
-                        await db.Database.ExecuteSqlRawAsync("UPDATE Registry SET SerialAndNumberSert = {0}, DateGetSert = {1}, DateAndNumbSolutionSert = {2}, Comment = {3}, Trek = {4}, MailingDate = {5} WHERE Id = {6}", a.Sernumb, a.DateGetSert, a.DateAndNumbSolutionSert, a.Comment, a.Trek, a.MailingDate, a.IdReg);
-                    }
+                    //Обновление таблицы Заявитель
+                    await db.Database.ExecuteSqlRawAsync("UPDATE Applicant SET Firstname = {0}, Middlename = {1}, Lastname = {2}, Adress = {3}, Snils = {4} WHERE Id = {5}", a.Family, a.Name, a.Lastname, a.Adress, a.Snils, a.IdApplicant);
 
-                    flagfix = false;
-                    Start();
-                    dataGrid.Items.Refresh();
-                    dataGrid.CancelEdit();
+                    //Обновление таблицы Регистр
+                    await db.Database.ExecuteSqlRawAsync("UPDATE Registry SET SerialAndNumberSert = {0}, DateGetSert = {1}, DateAndNumbSolutionSert = {2}, Comment = {3}, Trek = {4}, MailingDate = {5} WHERE Id = {6}", a.Sernumb, a.DateGetSert, a.DateAndNumbSolutionSert, a.Comment, a.Trek, a.MailingDate, a.IdReg);
+                    
                 }
-                flagfix = true;
+                dataGrid.CancelEdit();
             }
             catch (Exception ex)
             {
@@ -102,11 +97,11 @@ namespace exel_for_mfc
 
               dataGrid.ItemsSource = MyList;
 
-                AreaCombobox = db.Areas.AsNoTracking().ToList();
-                LocalCombobox = db.Localities.AsNoTracking().ToList();
-                PayCombobox = db.PayAmounts.AsNoTracking().ToList();
-                PrivelCombobox = db.Privileges.AsNoTracking().ToList();
-                SolCombobox = db.SolutionTypes.AsNoTracking().ToList();
+                AreaCombobox = db.Areas.FromSqlRaw("SELECT * FROM Area").AsNoTracking().ToList();
+                LocalCombobox = db.Localities.FromSqlRaw("SELECT * FROM Locality").AsNoTracking().ToList();
+                PayCombobox = db.PayAmounts.FromSqlRaw("SELECT * FROM PayAmount").AsNoTracking().ToList();
+                PrivelCombobox = db.Privileges.FromSqlRaw("SELECT * FROM Privileges").AsNoTracking().ToList();
+                SolCombobox = db.SolutionTypes.FromSqlRaw("SELECT * FROM SolutionType").AsNoTracking().ToList();
             };
          }
 
