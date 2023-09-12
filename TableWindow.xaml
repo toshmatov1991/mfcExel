@@ -69,7 +69,7 @@
                 <DataGridTextColumn Binding="{Binding DateAndNumbSolutionSert, UpdateSourceTrigger=PropertyChanged}" Header="Дата и номер решения"/>
                 <DataGridTextColumn Binding="{Binding Trek, UpdateSourceTrigger=PropertyChanged}" Header="Трек"/>
                 <DataGridTextColumn Binding="{Binding MailingDate, UpdateSourceTrigger=PropertyChanged}" Header="Дата отправки почтой"/>
-                <DataGridTextColumn Binding="{Binding Commentar, UpdateSourceTrigger=PropertyChanged}" Header="Комментарий"/>
+                <DataGridTextColumn Binding="{Binding Comment, UpdateSourceTrigger=PropertyChanged}" Header="Комментарий"/>
             </DataGrid.Columns>
         </DataGrid>
     </Grid>

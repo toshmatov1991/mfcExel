@@ -97,8 +97,7 @@ namespace exel_for_mfc
                                             Comment = reg.Comment,
                                             Trek = reg.Trek,
                                             MailingDate = reg.MailingDate,
-                                            IdApplicant = appl.Id,
-                                            Commentar = reg.Comment
+                                            IdApplicant = appl.Id
                                         }).AsNoTracking().ToList();
 
               dataGrid.ItemsSource = MyList;
