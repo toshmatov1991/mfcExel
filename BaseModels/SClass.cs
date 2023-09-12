@@ -14,18 +14,19 @@ namespace exel_for_mfc
         public string? Name { get; set; }
         public string? Lastname { get; set; }
         public string? Snils { get; set; }
-        public dynamic? Area { get; set; }
-        public dynamic? Local { get; set; }
+        public int? Area { get; set; }
+        public int? Local { get; set; }
         public string? Adress { get; set; }
         public dynamic? Lgota { get; set; } // privel
-        public dynamic? Pay { get; set; }
+        public int? Pay { get; set; }
         public string? Sernumb { get; set; }
         public DateTime? DateGetSert { get; set; }
-        public dynamic? Solution { get; set; } //Тип решения
+        public int? Solution { get; set; } //Тип решения
         public string? DateAndNumbSolutionSert { get; set; } //Дата и номер решения по серту
         public string? Comment { get; set; }
         public string? Trek { get; set; }
         public DateTime? MailingDate { get; set; }
         public int? IdApplicant { get; set; }
+        public string? Commentar { get; set; }
     }
 }

@@ -26,8 +26,7 @@ namespace exel_for_mfc
         public static List<Privilege>? PrivelCombobox { get; set; }
         public static List<SolutionType>? SolCombobox { get; set; }
 
-        bool flagfix = true;
-
+        private bool flagfix = true;
 
         public TableWindow()
         {
@@ -38,77 +37,22 @@ namespace exel_for_mfc
         //Получаем измененные данные после редактирования ячейки
         private async void dataGrid_CellEditEnding(object sender, DataGridCellEditEndingEventArgs e)
         {
-            //Считывание строки
-            SClass? a = e.Row.Item as SClass;
+             //Считывание строки
+             SClass? a = e.Row.Item as SClass;
 
             //Сделать заполнение комментария отдельным окном? типо реализовать mvvm
             try
             {
                 if (flagfix)
                 {
-                    //Непосредственно редактирование ячейки (Обновление строки) - Заявитель
+                    //Непосредственно редактирование ячейки (Обновление строки) - Заявитель - Регистр
                     using (ExDbContext db = new())
                     {
                         //Обновление таблицы Заявитель
-                        int ApplicantUpdated = await db.Database.ExecuteSqlRawAsync("UPDATE Applicant SET Firstname = {0}, Middlename = {1}, Lastname = {2}, Area_FK = {3}, Locality_FK = {4}, Adress = {5}, Snils = {6}, Privileges_FK = {7} WHERE Id = {8}", a.Family, a.Name, a.Lastname, ReturnIdAreaAsync(a.Area), ReturnIdLocalAsync(a.Local), a.Adress, a.Snils, ReturnIdPrivelAsync(a.Lgota), a.IdApplicant);
-                    }
+                        await db.Database.ExecuteSqlRawAsync("UPDATE Applicant SET Firstname = {0}, Middlename = {1}, Lastname = {2}, Adress = {3}, Snils = {4} WHERE Id = {5}", a.Family, a.Name, a.Lastname, a.Adress, a.Snils, a.IdApplicant);
 
-                    //Вернуть идентификатор Района
-                    static async Task<int> ReturnIdAreaAsync(string _area)
-                    {
-                        using (ExDbContext db = new())
-                        {
-                            var IdArea = await db.Areas.Where(u => u.AreaName == _area).AsNoTracking().FirstOrDefaultAsync();
-                            return IdArea.Id - 1;
-                        }
-                    }
-
-                    //Вернуть идентификатор Населенного пункта
-                    static async Task<int> ReturnIdLocalAsync(string _loc)
-                    {
-                        using (ExDbContext db = new())
-                        {
-                            var IdLoc = await db.Localities.Where(u => u.LocalName == _loc).AsNoTracking().FirstOrDefaultAsync();
-                            return IdLoc.Id - 1;
-                        }
-                    }
-
-                    //Вернуть идентификатор Льготы
-                    static async Task<int> ReturnIdPrivelAsync(string _priv)
-                    {
-                        using (ExDbContext db = new())
-                        {
-                            var IdPriv = await db.Privileges.Where(u => u.PrivilegesName == _priv).AsNoTracking().FirstOrDefaultAsync();
-                            return IdPriv.Id - 1;
-                        }
-                    }
-
-                    //Непосредственно редактирование ячейки (Обновление строки) - Регистр
-                    using (ExDbContext db = new())
-                    {
                         //Обновление таблицы Регистр
-                        int RegistrUpdated = await db.Database.ExecuteSqlRawAsync("UPDATE Registry SET Applicant_FK = {0}, SerialAndNumberSert = {1}, DateGetSert = {2}, PayAmount_FK = {3}, Solution_FK = {4}, DateAndNumbSolutionSert = {5}, Comment = {6}, Trek = {7}, MailingDate = {8} WHERE Id = {9}",
-                                                                       a.IdApplicant, a.Sernumb, a.DateGetSert, ReturnIdPaylAsync(a.Pay), ReturnIdSolutionAsync(a.Solution), a.DateAndNumbSolutionSert, a.Comment, a.Trek, a.MailingDate, a.IdReg);
-                    }
-
-                    //Вернуть идентификатор Выплаты
-                    static async Task<decimal> ReturnIdPaylAsync(decimal _pay)
-                    {
-                        using (ExDbContext db = new())
-                        {
-                            var IdPay = await db.PayAmounts.Where(u => u.Pay == _pay).AsNoTracking().FirstOrDefaultAsync();
-                            return IdPay.Id - 1;
-                        }
-                    }
-
-                    //Вернуть идентификатор Решения
-                    static async Task<decimal> ReturnIdSolutionAsync(string _sol)
-                    {
-                        using (ExDbContext db = new())
-                        {
-                            var IdSol = await db.SolutionTypes.Where(u => u.SolutionName == _sol).AsNoTracking().FirstOrDefaultAsync();
-                            return IdSol.Id - 1;
-                        }
+                        await db.Database.ExecuteSqlRawAsync("UPDATE Registry SET SerialAndNumberSert = {0}, DateGetSert = {1}, DateAndNumbSolutionSert = {2}, Comment = {3}, Trek = {4}, MailingDate = {5} WHERE Id = {6}", a.Sernumb, a.DateGetSert, a.DateAndNumbSolutionSert, a.Comment, a.Trek, a.MailingDate, a.IdReg);
                     }
 
                     flagfix = false;
@@ -120,31 +64,8 @@ namespace exel_for_mfc
             }
             catch (Exception ex)
             {
-
                 MessageBox.Show(ex.Message);
             }
-
-          
-
-            //Password? p = e.Row.Item as Password;
-            //if (p.Id != 0)
-            //{
-            //    //Редактирование
-            //    if (flagfix)
-            //    {
-            //        var customer = await db.Passwords.Where(c => c.Id == p.Id).FirstOrDefaultAsync();
-
-            //        customer.Login = p.Login;
-            //        customer.Pass = p.Pass;
-            //        await db.SaveChangesAsync();
-            //        flagfix = false;
-            //        dataGrid.ItemsSource = await db.Passwords.ToListAsync();
-            //        dataGrid.Items.Refresh();
-            //        dataGrid.CancelEdit();
-            //    }
-            //    flagfix = true;
-            //}
-
         }
 
      
@@ -176,7 +97,8 @@ namespace exel_for_mfc
                                             Comment = reg.Comment,
                                             Trek = reg.Trek,
                                             MailingDate = reg.MailingDate,
-                                            IdApplicant = appl.Id
+                                            IdApplicant = appl.Id,
+                                            Commentar = reg.Comment
                                         }).AsNoTracking().ToList();
 
               dataGrid.ItemsSource = MyList;
@@ -189,7 +111,50 @@ namespace exel_for_mfc
             };
          }
 
-        //Двойной клик, обработка множественного нажатия мыши, чтоб не вылетала программа
+        private async void AreaComboEvent(object sender, EventArgs e)
+        {
+            //Меняем район Заявителю
+            using (ExDbContext db = new())
+            {
+                try
+                {
+                    // MessageBox.Show((sender as ComboBox)?.SelectedIndex.ToString() + " id Заявителя -> " + (dataGrid.SelectedItem as SClass).IdApplicant.ToString());
+                    int utre = await db.Database.ExecuteSqlRawAsync("UPDATE Applicant SET Area_FK = {0} WHERE Id = {1}", (sender as ComboBox)?.SelectedIndex + 1, (dataGrid.SelectedItem as SClass)?.IdApplicant);
+                    if (utre == 1)
+                        MessageBox.Show("Успешно");
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message);
+                }
+             
+            }    
+        }
 
+        private void LocalComboEvent(object sender, EventArgs e)
+        {
+           // MessageBox.Show("Населенный пункт");
+        }
+
+        private void PrivilegesComboEvent(object sender, EventArgs e)
+        {
+           // MessageBox.Show("Льготы");
+        }
+
+        private void PayComboEvent(object sender, EventArgs e)
+        {
+           // MessageBox.Show("Выплаты");
+        }
+
+        private void SolutionComboEvent(object sender, EventArgs e)
+        {
+            //MessageBox.Show("Решение");
+        }
     }
+
+
+
+
+    //Двойной клик, обработка множественного нажатия мыши, чтоб не вылетала программа
+
 }

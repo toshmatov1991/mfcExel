@@ -19,8 +19,7 @@
                         <DataTemplate>
                             <ComboBox ItemsSource="{Binding Path=AreaCombobox, RelativeSource={RelativeSource AncestorType={x:Type Window}}}"
                                       DisplayMemberPath="AreaName"
-                                      SelectedIndex="{Binding Area, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}">
-                            </ComboBox>
+                                      SelectedIndex="{Binding Area, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" DropDownClosed="AreaComboEvent"/>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
@@ -29,7 +28,7 @@
                         <DataTemplate>
                             <ComboBox ItemsSource="{Binding Path=LocalCombobox, RelativeSource={RelativeSource AncestorType={x:Type Window}}}"
                                       DisplayMemberPath="LocalName"
-                                      SelectedIndex="{Binding Local, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}">
+                                      SelectedIndex="{Binding Local, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" DropDownClosed="LocalComboEvent">
                             </ComboBox>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
@@ -40,7 +39,7 @@
                         <DataTemplate>
                             <ComboBox ItemsSource="{Binding Path=PrivelCombobox, RelativeSource={RelativeSource AncestorType={x:Type Window}}}"
                                       DisplayMemberPath="PrivilegesName"
-                                      SelectedIndex="{Binding Lgota, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}">
+                                      SelectedIndex="{Binding Lgota, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" DropDownClosed="PrivilegesComboEvent">
                             </ComboBox>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
@@ -52,7 +51,7 @@
                         <DataTemplate>
                             <ComboBox ItemsSource="{Binding Path=PayCombobox, RelativeSource={RelativeSource AncestorType={x:Type Window}}}"
                                       DisplayMemberPath="Pay"
-                                      SelectedIndex="{Binding Pay, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}">
+                                      SelectedIndex="{Binding Pay, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" DropDownClosed="PayComboEvent">
                             </ComboBox>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
@@ -62,7 +61,7 @@
                         <DataTemplate>
                             <ComboBox ItemsSource="{Binding Path=SolCombobox, RelativeSource={RelativeSource AncestorType={x:Type Window}}}"
                                       DisplayMemberPath="SolutionName"
-                                      SelectedIndex="{Binding Solution, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}">
+                                      SelectedIndex="{Binding Solution, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" DropDownClosed="SolutionComboEvent">
                             </ComboBox>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
@@ -70,6 +69,7 @@
                 <DataGridTextColumn Binding="{Binding DateAndNumbSolutionSert, UpdateSourceTrigger=PropertyChanged}" Header="Дата и номер решения"/>
                 <DataGridTextColumn Binding="{Binding Trek, UpdateSourceTrigger=PropertyChanged}" Header="Трек"/>
                 <DataGridTextColumn Binding="{Binding MailingDate, UpdateSourceTrigger=PropertyChanged}" Header="Дата отправки почтой"/>
+                <DataGridTextColumn Binding="{Binding Commentar, UpdateSourceTrigger=PropertyChanged}" Header="Комментарий"/>
             </DataGrid.Columns>
         </DataGrid>
     </Grid>
