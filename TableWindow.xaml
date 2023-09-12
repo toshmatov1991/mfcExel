@@ -74,7 +74,7 @@
             <DataGrid.RowDetailsTemplate>
                 <DataTemplate>
                     <StackPanel Orientation="Horizontal">
-                        <TextBlock Text="{Binding Path=Comment}" />
+                        <TextBox Text="{Binding Path=Comment, UpdateSourceTrigger=PropertyChanged}" />
                         <TextBlock Text=" комментарий" />
                     </StackPanel>
                 </DataTemplate>
