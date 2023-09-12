@@ -7,14 +7,14 @@
         Title="Главное окно" Height="700" Width="1300">
 
     <Grid>
-        <DataGrid x:Name="dataGrid" AutoGenerateColumns="False" CanUserAddRows="False" CellEditEnding="dataGrid_CellEditEnding" Margin="0,0,105,0">
+        <DataGrid x:Name="dataGrid" CanUserSortColumns="True"  Height="590" HorizontalAlignment="Left" VerticalAlignment="Top" AutoGenerateColumns="False" CanUserAddRows="False" CellEditEnding="dataGrid_CellEditEnding" Width="1290">
             <DataGrid.Columns>
                 <DataGridTextColumn Binding="{Binding IdReg, UpdateSourceTrigger=PropertyChanged}" IsReadOnly="True" Header="№п/п"/>
                 <DataGridTextColumn Binding="{Binding Family, UpdateSourceTrigger=PropertyChanged}" Header="Фамилия"/>
                 <DataGridTextColumn Binding="{Binding Name, UpdateSourceTrigger=PropertyChanged}" Header="Имя"/>
                 <DataGridTextColumn Binding="{Binding Lastname, UpdateSourceTrigger=PropertyChanged}" Header="Отчество"/>
                 <DataGridTextColumn Binding="{Binding Snils, UpdateSourceTrigger=PropertyChanged}" Header="Снилс"/>
-                <DataGridTemplateColumn Header="Район">
+                <DataGridTemplateColumn CanUserSort="True" Header="Район" SortMemberPath="Area">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <ComboBox ItemsSource="{Binding Path=AreaCombobox, RelativeSource={RelativeSource AncestorType={x:Type Window}}}"
@@ -23,7 +23,7 @@
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
-                <DataGridTemplateColumn Header="Населенный пункт">
+                <DataGridTemplateColumn Header="Населенный пункт" CanUserSort="True" SortMemberPath="Local">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <ComboBox ItemsSource="{Binding Path=LocalCombobox, RelativeSource={RelativeSource AncestorType={x:Type Window}}}"
@@ -34,7 +34,7 @@
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
                 <DataGridTextColumn Binding="{Binding Adress, UpdateSourceTrigger=PropertyChanged}" Header="Адрес"/>
-                <DataGridTemplateColumn Header="Льгота">
+                <DataGridTemplateColumn Header="Льгота" CanUserSort="True" SortMemberPath="Lgota">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <ComboBox ItemsSource="{Binding Path=PrivelCombobox, RelativeSource={RelativeSource AncestorType={x:Type Window}}}"
@@ -46,7 +46,7 @@
                 </DataGridTemplateColumn>
                 <DataGridTextColumn Binding="{Binding Sernumb, UpdateSourceTrigger=PropertyChanged}" Header="Серия и № сертификата"/>
                 <DataGridTextColumn Binding="{Binding DateGetSert, UpdateSourceTrigger=PropertyChanged}" Header="Дата выдачи"/>
-                <DataGridTemplateColumn Header="Размер выплаты">
+                <DataGridTemplateColumn Header="Размер выплаты" CanUserSort="True" SortMemberPath="Pay">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <ComboBox ItemsSource="{Binding Path=PayCombobox, RelativeSource={RelativeSource AncestorType={x:Type Window}}}"
@@ -56,7 +56,7 @@
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
-                <DataGridTemplateColumn Header="Тип решения">
+                <DataGridTemplateColumn Header="Тип решения" CanUserSort="True" SortMemberPath="Solution">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <ComboBox ItemsSource="{Binding Path=SolCombobox, RelativeSource={RelativeSource AncestorType={x:Type Window}}}"
