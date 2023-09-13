@@ -1,9 +1,13 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using DocumentFormat.OpenXml.Packaging;
+using DocumentFormat.OpenXml.Spreadsheet;
+using DocumentFormat.OpenXml;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.VisualBasic;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -16,6 +20,14 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using Newtonsoft.Json;
+
+/*RowEditEnding
+Возникает при переходе пользователем на новую строку после редактирования текущей.
+Как и в случае CellEditEnding, в этот момент можно выполнить проверку достоверности и отменить изменения. 
+Обычно проверка достоверности охватывает несколько столбцов,
+например, когда значение в одном столбце не должно быть больше значения в другом столбце*/
+
 
 namespace exel_for_mfc
 {
@@ -26,6 +38,7 @@ namespace exel_for_mfc
         public static List<PayAmount>? PayCombobox { get; set; }
         public static List<Privilege>? PrivelCombobox { get; set; }
         public static List<SolutionType>? SolCombobox { get; set; }
+        public static List<SClass>? MyList { get; set; }
 
         public TableWindow()
         {
@@ -39,7 +52,7 @@ namespace exel_for_mfc
         {
             using (ExDbContext db = new())
             {
-                var MyList = (from reg in db.Registries
+                     MyList = (from reg in db.Registries
                               join appl in db.Applicants on reg.ApplicantFk equals appl.Id
                               select new SClass
                               {
@@ -73,7 +86,7 @@ namespace exel_for_mfc
             };
         }
 
-        //Событие редактирвания ячейки
+        //Событие редактирования ячейки
         private async void dataGrid_CellEditEnding(object sender, DataGridCellEditEndingEventArgs e)
         {
             //Сделать заполнение комментария отдельным окном? типо реализовать mvvm
@@ -98,6 +111,98 @@ namespace exel_for_mfc
                 MessageBox.Show(ex.Message);
             }
         }
+
+
+        //Сохранить таблицу в Excel
+        void SaveDataInExel()
+        {
+            // Lets converts our object data to Datatable for a simplified logic.
+            // Datatable is most easy way to deal with complex datatypes for easy reading and formatting. 
+            DataTable table = (DataTable)JsonConvert.DeserializeObject(JsonConvert.SerializeObject(MyList), typeof(DataTable));
+
+            using (SpreadsheetDocument document = SpreadsheetDocument.Create(@"C:\Users\toshm\OneDrive\Рабочий стол\TestNewData.xlsx", SpreadsheetDocumentType.Workbook))
+            {
+                WorkbookPart workbookPart = document.AddWorkbookPart();
+                workbookPart.Workbook = new Workbook();
+
+                WorksheetPart worksheetPart = workbookPart.AddNewPart<WorksheetPart>();
+                var sheetData = new SheetData();
+                worksheetPart.Worksheet = new Worksheet(sheetData);
+
+                Sheets sheets = workbookPart.Workbook.AppendChild(new Sheets());
+                Sheet sheet = new Sheet() { Id = workbookPart.GetIdOfPart(worksheetPart), SheetId = 1, Name = "Sheet1" };
+
+                sheets.Append(sheet);
+
+                Row headerRow = new Row();
+
+                //Здесь постройка и название колонок
+                List<string> columns = new();
+                foreach (DataColumn column in table.Columns)
+                {
+                    columns.Add(column.ColumnName);
+
+                    Cell cell = new();
+                    cell.DataType = CellValues.String;
+                    cell.CellValue = new CellValue(DoOperation(column.ColumnName));
+                    headerRow.AppendChild(cell);
+                }
+
+                sheetData.AppendChild(headerRow);
+
+                foreach (DataRow dsrow in table.Rows)
+                {
+                    Row newRow = new Row();
+                    foreach (string col in columns)
+                    {
+                        //if (dsrow[col] == "Название колонки")
+                        //{
+
+                        //}
+                        Cell cell = new Cell();
+                        cell.DataType = CellValues.String;
+                        cell.CellValue = new CellValue(dsrow[col].ToString());//Тут значение Id
+                        newRow.AppendChild(cell);
+                    }
+
+                    sheetData.AppendChild(newRow);
+                }
+
+                workbookPart.Workbook.Save();
+            }
+
+
+            string DoOperation(string str)
+            {
+                switch (str)
+                {
+                    case "IdReg": return "id";
+                    case "Family": return "Фамилия";
+                    case "Name": return "Имя";
+                    case "Lastname": return "Отчество";
+                    case "Snils": return "Снилс";
+                    case "Area": return "Район";
+                    case "Local": return "Населенный пункт";
+                    case "Adress": return "Адрес";
+                    case "Lgota": return "Льгота";
+                    case "Sernumb": return "Серия и номер сертификата";
+                    case "DateGetSert": return "Дата выдачи сертификата";
+                    case "Solution": return "Решение";
+                    case "DateAndNumbSolutionSert": return "Дата и номер решения";
+                    case "Trek": return "Трек";
+                    case "MailingDate": return "Дата отправки";
+                    case "Comment": return "Комментарий";
+                    default: return "";
+                }
+            }
+
+
+        }
+
+
+
+
+
 
         #region События изменения значений ComboBox
         private async void AreaComboEvent(object sender, EventArgs e)
@@ -138,5 +243,11 @@ namespace exel_for_mfc
             }
         }
         #endregion
+
+        //Выгрузить в Excel
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            SaveDataInExel();
+        }
     }
 }
