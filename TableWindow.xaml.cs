@@ -249,7 +249,7 @@ namespace exel_for_mfc
         private async void CommentUpdate(object sender, TextChangedEventArgs e)
         {
             try
-            {
+            { 
                 string a = "";
                 if (e.Source.ToString().Length == 31)
                     a = null;
