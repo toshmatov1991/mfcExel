@@ -245,14 +245,29 @@ namespace exel_for_mfc
             SaveDataInExel();
         }
 
+        //Обновить коммент
         private async void CommentUpdate(object sender, TextChangedEventArgs e)
         {
-            var a = e.OriginalSource.ToString().Substring(33);
-
-            using (ExDbContext db = new())
+            try
             {
-                await db.Database.ExecuteSqlRawAsync("UPDATE Registry SET Comment = {0} WHERE Id = {1}", a, (dataGrid.SelectedItem as SClass)?.IdReg);
+                string a = "";
+                if (e.Source.ToString().Length == 31)
+                    a = null;
+
+                else
+                    a = e.OriginalSource.ToString().Substring(33);
+
+                using (ExDbContext db = new())
+                {
+                    await db.Database.ExecuteSqlRawAsync("UPDATE Registry SET Comment = {0} WHERE Id = {1}", a, (dataGrid.SelectedItem as SClass)?.IdReg);
+                }
             }
+            catch (Exception ex)
+            {
+
+                MessageBox.Show(ex.Message);
+            }
+            
         }
     }
 }
