@@ -87,7 +87,7 @@ namespace exel_for_mfc
         }
 
         //Событие редактирования ячейки
-        private async void dataGrid_CellEditEnding(object sender, DataGridCellEditEndingEventArgs e)
+        public async void dataGrid_CellEditEnding(object sender, DataGridCellEditEndingEventArgs e)
         {
             //Сделать заполнение комментария отдельным окном? типо реализовать mvvm
             try
@@ -97,13 +97,12 @@ namespace exel_for_mfc
                 {
                     //Считывание строки
                     SClass? a = e.Row.Item as SClass;
-
+                    
                     //Обновление таблицы Заявитель
                     await db.Database.ExecuteSqlRawAsync("UPDATE Applicant SET Firstname = {0}, Middlename = {1}, Lastname = {2}, Adress = {3}, Snils = {4} WHERE Id = {5}", a.Family, a.Name, a.Lastname, a.Adress, a.Snils, a.IdApplicant);
-
+                    
                     //Обновление таблицы Регистр
                     await db.Database.ExecuteSqlRawAsync("UPDATE Registry SET SerialAndNumberSert = {0}, DateGetSert = {1}, DateAndNumbSolutionSert = {2}, Comment = {3}, Trek = {4}, MailingDate = {5} WHERE Id = {6}", a.Sernumb, a.DateGetSert, a.DateAndNumbSolutionSert, a.Comment, a.Trek, a.MailingDate, a.IdReg);
-                    
                 }
             }
             catch (Exception ex)
@@ -155,10 +154,11 @@ namespace exel_for_mfc
                     Row newRow = new Row();
                     foreach (string col in columns)
                     {
-                        //if (dsrow[col] == "Название колонки")
-                        //{
+                        if(col == "Area") //if название колонки узнать, робит
+                            return;   
+                        
 
-                        //}
+                        
                         Cell cell = new Cell();
                         cell.DataType = CellValues.String;
                         cell.CellValue = new CellValue(dsrow[col].ToString());//Тут значение Id
@@ -198,11 +198,6 @@ namespace exel_for_mfc
 
 
         }
-
-
-
-
-
 
         #region События изменения значений ComboBox
         private async void AreaComboEvent(object sender, EventArgs e)
@@ -248,6 +243,16 @@ namespace exel_for_mfc
         private void Button_Click(object sender, RoutedEventArgs e)
         {
             SaveDataInExel();
+        }
+
+        private async void CommentUpdate(object sender, TextChangedEventArgs e)
+        {
+            var a = e.OriginalSource.ToString().Substring(33);
+
+            using (ExDbContext db = new())
+            {
+                await db.Database.ExecuteSqlRawAsync("UPDATE Registry SET Comment = {0} WHERE Id = {1}", a, (dataGrid.SelectedItem as SClass)?.IdReg);
+            }
         }
     }
 }
