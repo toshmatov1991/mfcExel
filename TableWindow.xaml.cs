@@ -113,7 +113,7 @@ namespace exel_for_mfc
 
 
         //Сохранить таблицу в Excel
-        void SaveDataInExel()
+        async void SaveDataInExel()
         {
             // Lets converts our object data to Datatable for a simplified logic.
             // Datatable is most easy way to deal with complex datatypes for easy reading and formatting. 
@@ -140,29 +140,93 @@ namespace exel_for_mfc
                 foreach (DataColumn column in table.Columns)
                 {
                     columns.Add(column.ColumnName);
-
                     Cell cell = new();
                     cell.DataType = CellValues.String;
+                    
                     cell.CellValue = new CellValue(DoOperation(column.ColumnName));
                     headerRow.AppendChild(cell);
                 }
 
                 sheetData.AppendChild(headerRow);
 
+                //Данные заносятся здесь
                 foreach (DataRow dsrow in table.Rows)
                 {
                     Row newRow = new Row();
                     foreach (string col in columns)
                     {
-                        if(col == "Area") //if название колонки узнать, робит
-                            return;   
-                        
+                        if (col == "Area")
+                        {
+                                Cell cell = new Cell();
+                                cell.DataType = CellValues.String;
+                                cell.CellValue = new CellValue(dsrow[col].ToString());//Тут значение Id
+                                using (ExDbContext db = new())
+                                {
+                                    var GetNameOfArea = await db.Areas.Where(u => u.Id == Convert.ToInt32(cell.CellValue.Text) + 1).FirstOrDefaultAsync();
+                                    cell.CellValue = new CellValue(GetNameOfArea.AreaName);
+                                    newRow.AppendChild(cell);
+                                }
+                        }
 
-                        
-                        Cell cell = new Cell();
-                        cell.DataType = CellValues.String;
-                        cell.CellValue = new CellValue(dsrow[col].ToString());//Тут значение Id
-                        newRow.AppendChild(cell);
+                        else if (col == "Local")
+                        {
+                            Cell cell = new Cell();
+                            cell.DataType = CellValues.String;
+                            cell.CellValue = new CellValue(dsrow[col].ToString());//Тут значение Id
+                            using (ExDbContext db = new())
+                            {
+                                var GetNameOfLocal = await db.Localities.Where(u => u.Id == Convert.ToInt32(cell.CellValue.Text) + 1).FirstOrDefaultAsync();
+                                cell.CellValue = new CellValue(GetNameOfLocal.LocalName);
+                                newRow.AppendChild(cell);
+                            }
+                        }
+
+                        else if (col == "Lgota")
+                        {
+                            Cell cell = new Cell();
+                            cell.DataType = CellValues.String;
+                            cell.CellValue = new CellValue(dsrow[col].ToString());//Тут значение Id
+                            using (ExDbContext db = new())
+                            {
+                                var GetNameOfLocal = await db.Privileges.Where(u => u.Id == Convert.ToInt32(cell.CellValue.Text) + 1).FirstOrDefaultAsync();
+                                cell.CellValue = new CellValue(GetNameOfLocal.PrivilegesName);
+                                newRow.AppendChild(cell);
+                            }
+                        }
+
+                        else if (col == "Pay")
+                        {
+                            Cell cell = new Cell();
+                            cell.DataType = CellValues.String;
+                            cell.CellValue = new CellValue(dsrow[col].ToString());//Тут значение Id
+                            using (ExDbContext db = new())
+                            {
+                                var GetNameOfLocal = await db.PayAmounts.Where(u => u.Id == Convert.ToInt32(cell.CellValue.Text) + 1).FirstOrDefaultAsync();
+                                cell.CellValue = new CellValue((decimal)GetNameOfLocal.Pay);
+                                newRow.AppendChild(cell);
+                            }
+                        }
+
+                        else if (col == "Solution")
+                        {
+                            Cell cell = new Cell();
+                            cell.DataType = CellValues.String;
+                            cell.CellValue = new CellValue(dsrow[col].ToString());//Тут значение Id
+                            using (ExDbContext db = new())
+                            {
+                                var GetNameOfLocal = await db.SolutionTypes.Where(u => u.Id == Convert.ToInt32(cell.CellValue.Text) + 1).FirstOrDefaultAsync();
+                                cell.CellValue = new CellValue(GetNameOfLocal.SolutionName);
+                                newRow.AppendChild(cell);
+                            }
+                        }
+
+                        else
+                        {
+                            Cell cell = new Cell();
+                            cell.DataType = CellValues.String;
+                            cell.CellValue = new CellValue(dsrow[col].ToString());//Тут значение Id
+                            newRow.AppendChild(cell);
+                        }
                     }
 
                     sheetData.AppendChild(newRow);
@@ -176,7 +240,7 @@ namespace exel_for_mfc
             {
                 switch (str)
                 {
-                    case "IdReg": return "id";
+                    case "IdReg": return "№ п/п";
                     case "Family": return "Фамилия";
                     case "Name": return "Имя";
                     case "Lastname": return "Отчество";
@@ -190,13 +254,12 @@ namespace exel_for_mfc
                     case "Solution": return "Решение";
                     case "DateAndNumbSolutionSert": return "Дата и номер решения";
                     case "Trek": return "Трек";
+                    case "Pay": return "Размер выплаты";
                     case "MailingDate": return "Дата отправки";
                     case "Comment": return "Комментарий";
                     default: return "";
                 }
             }
-
-
         }
 
         #region События изменения значений ComboBox

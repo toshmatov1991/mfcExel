@@ -57,22 +57,22 @@
                         </DataTemplate>
                     </DataGridTemplateColumn.CellEditingTemplate>
                 </DataGridTemplateColumn>
-                <DataGridTemplateColumn Header="Размер выплаты" CanUserSort="True" SortMemberPath="Pay">
-                    <DataGridTemplateColumn.CellTemplate>
-                        <DataTemplate>
-                            <ComboBox ItemsSource="{Binding Path=PayCombobox, RelativeSource={RelativeSource AncestorType={x:Type Window}}}"
-                                      DisplayMemberPath="Pay"
-                                      SelectedIndex="{Binding Pay, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" DropDownClosed="PayComboEvent">
-                            </ComboBox>
-                        </DataTemplate>
-                    </DataGridTemplateColumn.CellTemplate>
-                </DataGridTemplateColumn>
                 <DataGridTemplateColumn Header="Тип решения" CanUserSort="True" SortMemberPath="Solution">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <ComboBox ItemsSource="{Binding Path=SolCombobox, RelativeSource={RelativeSource AncestorType={x:Type Window}}}"
                                       DisplayMemberPath="SolutionName"
                                       SelectedIndex="{Binding Solution, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" DropDownClosed="SolutionComboEvent">
+                            </ComboBox>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTemplateColumn Header="Размер выплаты" CanUserSort="True" SortMemberPath="Pay">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <ComboBox ItemsSource="{Binding Path=PayCombobox, RelativeSource={RelativeSource AncestorType={x:Type Window}}}"
+                                      DisplayMemberPath="Pay"
+                                      SelectedIndex="{Binding Pay, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" DropDownClosed="PayComboEvent">
                             </ComboBox>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
@@ -87,7 +87,7 @@
             <DataGrid.RowDetailsTemplate>
                 <DataTemplate>
                     <StackPanel Orientation="Horizontal" Height="33" VerticalAlignment="Center">
-                        <TextBlock Text="Трек: "
+                        <TextBlock Text="   Трек:  "
                                    FontWeight="DemiBold"
                                    VerticalAlignment="Center"/>
                         <TextBox Text="{Binding Path=Trek, UpdateSourceTrigger=PropertyChanged}"
@@ -95,7 +95,7 @@
                                  FontSize="14"
                                  VerticalContentAlignment="Center"
                                  Foreground="DarkCyan"/>
-                        <TextBlock Text="  Дата отправки почтой: "
+                        <TextBlock Text="      Дата отправки почтой:  "
                                    FontWeight="DemiBold"
                                    VerticalAlignment="Center"/>
                         <TextBox Text="{Binding Path=MailingDate, UpdateSourceTrigger=PropertyChanged}"
@@ -103,7 +103,7 @@
                                  FontSize="14"
                                  VerticalContentAlignment="Center"
                                  Foreground="DarkCyan"/>
-                        <TextBlock Text="  Комментарий: "
+                        <TextBlock Text="      Комментарий:  "
                                    FontWeight="DemiBold"
                                    VerticalAlignment="Center"/>
                         <TextBox Text="{Binding Path=Comment, UpdateSourceTrigger=PropertyChanged}"
