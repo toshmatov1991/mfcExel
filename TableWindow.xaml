@@ -78,16 +78,39 @@
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
                 <DataGridTextColumn Binding="{Binding DateAndNumbSolutionSert, UpdateSourceTrigger=PropertyChanged}" Header="Дата и номер решения"/>
-                <DataGridTextColumn Binding="{Binding Trek, UpdateSourceTrigger=PropertyChanged}" Header="Трек"/>
-                <DataGridTextColumn Binding="{Binding MailingDate, UpdateSourceTrigger=PropertyChanged}" Header="Дата отправки почтой"/>
+                <DataGridTextColumn Binding="{Binding Trek, UpdateSourceTrigger=PropertyChanged}" Header="Трек" Visibility="Hidden"/>
+                <DataGridTextColumn Binding="{Binding MailingDate, UpdateSourceTrigger=PropertyChanged}" Visibility="Hidden" Header="Дата отправки почтой"/>
                 <DataGridTextColumn Binding="{Binding Comment, UpdateSourceTrigger=PropertyChanged}" Header="" Visibility="Hidden"/>
             </DataGrid.Columns>
 
             <!-- Отображение комментария при выделении строки -->
             <DataGrid.RowDetailsTemplate>
                 <DataTemplate>
-                    <StackPanel Orientation="Horizontal">
-                        <TextBox Text="{Binding Path=Comment, UpdateSourceTrigger=PropertyChanged}" TextChanged="CommentUpdate"/>
+                    <StackPanel Orientation="Horizontal" Height="33" VerticalAlignment="Center">
+                        <TextBlock Text="Трек: "
+                                   FontWeight="DemiBold"
+                                   VerticalAlignment="Center"/>
+                        <TextBox Text="{Binding Path=Trek, UpdateSourceTrigger=PropertyChanged}"
+                                 TextChanged="CommentUpdate" 
+                                 FontSize="14"
+                                 VerticalContentAlignment="Center"
+                                 Foreground="DarkCyan"/>
+                        <TextBlock Text="  Дата отправки почтой: "
+                                   FontWeight="DemiBold"
+                                   VerticalAlignment="Center"/>
+                        <TextBox Text="{Binding Path=MailingDate, UpdateSourceTrigger=PropertyChanged}"
+                                 TextChanged="CommentUpdate" 
+                                 FontSize="14"
+                                 VerticalContentAlignment="Center"
+                                 Foreground="DarkCyan"/>
+                        <TextBlock Text="  Комментарий: "
+                                   FontWeight="DemiBold"
+                                   VerticalAlignment="Center"/>
+                        <TextBox Text="{Binding Path=Comment, UpdateSourceTrigger=PropertyChanged}"
+                                 TextChanged="CommentUpdate" 
+                                 VerticalContentAlignment="Center"
+                                 FontSize="14"
+                                 Foreground="DarkCyan"/>
                     </StackPanel>
                 </DataTemplate>
             </DataGrid.RowDetailsTemplate>
