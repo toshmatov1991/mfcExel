@@ -118,7 +118,7 @@ namespace exel_for_mfc
             // Lets converts our object data to Datatable for a simplified logic.
             // Datatable is most easy way to deal with complex datatypes for easy reading and formatting. 
             DataTable table = (DataTable)JsonConvert.DeserializeObject(JsonConvert.SerializeObject(MyList), typeof(DataTable));
-
+           
             using (SpreadsheetDocument document = SpreadsheetDocument.Create(@"C:\Users\toshm\OneDrive\Рабочий стол\TestNewData.xlsx", SpreadsheetDocumentType.Workbook))
             {
                 WorkbookPart workbookPart = document.AddWorkbookPart();
@@ -126,15 +126,24 @@ namespace exel_for_mfc
 
                 WorksheetPart worksheetPart = workbookPart.AddNewPart<WorksheetPart>();
                 var sheetData = new SheetData();
+                
                 worksheetPart.Worksheet = new Worksheet(sheetData);
+
+                Columns column1 = new();
+
+                column1.Append(new Column() { Min = 1, Max = 2, Width = 20, CustomWidth = true });
+                worksheetPart.Worksheet.Append(column1);
+
 
                 Sheets sheets = workbookPart.Workbook.AppendChild(new Sheets());
                 Sheet sheet = new Sheet() { Id = workbookPart.GetIdOfPart(worksheetPart), SheetId = 1, Name = "Sheet1" };
-
                 sheets.Append(sheet);
+                
+                
+                
 
-                Row headerRow = new Row();
-
+                Row headerRow = new();
+                
                 //Здесь постройка и название колонок
                 List<string> columns = new();
                 foreach (DataColumn column in table.Columns)
@@ -142,9 +151,9 @@ namespace exel_for_mfc
                     columns.Add(column.ColumnName);
                     Cell cell = new();
                     cell.DataType = CellValues.String;
-                    
                     cell.CellValue = new CellValue(DoOperation(column.ColumnName));
                     headerRow.AppendChild(cell);
+                    
                 }
 
                 sheetData.AppendChild(headerRow);
@@ -153,6 +162,7 @@ namespace exel_for_mfc
                 foreach (DataRow dsrow in table.Rows)
                 {
                     Row newRow = new Row();
+                    
                     foreach (string col in columns)
                     {
                         if (col == "Area")
@@ -211,6 +221,7 @@ namespace exel_for_mfc
                         {
                             Cell cell = new Cell();
                             cell.DataType = CellValues.String;
+
                             cell.CellValue = new CellValue(dsrow[col].ToString());//Тут значение Id
                             using (ExDbContext db = new())
                             {
@@ -223,12 +234,14 @@ namespace exel_for_mfc
                         else
                         {
                             Cell cell = new Cell();
+                            
                             cell.DataType = CellValues.String;
                             cell.CellValue = new CellValue(dsrow[col].ToString());//Тут значение Id
                             newRow.AppendChild(cell);
                         }
                     }
-
+                    
+                    
                     sheetData.AppendChild(newRow);
                 }
 
