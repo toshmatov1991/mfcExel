@@ -21,6 +21,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using Newtonsoft.Json;
+using Microsoft.Win32;
 
 /*RowEditEnding
 Возникает при переходе пользователем на новую строку после редактирования текущей.
@@ -45,7 +46,6 @@ namespace exel_for_mfc
             InitializeComponent();
             Start();
         }
-
         //Запрос для заполнения таблицы
         //Комментарий чтоб появлялся при наведении
         void Start()
@@ -85,7 +85,6 @@ namespace exel_for_mfc
                 SolCombobox = db.SolutionTypes.FromSqlRaw("SELECT * FROM SolutionType").AsNoTracking().ToList();
             };
         }
-
         //Событие редактирования ячейки
         public async void dataGrid_CellEditEnding(object sender, DataGridCellEditEndingEventArgs e)
         {
@@ -113,167 +112,173 @@ namespace exel_for_mfc
 
 
         //Сохранить таблицу в Excel
-        async void SaveDataInExel()
+        async Task SaveDataInExel()
         {
-            // Lets converts our object data to Datatable for a simplified logic.
-            // Datatable is most easy way to deal with complex datatypes for easy reading and formatting. 
-            DataTable table = (DataTable)JsonConvert.DeserializeObject(JsonConvert.SerializeObject(MyList), typeof(DataTable));
-           
-            using (SpreadsheetDocument document = SpreadsheetDocument.Create(@"C:\Users\toshm\OneDrive\Рабочий стол\TestNewData.xlsx", SpreadsheetDocumentType.Workbook))
+            await Task.Run(async () =>
             {
-                WorkbookPart workbookPart = document.AddWorkbookPart();
-                workbookPart.Workbook = new Workbook();
-
-                WorksheetPart worksheetPart = workbookPart.AddNewPart<WorksheetPart>();
-                var sheetData = new SheetData();
-                
-                worksheetPart.Worksheet = new Worksheet(sheetData);
-
-                Columns column1 = new();
-
-                column1.Append(new Column() { Min = 1, Max = 2, Width = 20, CustomWidth = true });
-                worksheetPart.Worksheet.Append(column1);
-
-
-                Sheets sheets = workbookPart.Workbook.AppendChild(new Sheets());
-                Sheet sheet = new Sheet() { Id = workbookPart.GetIdOfPart(worksheetPart), SheetId = 1, Name = "Sheet1" };
-                sheets.Append(sheet);
-                
-                
-                
-
-                Row headerRow = new();
-                
-                //Здесь постройка и название колонок
-                List<string> columns = new();
-                foreach (DataColumn column in table.Columns)
+                SaveFileDialog dialog = new SaveFileDialog();
+                dialog.Filter = "Execl files (*.xlsx)|*.xlsx";
+                string nameFile = "";
+                if (dialog.ShowDialog() == true)
                 {
-                    columns.Add(column.ColumnName);
-                    Cell cell = new();
-                    cell.DataType = CellValues.String;
-                    cell.CellValue = new CellValue(DoOperation(column.ColumnName));
-                    headerRow.AppendChild(cell);
-                    
-                }
+                    nameFile = dialog.FileName;
+                    // Lets converts our object data to Datatable for a simplified logic.
+                    // Datatable is most easy way to deal with complex datatypes for easy reading and formatting. 
+                    DataTable table = (DataTable)JsonConvert.DeserializeObject(JsonConvert.SerializeObject(MyList), typeof(DataTable));
 
-                sheetData.AppendChild(headerRow);
-
-                //Данные заносятся здесь
-                foreach (DataRow dsrow in table.Rows)
-                {
-                    Row newRow = new Row();
-                    
-                    foreach (string col in columns)
+                    using (SpreadsheetDocument document = SpreadsheetDocument.Create(nameFile, SpreadsheetDocumentType.Workbook))
                     {
-                        if (col == "Area")
+                        WorkbookPart workbookPart = document.AddWorkbookPart();
+                        workbookPart.Workbook = new Workbook();
+
+                        WorksheetPart worksheetPart = workbookPart.AddNewPart<WorksheetPart>();
+                        var sheetData = new SheetData();
+
+                        worksheetPart.Worksheet = new Worksheet(sheetData);
+
+
+                        Sheets sheets = workbookPart.Workbook.AppendChild(new Sheets());
+                        Sheet sheet = new Sheet() { Id = workbookPart.GetIdOfPart(worksheetPart), SheetId = 1, Name = "Sheet1" };
+                        
+                        sheets.Append(sheet);
+
+                        Row headerRow = new();
+
+                        //Здесь постройка и название колонок
+                        List<string> columns = new();
+                        foreach (DataColumn column in table.Columns)
                         {
-                                Cell cell = new Cell();
-                                cell.DataType = CellValues.String;
-                                cell.CellValue = new CellValue(dsrow[col].ToString());//Тут значение Id
-                                using (ExDbContext db = new())
+                            columns.Add(column.ColumnName);
+                            Cell cell = new();
+                            cell.DataType = CellValues.String;
+                            cell.CellValue = new CellValue(DoOperation(column.ColumnName));
+                            headerRow.AppendChild(cell);
+
+                        }
+
+                        sheetData.AppendChild(headerRow);
+
+                        //Данные заносятся здесь
+                        foreach (DataRow dsrow in table.Rows)
+                        {
+                            Row newRow = new Row();
+
+                            foreach (string col in columns)
+                            {
+                                if (col == "Area")
                                 {
-                                    var GetNameOfArea = await db.Areas.Where(u => u.Id == Convert.ToInt32(cell.CellValue.Text) + 1).FirstOrDefaultAsync();
-                                    cell.CellValue = new CellValue(GetNameOfArea.AreaName);
+                                    Cell cell = new Cell();
+                                    cell.DataType = CellValues.String;
+                                    cell.CellValue = new CellValue(dsrow[col].ToString());//Тут значение Id
+                                    using (ExDbContext db = new())
+                                    {
+                                        var GetNameOfArea = await db.Areas.Where(u => u.Id == Convert.ToInt32(cell.CellValue.Text) + 1).FirstOrDefaultAsync();
+                                        cell.CellValue = new CellValue(GetNameOfArea.AreaName);
+                                        newRow.AppendChild(cell);
+                                    }
+                                }
+
+                                else if (col == "Local")
+                                {
+                                    Cell cell = new Cell();
+                                    cell.DataType = CellValues.String;
+                                    cell.CellValue = new CellValue(dsrow[col].ToString());//Тут значение Id
+                                    using (ExDbContext db = new())
+                                    {
+                                        var GetNameOfLocal = await db.Localities.Where(u => u.Id == Convert.ToInt32(cell.CellValue.Text) + 1).FirstOrDefaultAsync();
+                                        cell.CellValue = new CellValue(GetNameOfLocal.LocalName);
+                                        newRow.AppendChild(cell);
+                                    }
+                                }
+
+                                else if (col == "Lgota")
+                                {
+                                    Cell cell = new Cell();
+                                    cell.DataType = CellValues.String;
+                                    cell.CellValue = new CellValue(dsrow[col].ToString());//Тут значение Id
+                                    using (ExDbContext db = new())
+                                    {
+                                        var GetNameOfLocal = await db.Privileges.Where(u => u.Id == Convert.ToInt32(cell.CellValue.Text) + 1).FirstOrDefaultAsync();
+                                        cell.CellValue = new CellValue(GetNameOfLocal.PrivilegesName);
+                                        newRow.AppendChild(cell);
+                                    }
+                                }
+
+                                else if (col == "Pay")
+                                {
+                                    Cell cell = new Cell();
+                                    cell.DataType = CellValues.String;
+                                    cell.CellValue = new CellValue(dsrow[col].ToString());//Тут значение Id
+                                    using (ExDbContext db = new())
+                                    {
+                                        var GetNameOfLocal = await db.PayAmounts.Where(u => u.Id == Convert.ToInt32(cell.CellValue.Text) + 1).FirstOrDefaultAsync();
+                                        cell.CellValue = new CellValue((decimal)GetNameOfLocal.Pay);
+                                        newRow.AppendChild(cell);
+                                    }
+                                }
+
+                                else if (col == "Solution")
+                                {
+                                    Cell cell = new Cell();
+                                    cell.DataType = CellValues.String;
+                                    cell.CellValue = new CellValue(dsrow[col].ToString());//Тут значение Id
+                                    using (ExDbContext db = new())
+                                    {
+                                        var GetNameOfLocal = await db.SolutionTypes.Where(u => u.Id == Convert.ToInt32(cell.CellValue.Text) + 1).FirstOrDefaultAsync();
+                                        cell.CellValue = new CellValue(GetNameOfLocal.SolutionName);
+                                        newRow.AppendChild(cell);
+                                    }
+                                }
+
+                                else
+                                {
+                                    Cell cell = new()
+                                    {
+                                        DataType = CellValues.String,
+                                        CellValue = new CellValue(dsrow[col].ToString())//Тут значение Id
+                                    };
                                     newRow.AppendChild(cell);
                                 }
-                        }
-
-                        else if (col == "Local")
-                        {
-                            Cell cell = new Cell();
-                            cell.DataType = CellValues.String;
-                            cell.CellValue = new CellValue(dsrow[col].ToString());//Тут значение Id
-                            using (ExDbContext db = new())
-                            {
-                                var GetNameOfLocal = await db.Localities.Where(u => u.Id == Convert.ToInt32(cell.CellValue.Text) + 1).FirstOrDefaultAsync();
-                                cell.CellValue = new CellValue(GetNameOfLocal.LocalName);
-                                newRow.AppendChild(cell);
                             }
+                            sheetData.AppendChild(newRow);
                         }
 
-                        else if (col == "Lgota")
-                        {
-                            Cell cell = new Cell();
-                            cell.DataType = CellValues.String;
-                            cell.CellValue = new CellValue(dsrow[col].ToString());//Тут значение Id
-                            using (ExDbContext db = new())
-                            {
-                                var GetNameOfLocal = await db.Privileges.Where(u => u.Id == Convert.ToInt32(cell.CellValue.Text) + 1).FirstOrDefaultAsync();
-                                cell.CellValue = new CellValue(GetNameOfLocal.PrivilegesName);
-                                newRow.AppendChild(cell);
-                            }
-                        }
-
-                        else if (col == "Pay")
-                        {
-                            Cell cell = new Cell();
-                            cell.DataType = CellValues.String;
-                            cell.CellValue = new CellValue(dsrow[col].ToString());//Тут значение Id
-                            using (ExDbContext db = new())
-                            {
-                                var GetNameOfLocal = await db.PayAmounts.Where(u => u.Id == Convert.ToInt32(cell.CellValue.Text) + 1).FirstOrDefaultAsync();
-                                cell.CellValue = new CellValue((decimal)GetNameOfLocal.Pay);
-                                newRow.AppendChild(cell);
-                            }
-                        }
-
-                        else if (col == "Solution")
-                        {
-                            Cell cell = new Cell();
-                            cell.DataType = CellValues.String;
-
-                            cell.CellValue = new CellValue(dsrow[col].ToString());//Тут значение Id
-                            using (ExDbContext db = new())
-                            {
-                                var GetNameOfLocal = await db.SolutionTypes.Where(u => u.Id == Convert.ToInt32(cell.CellValue.Text) + 1).FirstOrDefaultAsync();
-                                cell.CellValue = new CellValue(GetNameOfLocal.SolutionName);
-                                newRow.AppendChild(cell);
-                            }
-                        }
-
-                        else
-                        {
-                            Cell cell = new Cell();
-                            
-                            cell.DataType = CellValues.String;
-                            cell.CellValue = new CellValue(dsrow[col].ToString());//Тут значение Id
-                            newRow.AppendChild(cell);
-                        }
+                        workbookPart.Workbook.Save();
                     }
+
                     
-                    
-                    sheetData.AppendChild(newRow);
                 }
 
-                workbookPart.Workbook.Save();
-            }
 
-
-            string DoOperation(string str)
-            {
-                switch (str)
+                string DoOperation(string str)
                 {
-                    case "IdReg": return "№ п/п";
-                    case "Family": return "Фамилия";
-                    case "Name": return "Имя";
-                    case "Lastname": return "Отчество";
-                    case "Snils": return "Снилс";
-                    case "Area": return "Район";
-                    case "Local": return "Населенный пункт";
-                    case "Adress": return "Адрес";
-                    case "Lgota": return "Льгота";
-                    case "Sernumb": return "Серия и номер сертификата";
-                    case "DateGetSert": return "Дата выдачи сертификата";
-                    case "Solution": return "Решение";
-                    case "DateAndNumbSolutionSert": return "Дата и номер решения";
-                    case "Trek": return "Трек";
-                    case "Pay": return "Размер выплаты";
-                    case "MailingDate": return "Дата отправки";
-                    case "Comment": return "Комментарий";
-                    default: return "";
+                    switch (str)
+                    {
+                        case "IdReg": return "№ п/п";
+                        case "Family": return "Фамилия";
+                        case "Name": return "Имя";
+                        case "Lastname": return "Отчество";
+                        case "Snils": return "Снилс";
+                        case "Area": return "Район";
+                        case "Local": return "Населенный пункт";
+                        case "Adress": return "Адрес";
+                        case "Lgota": return "Льгота";
+                        case "Sernumb": return "Серия и номер сертификата";
+                        case "DateGetSert": return "Дата выдачи сертификата";
+                        case "Solution": return "Решение";
+                        case "DateAndNumbSolutionSert": return "Дата и номер решения";
+                        case "Trek": return "Трек";
+                        case "Pay": return "Размер выплаты";
+                        case "MailingDate": return "Дата отправки";
+                        case "Comment": return "Комментарий";
+                        default: return "";
+                    }
                 }
-            }
+            });
         }
+
+       
+
 
         #region События изменения значений ComboBox
         private async void AreaComboEvent(object sender, EventArgs e)
@@ -316,9 +321,9 @@ namespace exel_for_mfc
         #endregion
 
         //Выгрузить в Excel
-        private void Button_Click(object sender, RoutedEventArgs e)
+        private async void Button_Click(object sender, RoutedEventArgs e)
         {
-            SaveDataInExel();
+            await SaveDataInExel();
         }
 
         //Обновить коммент
