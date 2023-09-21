@@ -22,6 +22,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using Newtonsoft.Json;
 using Microsoft.Win32;
+using System.IO.Packaging;
 
 /*RowEditEnding
 Возникает при переходе пользователем на новую строку после редактирования текущей.
@@ -112,7 +113,7 @@ namespace exel_for_mfc
 
 
         //Сохранить таблицу в Excel
-        async Task SaveDataInExel()
+        static async Task SaveDataInExel()
         {
             await Task.Run(async () =>
             {
@@ -136,11 +137,13 @@ namespace exel_for_mfc
 
                         worksheetPart.Worksheet = new Worksheet(sheetData);
 
-
                         Sheets sheets = workbookPart.Workbook.AppendChild(new Sheets());
                         Sheet sheet = new Sheet() { Id = workbookPart.GetIdOfPart(worksheetPart), SheetId = 1, Name = "Sheet1" };
                         
                         sheets.Append(sheet);
+
+
+
 
                         Row headerRow = new();
 
@@ -248,8 +251,6 @@ namespace exel_for_mfc
 
                     
                 }
-
-
                 string DoOperation(string str)
                 {
                     switch (str)
