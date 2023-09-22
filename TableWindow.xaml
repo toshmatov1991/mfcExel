@@ -101,5 +101,4 @@
         </DataGrid>
         <Button Content="Выгрузить в Excel" HorizontalAlignment="Left" Margin="947,562,0,0" VerticalAlignment="Top" Height="42" Width="107" Click="Button_Click"/>
     </Grid>
-
 </Window>

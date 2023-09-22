@@ -119,15 +119,14 @@ namespace exel_for_mfc
             {
                 SaveFileDialog dialog = new SaveFileDialog();
                 dialog.Filter = "Execl files (*.xlsx)|*.xlsx";
-                string nameFile = "";
+
                 if (dialog.ShowDialog() == true)
                 {
-                    nameFile = dialog.FileName;
                     // Lets converts our object data to Datatable for a simplified logic.
                     // Datatable is most easy way to deal with complex datatypes for easy reading and formatting. 
                     DataTable table = (DataTable)JsonConvert.DeserializeObject(JsonConvert.SerializeObject(MyList), typeof(DataTable));
 
-                    using (SpreadsheetDocument document = SpreadsheetDocument.Create(nameFile, SpreadsheetDocumentType.Workbook))
+                    using (SpreadsheetDocument document = SpreadsheetDocument.Create(dialog.FileName, SpreadsheetDocumentType.Workbook))
                     {
                         WorkbookPart workbookPart = document.AddWorkbookPart();
                         workbookPart.Workbook = new Workbook();
