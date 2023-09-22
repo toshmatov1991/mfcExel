@@ -89,9 +89,7 @@ namespace exel_for_mfc
         //Событие редактирования ячейки
         public async void dataGrid_CellEditEnding(object sender, DataGridCellEditEndingEventArgs e)
         {
-            //Сделать заполнение комментария отдельным окном? типо реализовать mvvm
-            try
-            {
+
               //Непосредственно редактирование ячейки (Обновление строки) - Заявитель - Регистр
                 using (ExDbContext db = new())
                 {
@@ -104,11 +102,6 @@ namespace exel_for_mfc
                     //Обновление таблицы Регистр
                     await db.Database.ExecuteSqlRawAsync("UPDATE Registry SET SerialAndNumberSert = {0}, DateGetSert = {1}, DateAndNumbSolutionSert = {2}, Comment = {3}, Trek = {4}, MailingDate = {5} WHERE Id = {6}", a.Sernumb, a.DateGetSert, a.DateAndNumbSolutionSert, a.Comment, a.Trek, a.MailingDate, a.IdReg);
                 }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message);
-            }
         }
 
 
@@ -205,9 +198,11 @@ namespace exel_for_mfc
                             {
                                 if (col == "Area")
                                 {
-                                    Cell cell = new Cell();
-                                    cell.DataType = CellValues.String;
-                                    cell.CellValue = new CellValue(dsrow[col].ToString());//Тут значение Id
+                                    Cell cell = new()
+                                    {
+                                        DataType = CellValues.String,
+                                        CellValue = new CellValue(dsrow[col].ToString())//Тут значение Id
+                                    };
                                     using (ExDbContext db = new())
                                     {
                                         var GetNameOfArea = await db.Areas.Where(u => u.Id == Convert.ToInt32(cell.CellValue.Text) + 1).FirstOrDefaultAsync();
@@ -231,9 +226,11 @@ namespace exel_for_mfc
 
                                 else if (col == "Lgota")
                                 {
-                                    Cell cell = new Cell();
-                                    cell.DataType = CellValues.String;
-                                    cell.CellValue = new CellValue(dsrow[col].ToString());//Тут значение Id
+                                    Cell cell = new()
+                                    {
+                                        DataType = CellValues.String,
+                                        CellValue = new CellValue(dsrow[col].ToString())//Тут значение Id
+                                    };
                                     using (ExDbContext db = new())
                                     {
                                         var GetNameOfLocal = await db.Privileges.Where(u => u.Id == Convert.ToInt32(cell.CellValue.Text) + 1).FirstOrDefaultAsync();
@@ -368,26 +365,15 @@ namespace exel_for_mfc
         //Обновить коммент
         private async void CommentUpdate(object sender, TextChangedEventArgs e)
         {
-            try
-            { 
-                string a = "";
-                if (e.Source.ToString().Length == 31)
-                    a = null;
+            string a = "";
+            if (e.Source.ToString().Length == 31)
+                a = null;
 
-                else
-                    a = e.OriginalSource.ToString().Substring(33);
+            else
+                a = e.OriginalSource.ToString().Substring(33);
 
-                using (ExDbContext db = new())
-                {
-                    await db.Database.ExecuteSqlRawAsync("UPDATE Registry SET Comment = {0} WHERE Id = {1}", a, (dataGrid.SelectedItem as SClass)?.IdReg);
-                }
-            }
-            catch (Exception ex)
-            {
-
-                MessageBox.Show(ex.Message);
-            }
-            
+            using ExDbContext db = new();
+            await db.Database.ExecuteSqlRawAsync("UPDATE Registry SET Comment = {0} WHERE Id = {1}", a, (dataGrid.SelectedItem as SClass)?.IdReg);
         }
     }
 }
