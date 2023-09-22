@@ -134,16 +134,13 @@ namespace exel_for_mfc
 
                         WorksheetPart worksheetPart = workbookPart.AddNewPart<WorksheetPart>();
 
-                      
-
-
                         var sheetData = new SheetData();
 
                         worksheetPart.Worksheet = new Worksheet(sheetData);
 
-                        // Create custom widths for columns
+                        // Create custom widths for columns - Здесь задаем ширину колонок
                         Columns lstColumns = worksheetPart.Worksheet.GetFirstChild<Columns>();
-                        Boolean needToInsertColumns = false;
+                        bool needToInsertColumns = false;
                         if (lstColumns == null)
                         {
                             lstColumns = new Columns();
@@ -153,13 +150,23 @@ namespace exel_for_mfc
                         // Min = 2, Max = 2 ==> Apply this to column 2 (B)
                         // Width = 25 ==> Set the width to 25
                         // CustomWidth = true ==> Tell Excel to use the custom width
-                        lstColumns.Append(new Column() { Min = 1, Max = 1, Width = 20, CustomWidth = true });
-                        lstColumns.Append(new Column() { Min = 2, Max = 2, Width = 35, CustomWidth = true });
-                        lstColumns.Append(new Column() { Min = 3, Max = 3, Width = 35, CustomWidth = true });
-                        lstColumns.Append(new Column() { Min = 4, Max = 4, Width = 35, CustomWidth = true });
-                        lstColumns.Append(new Column() { Min = 5, Max = 5, Width = 40, CustomWidth = true });
-                        lstColumns.Append(new Column() { Min = 6, Max = 6, Width = 35, CustomWidth = true });
-                        lstColumns.Append(new Column() { Min = 7, Max = 7, Width = 70, CustomWidth = true });
+                        lstColumns.Append(new Column() { Min = 1, Max = 1, Width = 7, CustomWidth = true });  // id
+                        lstColumns.Append(new Column() { Min = 2, Max = 2, Width = 20, CustomWidth = true }); // f
+                        lstColumns.Append(new Column() { Min = 3, Max = 3, Width = 20, CustomWidth = true }); // n
+                        lstColumns.Append(new Column() { Min = 4, Max = 4, Width = 20, CustomWidth = true }); // l
+                        lstColumns.Append(new Column() { Min = 5, Max = 5, Width = 15, CustomWidth = true }); // snils
+                        lstColumns.Append(new Column() { Min = 6, Max = 6, Width = 25, CustomWidth = true }); // район
+                        lstColumns.Append(new Column() { Min = 7, Max = 7, Width = 25, CustomWidth = true }); // населенный
+                        lstColumns.Append(new Column() { Min = 8, Max = 8, Width = 30, CustomWidth = true }); // адрес
+                        lstColumns.Append(new Column() { Min = 9, Max = 9, Width = 35, CustomWidth = true }); // льгота
+                        lstColumns.Append(new Column() { Min = 10, Max = 10, Width = 18, CustomWidth = true }); // размер выплаты
+                        lstColumns.Append(new Column() { Min = 11, Max = 11, Width = 30, CustomWidth = true }); // серия и номер серта
+                        lstColumns.Append(new Column() { Min = 12, Max = 12, Width = 25, CustomWidth = true }); // дата выдачи серта
+                        lstColumns.Append(new Column() { Min = 13, Max = 13, Width = 15, CustomWidth = true }); // решение
+                        lstColumns.Append(new Column() { Min = 14, Max = 14, Width = 25, CustomWidth = true }); // дата и номер решения
+                        lstColumns.Append(new Column() { Min = 15, Max = 15, Width = 25, CustomWidth = true }); // трек
+                        lstColumns.Append(new Column() { Min = 16, Max = 16, Width = 25, CustomWidth = true }); // дата отправки почтой
+                        lstColumns.Append(new Column() { Min = 17, Max = 17, Width = 25, CustomWidth = true }); // дата отправки почтой
                         // Only insert the columns if we had to create a new columns element
                         if (needToInsertColumns)
                             worksheetPart.Worksheet.InsertAt(lstColumns, 0);

@@ -67,6 +67,7 @@
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
+                <DataGridTextColumn Binding="{Binding DateAndNumbSolutionSert, UpdateSourceTrigger=PropertyChanged}" Header="Дата и номер решения"/>
                 <DataGridTemplateColumn Header="Размер выплаты" CanUserSort="True" SortMemberPath="Pay">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
@@ -77,7 +78,6 @@
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
-                <DataGridTextColumn Binding="{Binding DateAndNumbSolutionSert, UpdateSourceTrigger=PropertyChanged}" Header="Дата и номер решения"/>
                 <DataGridTextColumn Binding="{Binding Trek, UpdateSourceTrigger=PropertyChanged}" Header="Трек"/>
                 <DataGridTextColumn Binding="{Binding MailingDate, UpdateSourceTrigger=PropertyChanged}" Header="Дата отправки почтой"/>
                 <DataGridTextColumn Binding="{Binding Comment, UpdateSourceTrigger=PropertyChanged}" Header="" Visibility="Hidden"/>
