@@ -87,7 +87,7 @@ namespace exel_for_mfc
             };
         }
         //Событие редактирования ячейки
-        public async void dataGrid_CellEditEnding(object sender, DataGridCellEditEndingEventArgs e)
+        public async void DataGrid_CellEditEnding(object sender, DataGridCellEditEndingEventArgs e)
         {
 
               //Непосредственно редактирование ячейки (Обновление строки) - Заявитель - Регистр
@@ -104,6 +104,38 @@ namespace exel_for_mfc
                 }
         }
 
+
+
+
+        #region События изменения значений ComboBox
+        private async void AreaComboEvent(object sender, EventArgs e)
+        {
+            //Меняем район Заявителю
+            using ExDbContext db = new();
+            await db.Database.ExecuteSqlRawAsync("UPDATE Applicant SET Area_FK = {0} WHERE Id = {1}", (sender as ComboBox)?.SelectedIndex + 1, (dataGrid.SelectedItem as SClass)?.IdApplicant);
+        }
+        private async void LocalComboEvent(object sender, EventArgs e)
+        {
+            //Меняем Населенный пункт Заявителю
+            using ExDbContext db = new();
+            await db.Database.ExecuteSqlRawAsync("UPDATE Applicant SET Locality_FK = {0} WHERE Id = {1}", (sender as ComboBox)?.SelectedIndex + 1, (dataGrid.SelectedItem as SClass)?.IdApplicant);
+        }
+        private async void PrivilegesComboEvent(object sender, EventArgs e)
+        {
+            using ExDbContext db = new();
+            await db.Database.ExecuteSqlRawAsync("UPDATE Applicant SET Privileges_FK = {0} WHERE Id = {1}", (sender as ComboBox)?.SelectedIndex + 1, (dataGrid.SelectedItem as SClass)?.IdApplicant);
+        }
+        private async void PayComboEvent(object sender, EventArgs e)
+        {
+            using ExDbContext db = new();
+            await db.Database.ExecuteSqlRawAsync("UPDATE Registry SET PayAmount_FK = {0} WHERE Id = {1}", (sender as ComboBox)?.SelectedIndex + 1, (dataGrid.SelectedItem as SClass)?.IdReg);
+        }
+        private async void SolutionComboEvent(object sender, EventArgs e)
+        {
+            using ExDbContext db = new();
+            await db.Database.ExecuteSqlRawAsync("UPDATE Registry SET Solution_FK = {0} WHERE Id = {1}", (sender as ComboBox)?.SelectedIndex + 1, (dataGrid.SelectedItem as SClass)?.IdReg);
+        }
+        #endregion
 
         //Сохранить таблицу в Excel
         static async Task SaveDataInExel()
@@ -167,8 +199,8 @@ namespace exel_for_mfc
 
 
                         Sheets sheets = workbookPart.Workbook.AppendChild(new Sheets());
-                        Sheet sheet = new Sheet() { Id = workbookPart.GetIdOfPart(worksheetPart), SheetId = 1, Name = "Sheet1" };
-                        
+                        Sheet sheet = new() { Id = workbookPart.GetIdOfPart(worksheetPart), SheetId = 1, Name = "Sheet1" };
+
                         sheets.Append(sheet);
 
                         Row headerRow = new();
@@ -284,9 +316,10 @@ namespace exel_for_mfc
                         workbookPart.Workbook.Save();
                     }
 
-                    
+
                 }
-                string DoOperation(string str)
+
+                static string DoOperation(string str)
                 {
                     switch (str)
                     {
@@ -312,49 +345,6 @@ namespace exel_for_mfc
                 }
             });
         }
-
-       
-
-
-        #region События изменения значений ComboBox
-        private async void AreaComboEvent(object sender, EventArgs e)
-        {
-            //Меняем район Заявителю
-            using (ExDbContext db = new())
-            {
-                await db.Database.ExecuteSqlRawAsync("UPDATE Applicant SET Area_FK = {0} WHERE Id = {1}", (sender as ComboBox)?.SelectedIndex + 1, (dataGrid.SelectedItem as SClass)?.IdApplicant);
-            }
-        }
-        private async void LocalComboEvent(object sender, EventArgs e)
-        {
-            //Меняем Населенный пункт Заявителю
-            using (ExDbContext db = new())
-            {
-                await db.Database.ExecuteSqlRawAsync("UPDATE Applicant SET Locality_FK = {0} WHERE Id = {1}", (sender as ComboBox)?.SelectedIndex + 1, (dataGrid.SelectedItem as SClass)?.IdApplicant);
-            }
-        }
-        private async void PrivilegesComboEvent(object sender, EventArgs e)
-        {
-            using (ExDbContext db = new())
-            {
-                await db.Database.ExecuteSqlRawAsync("UPDATE Applicant SET Privileges_FK = {0} WHERE Id = {1}", (sender as ComboBox)?.SelectedIndex + 1, (dataGrid.SelectedItem as SClass)?.IdApplicant);
-            }
-        }
-        private async void PayComboEvent(object sender, EventArgs e)
-        {
-            using (ExDbContext db = new())
-            {
-                await db.Database.ExecuteSqlRawAsync("UPDATE Registry SET PayAmount_FK = {0} WHERE Id = {1}", (sender as ComboBox)?.SelectedIndex + 1, (dataGrid.SelectedItem as SClass)?.IdReg);
-            }
-        }
-        private async void SolutionComboEvent(object sender, EventArgs e)
-        {
-            using (ExDbContext db = new())
-            {
-                await db.Database.ExecuteSqlRawAsync("UPDATE Registry SET Solution_FK = {0} WHERE Id = {1}", (sender as ComboBox)?.SelectedIndex + 1, (dataGrid.SelectedItem as SClass)?.IdReg);
-            }
-        }
-        #endregion
 
         //Выгрузить в Excel
         private async void Button_Click(object sender, RoutedEventArgs e)
