@@ -104,9 +104,6 @@ namespace exel_for_mfc
                 }
         }
 
-
-
-
         #region События изменения значений ComboBox
         private async void AreaComboEvent(object sender, EventArgs e)
         {
