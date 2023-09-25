@@ -7,7 +7,7 @@
         Title="Главное окно" Height="700" Width="1300">
 
     <Grid>
-        <DataGrid x:Name="dataGrid" CanUserSortColumns="True" Height="500" HorizontalAlignment="Left" VerticalAlignment="Top" AutoGenerateColumns="False" CanUserAddRows="False" CellEditEnding="DataGrid_CellEditEnding">
+        <DataGrid x:Name="dataGrid" CanUserSortColumns="True" Height="500" HorizontalAlignment="Left" VerticalAlignment="Top" AutoGenerateColumns="False" CanUserAddRows="False" CellEditEnding="dataGrid_CellEditEnding">
             <DataGrid.Columns>
                 <DataGridTextColumn Binding="{Binding IdReg, UpdateSourceTrigger=PropertyChanged}" IsReadOnly="True" Header="№п/п"/>
                 <DataGridTextColumn Binding="{Binding Family, UpdateSourceTrigger=PropertyChanged}" Header="Фамилия"/>

@@ -87,7 +87,7 @@ namespace exel_for_mfc
             };
         }
         //Событие редактирования ячейки
-        public async void DataGrid_CellEditEnding(object sender, DataGridCellEditEndingEventArgs e)
+        public async void dataGrid_CellEditEnding(object sender, DataGridCellEditEndingEventArgs e)
         {
 
               //Непосредственно редактирование ячейки (Обновление строки) - Заявитель - Регистр

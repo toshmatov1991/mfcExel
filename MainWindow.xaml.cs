@@ -120,9 +120,5 @@ namespace exel_for_mfc
             if (e.Key == Key.Enter) { }
                 //Button_Click(sender, e);
         }
-
-        private class PassContext
-        {
-        }
     }
 }

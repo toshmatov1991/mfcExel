@@ -30,7 +30,7 @@ public partial class ExDbContext : DbContext
     public virtual DbSet<SolutionType> SolutionTypes { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        => optionsBuilder.UseSqlServer("Data Source=LENIN-IT-ARM50;Database=ExDB;Trusted_connection=True;TrustServerCertificate=True");
+        => optionsBuilder.UseSqlServer("Data Source=localhost\\SQLEXPRESS;Database=ExDB;Trusted_connection=True;TrustServerCertificate=True");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
