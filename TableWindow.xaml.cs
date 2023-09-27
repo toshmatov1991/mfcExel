@@ -23,6 +23,7 @@ using System.Windows.Shapes;
 using Newtonsoft.Json;
 using Microsoft.Win32;
 using System.IO.Packaging;
+using System.Globalization;
 
 /*RowEditEnding
 Возникает при переходе пользователем на новую строку после редактирования текущей.
@@ -53,7 +54,8 @@ namespace exel_for_mfc
         {
             using (ExDbContext db = new())
             {
-                     MyList = (from reg in db.Registries
+               
+                MyList = (from reg in db.Registries
                               join appl in db.Applicants on reg.ApplicantFk equals appl.Id
                               select new SClass
                               {
@@ -182,12 +184,12 @@ namespace exel_for_mfc
                         lstColumns.Append(new Column() { Min = 9, Max = 9, Width = 35, CustomWidth = true }); // льгота
                         lstColumns.Append(new Column() { Min = 10, Max = 10, Width = 18, CustomWidth = true }); // размер выплаты
                         lstColumns.Append(new Column() { Min = 11, Max = 11, Width = 30, CustomWidth = true }); // серия и номер серта
-                        lstColumns.Append(new Column() { Min = 12, Max = 12, Width = 25, CustomWidth = true }); // дата выдачи серта
+                        lstColumns.Append(new Column() { Min = 12, Max = 12, Width = 20, CustomWidth = true }); // дата выдачи серта
                         lstColumns.Append(new Column() { Min = 13, Max = 13, Width = 15, CustomWidth = true }); // решение
                         lstColumns.Append(new Column() { Min = 14, Max = 14, Width = 25, CustomWidth = true }); // дата и номер решения
                         lstColumns.Append(new Column() { Min = 15, Max = 15, Width = 25, CustomWidth = true }); // трек
                         lstColumns.Append(new Column() { Min = 16, Max = 16, Width = 25, CustomWidth = true }); // дата отправки почтой
-                        lstColumns.Append(new Column() { Min = 17, Max = 17, Width = 25, CustomWidth = true }); // дата отправки почтой
+                        lstColumns.Append(new Column() { Min = 17, Max = 17, Width = 15, CustomWidth = true }); // дата отправки почтой
                         // Only insert the columns if we had to create a new columns element
                         if (needToInsertColumns)
                             worksheetPart.Worksheet.InsertAt(lstColumns, 0);
@@ -294,6 +296,16 @@ namespace exel_for_mfc
                                     }
                                 }
 
+                                else if (col == "DateGetSert" || col == "MailingDate")
+                                {
+                                    Cell cell = new()
+                                    {
+                                        DataType = CellValues.String,
+                                        CellValue = new CellValue(Convert.ToDateTime(dsrow[col].ToString()).ToString("d", new CultureInfo("Ru-ru")))//Тут значение Id
+                                    };
+                                    newRow.AppendChild(cell);
+                                }
+
                                 else if (col == "IdApplicant")
                                     continue;
 
@@ -361,6 +373,12 @@ namespace exel_for_mfc
 
             using ExDbContext db = new();
             await db.Database.ExecuteSqlRawAsync("UPDATE Registry SET Comment = {0} WHERE Id = {1}", a, (dataGrid.SelectedItem as SClass)?.IdReg);
+        }
+
+        //Добавить запись
+        private void Button_Click_1(object sender, RoutedEventArgs e)
+        {
+            
         }
     }
 }
