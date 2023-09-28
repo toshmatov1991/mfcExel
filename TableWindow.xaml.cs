@@ -181,15 +181,6 @@ namespace exel_for_mfc
         }
 
 
-                /*RowEditEnding
-        Возникает при переходе пользователем на новую строку после редактирования текущей.
-        Как и в случае CellEditEnding, в этот момент можно выполнить проверку достоверности и отменить изменения. 
-        Обычно проверка достоверности охватывает несколько столбцов,
-        например, когда значение в одном столбце не должно быть больше значения в другом столбце*/
-        private void dataGrid_RowEditEnding(object sender, DataGridRowEditEndingEventArgs e)
-        {
-            //MessageBox.Show("RowEditEnding");
-        }
 
         #region События изменения значений ComboBox
         private async void AreaComboEvent(object sender, EventArgs e)
@@ -460,10 +451,23 @@ namespace exel_for_mfc
             await db.Database.ExecuteSqlRawAsync("UPDATE Registry SET Comment = {0} WHERE Id = {1}", a, (dataGrid.SelectedItem as SClass)?.IdReg);
         }
 
-        //Добавить запись
-        private void Button_Click_1(object sender, RoutedEventArgs e)
+
+        private void test_DatagridPrepar(object sender, DataGridPreparingCellForEditEventArgs e)
         {
-            
+            //Перед редактированием ячейки, как только введены данные о пользователе
+            MessageBox.Show("RowEditEnding");
+        }
+
+
+
+            /*RowEditEnding
+            Возникает при переходе пользователем на новую строку после редактирования текущей.
+            Как и в случае CellEditEnding, в этот момент можно выполнить проверку достоверности и отменить изменения. 
+            Обычно проверка достоверности охватывает несколько столбцов,
+            например, когда значение в одном столбце не должно быть больше значения в другом столбце*/
+        private void dataGrid_RowEditEnding(object sender, DataGridRowEditEndingEventArgs e)
+        {
+            //MessageBox.Show("RowEditEnding");
         }
     }
 }
