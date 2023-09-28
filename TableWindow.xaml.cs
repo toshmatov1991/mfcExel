@@ -47,7 +47,6 @@ namespace exel_for_mfc
         {
             using (ExDbContext db = new())
             {
-               
                 MyList = (from reg in db.Registries
                               join appl in db.Applicants on reg.ApplicantFk equals appl.Id
                               select new SClass
@@ -495,8 +494,8 @@ namespace exel_for_mfc
                                      || u.Sernumb.Contains(SearchTable.Text)).AsNoTracking().ToList();
 
                 dataGrid.ItemsSource = MyList;
-
             }
+            
         }
     }
 }
