@@ -8,7 +8,7 @@
 
     <Grid>
         <TextBlock Text=" Быстрый поиск" HorizontalAlignment="Center" FontStyle="Italic" FontSize="20"/>
-        <TextBox HorizontalAlignment="Left" FontStyle="Italic" Height="23" Width="250" VerticalContentAlignment="Center" FontSize="14" VerticalAlignment="Top" Margin="739,4,0,0"/>
+        <TextBox HorizontalAlignment="Left" FontStyle="Italic" Height="23" Width="250" VerticalContentAlignment="Center" FontSize="14" VerticalAlignment="Top" Margin="739,4,0,0" x:Name="SearchTable" KeyUp="GoSearchToTable" />
         <DataGrid x:Name="dataGrid"
                   CanUserSortColumns="True"
                   Height="500"
@@ -113,7 +113,7 @@
                                  TextChanged="CommentUpdate" 
                                  VerticalContentAlignment="Center"
                                  FontWeight="DemiBold"
-                                 Width="100"
+                                 Width="250"
                                  FontSize="14"
                                  Foreground="Black"/>
                     </StackPanel>
