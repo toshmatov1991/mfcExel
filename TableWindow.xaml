@@ -7,6 +7,8 @@
         Title="Главное окно" Height="700" Width="1300">
 
     <Grid>
+        <TextBlock Text=" Быстрый поиск" HorizontalAlignment="Center" FontStyle="Italic" FontSize="20"/>
+        <TextBox HorizontalAlignment="Left" FontStyle="Italic" Height="23" Width="250" VerticalContentAlignment="Center" FontSize="14" VerticalAlignment="Top" Margin="739,4,0,0"/>
         <DataGrid x:Name="dataGrid"
                   CanUserSortColumns="True"
                   Height="500"
@@ -14,7 +16,7 @@
                   VerticalAlignment="Top"
                   AutoGenerateColumns="False"
                   CanUserAddRows="True"
-                  CellEditEnding="dataGrid_CellEditEnding">
+                  CellEditEnding="dataGrid_CellEditEnding" Margin="0,31,0,0">
             <DataGrid.Columns>
                 <DataGridTextColumn Binding="{Binding IdReg, UpdateSourceTrigger=PropertyChanged}" IsReadOnly="True" Header="№п/п"/>
                 <DataGridTextColumn Binding="{Binding Family, UpdateSourceTrigger=PropertyChanged}" Header="Фамилия"/>
@@ -85,8 +87,8 @@
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
-                <DataGridTextColumn Binding="{Binding Trek, UpdateSourceTrigger=PropertyChanged}" Header="Трек"/>
-                <DataGridTemplateColumn Header="Дата отправки почтой" Width="120" CanUserSort="True" >
+                <DataGridTextColumn Binding="{Binding Trek, UpdateSourceTrigger=PropertyChanged}" Width="60" Header="Трек"/>
+                <DataGridTemplateColumn Header="Дата отправки почтой" Width="150" CanUserSort="True" >
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <TextBox Text="{Binding DateGetSert, StringFormat=dd.MM.yyyy, UpdateSourceTrigger=PropertyChanged}" />
