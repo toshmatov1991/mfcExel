@@ -119,6 +119,5 @@
             </DataGrid.RowDetailsTemplate>
         </DataGrid>
         <Button Content="Выгрузить в Excel" HorizontalAlignment="Left" Margin="947,562,0,0" VerticalAlignment="Top" Height="42" Width="107" Click="Button_Click"/>
-        <Button Content="Добавить запись" HorizontalAlignment="Left" Margin="1131,562,0,0" VerticalAlignment="Top" RenderTransformOrigin="3.559,2.006" Height="42" Width="108" Click="Button_Click_1"/>
     </Grid>
 </Window>

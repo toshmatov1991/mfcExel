@@ -109,24 +109,16 @@ namespace exel_for_mfc
                 if (a.Family != null 
                     && a.Name!= null
                     && a.Lastname != null
+                    && a.Adress != null
                     && a.Area != null
                     && a.Local != null
-                    && a.Adress != null
-                    && a.Snils != null
-                    && a.Lgota != null
-                    && a.Sernumb != null
-                    && a.DateGetSert != null
-                    && a.Solution != null
-                    && a.DateGetSert != null
-                    && a.Pay != null
-                    && a.Trek != null
-                    && a.MailingDate != null)
+                    && a.Snils != null)
                 { 
                     //Сначала проверяю на наличие такого же человека в БД, если его нету,
                     //то вставляю новую запись в таблицу Заявители,
                     // Иначе просто беру ID того чела который уже есть в базе такой же
 
-                    //Жесткая проверка
+                    //Жуткая проверка
                     var myQuery = await db.Applicants.FromSqlRaw("SELECT * FROM Applicant WHERE Firstname LIKE {0} AND Middlename LIKE {1} AND Lastname LIKE {2} AND Adress LIKE {3} AND Snils LIKE {4}", a.Family, a.Name, a.Lastname, a.Adress, a.Snils).AsNoTracking().FirstOrDefaultAsync();
 
                     if (myQuery != null)
@@ -139,8 +131,23 @@ namespace exel_for_mfc
                         {
                             try
                             {
-                                //Добавить новую запись в таблицу Регистр
-                                await db.Database.ExecuteSqlInterpolatedAsync($"INSERT INTO Registry(Applicant_FK, SerialAndNumberSert, DateGetSert, PayAmount_FK, Solution_FK, DateAndNumbSolutionSert, Comment, Trek, MailingDate) VALUES({await db.Applicants.CountAsync()}, {a.Sernumb}, {a.DateGetSert}, {a.Pay + 1}, {a.Solution + 1}, {a.DateAndNumbSolutionSert}, {a.Comment}, {a.Trek}, {a.MailingDate})");
+                                if(a.Pay == null || a.Solution == null || a.Pay == null && a.Solution == null)
+                                {
+                                    //Добавить новую запись в таблицу Регистр
+                                    await db.Database.ExecuteSqlInterpolatedAsync($"INSERT INTO Registry(Applicant_FK, SerialAndNumberSert, DateGetSert, PayAmount_FK, Solution_FK, DateAndNumbSolutionSert, Comment, Trek, MailingDate) VALUES({await db.Applicants.CountAsync()}, {a.Sernumb}, {a.DateGetSert}, {null}, {null}, {a.DateAndNumbSolutionSert}, {a.Comment}, {a.Trek}, {a.MailingDate})");
+                                    await Task.Delay(100);
+                                    Start();
+                                }
+
+                                else if(a.Pay != null && a.Solution != null)
+                                {
+                                    //Добавить новую запись в таблицу Регистр
+                                    await db.Database.ExecuteSqlInterpolatedAsync($"INSERT INTO Registry(Applicant_FK, SerialAndNumberSert, DateGetSert, PayAmount_FK, Solution_FK, DateAndNumbSolutionSert, Comment, Trek, MailingDate) VALUES({await db.Applicants.CountAsync()}, {a.Sernumb}, {a.DateGetSert}, {a.Pay + 1}, {a.Solution + 1}, {a.DateAndNumbSolutionSert}, {a.Comment}, {a.Trek}, {a.MailingDate})");
+                                    await Task.Delay(100);
+                                    Start();
+                                }
+                                  
+
                             }
                             catch (Exception ex)
                             {
@@ -159,15 +166,36 @@ namespace exel_for_mfc
                     {
                         try
                         {
-                            //Добавить новую запись в таблицу заявитель
-                            await db.Database.ExecuteSqlInterpolatedAsync($"INSERT INTO Applicant(Firstname, Middlename, Lastname, Area_FK, Locality_FK, Adress, Snils, Privileges_FK) VALUES({a.Family}, {a.Name}, {a.Lastname}, {a.Area + 1}, {a.Local + 1}, {a.Adress}, {a.Snils}, {a.Lgota + 1})");
+                            if (a.Lgota == null)
+                            {
+                                //Добавить новую запись в таблицу заявитель
+                                await db.Database.ExecuteSqlInterpolatedAsync($"INSERT INTO Applicant(Firstname, Middlename, Lastname, Area_FK, Locality_FK, Adress, Snils, Privileges_FK) VALUES({a.Family}, {a.Name}, {a.Lastname}, {a.Area + 1}, {a.Local + 1}, {a.Adress}, {a.Snils}, {null})");
+                            }
 
-                            var GetCountApplicant = await db.Applicants.CountAsync(); 
+                            else if (a.Area != null && a.Local != null && a.Lgota != null)
+                            {
+                                //Добавить новую запись в таблицу заявитель
+                                await db.Database.ExecuteSqlInterpolatedAsync($"INSERT INTO Applicant(Firstname, Middlename, Lastname, Area_FK, Locality_FK, Adress, Snils, Privileges_FK) VALUES({a.Family}, {a.Name}, {a.Lastname}, {a.Area + 1}, {a.Local + 1}, {a.Adress}, {a.Snils}, {a.Lgota + 1})");
+                            }
+
+                            var GetCountApplicant = await db.Applicants.CountAsync();
 
                             //Добавить новую запись в таблицу Регистр
-                            await db.Database.ExecuteSqlInterpolatedAsync($"INSERT INTO Registry(Applicant_FK, SerialAndNumberSert, DateGetSert, PayAmount_FK, Solution_FK, DateAndNumbSolutionSert, Comment, Trek, MailingDate) VALUES({GetCountApplicant}, {a.Sernumb}, {a.DateGetSert}, {a.Pay + 1}, {a.Solution + 1}, {a.DateAndNumbSolutionSert}, {a.Comment}, {a.Trek}, {a.MailingDate})");
-                            await Task.Delay(100);
-                            Start();
+                            if (a.Pay == null || a.Solution == null || a.Pay == null && a.Solution == null)
+                            {
+                                //Добавить новую запись в таблицу Регистр
+                                await db.Database.ExecuteSqlInterpolatedAsync($"INSERT INTO Registry(Applicant_FK, SerialAndNumberSert, DateGetSert, PayAmount_FK, Solution_FK, DateAndNumbSolutionSert, Comment, Trek, MailingDate) VALUES({await db.Applicants.CountAsync()}, {a.Sernumb}, {a.DateGetSert}, {null}, {null}, {a.DateAndNumbSolutionSert}, {a.Comment}, {a.Trek}, {a.MailingDate})");
+                                await Task.Delay(100);
+                                Start();
+                            }
+
+                            else if (a.Pay != null && a.Solution != null)
+                            {
+                                //Добавить новую запись в таблицу Регистр
+                                await db.Database.ExecuteSqlInterpolatedAsync($"INSERT INTO Registry(Applicant_FK, SerialAndNumberSert, DateGetSert, PayAmount_FK, Solution_FK, DateAndNumbSolutionSert, Comment, Trek, MailingDate) VALUES({await db.Applicants.CountAsync()}, {a.Sernumb}, {a.DateGetSert}, {a.Pay + 1}, {a.Solution + 1}, {a.DateAndNumbSolutionSert}, {a.Comment}, {a.Trek}, {a.MailingDate})");
+                                await Task.Delay(100);
+                                Start();
+                            }
                         }
                         catch (Exception ex)
                         {
@@ -455,7 +483,7 @@ namespace exel_for_mfc
         private void test_DatagridPrepar(object sender, DataGridPreparingCellForEditEventArgs e)
         {
             //Перед редактированием ячейки, как только введены данные о пользователе
-            MessageBox.Show("RowEditEnding");
+           // MessageBox.Show("RowEditEnding");
         }
 
 
