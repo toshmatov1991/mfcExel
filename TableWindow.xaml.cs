@@ -146,8 +146,6 @@ namespace exel_for_mfc
                                     await Task.Delay(100);
                                     Start();
                                 }
-                                  
-
                             }
                             catch (Exception ex)
                             {

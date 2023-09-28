@@ -112,6 +112,7 @@
                                  TextChanged="CommentUpdate" 
                                  VerticalContentAlignment="Center"
                                  FontWeight="DemiBold"
+                                 Width="100"
                                  FontSize="14"
                                  Foreground="Black"/>
                     </StackPanel>
