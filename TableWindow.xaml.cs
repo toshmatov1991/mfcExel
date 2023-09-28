@@ -146,7 +146,8 @@ namespace exel_for_mfc
                             {
                                 MessageBox.Show(ex.Message);
                             }
-
+                            await Task.Delay(100);
+                            Start();
                         }
                         else if (result == MessageBoxResult.No)
                             return;
@@ -165,16 +166,16 @@ namespace exel_for_mfc
 
                             //Добавить новую запись в таблицу Регистр
                             await db.Database.ExecuteSqlInterpolatedAsync($"INSERT INTO Registry(Applicant_FK, SerialAndNumberSert, DateGetSert, PayAmount_FK, Solution_FK, DateAndNumbSolutionSert, Comment, Trek, MailingDate) VALUES({GetCountApplicant}, {a.Sernumb}, {a.DateGetSert}, {a.Pay + 1}, {a.Solution + 1}, {a.DateAndNumbSolutionSert}, {a.Comment}, {a.Trek}, {a.MailingDate})");
+                            await Task.Delay(100);
+                            Start();
                         }
                         catch (Exception ex)
                         {
                             MessageBox.Show(ex.Message);
                         }
-                        //Start();
-                        //dataGrid.Items.Refresh();
                     }
                 }
-
+               
             }
            
         }
