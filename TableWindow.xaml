@@ -7,7 +7,15 @@
         Title="Главное окно" Height="700" Width="1300">
 
     <Grid>
-        <DataGrid x:Name="dataGrid" CanUserSortColumns="True" Height="500" HorizontalAlignment="Left" VerticalAlignment="Top" AutoGenerateColumns="False" CanUserAddRows="False" CellEditEnding="dataGrid_CellEditEnding">
+        <DataGrid x:Name="dataGrid"
+                  CanUserSortColumns="True"
+                  Height="500"
+                  HorizontalAlignment="Left"
+                  VerticalAlignment="Top"
+                  AutoGenerateColumns="False"
+                  CanUserAddRows="True"
+                  CellEditEnding="dataGrid_CellEditEnding"
+                  RowEditEnding="dataGrid_RowEditEnding">
             <DataGrid.Columns>
                 <DataGridTextColumn Binding="{Binding IdReg, UpdateSourceTrigger=PropertyChanged}" IsReadOnly="True" Header="№п/п"/>
                 <DataGridTextColumn Binding="{Binding Family, UpdateSourceTrigger=PropertyChanged}" Header="Фамилия"/>
@@ -28,7 +36,7 @@
                         <DataTemplate>
                             <ComboBox ItemsSource="{Binding Path=LocalCombobox, RelativeSource={RelativeSource AncestorType={x:Type Window}}}"
                                       DisplayMemberPath="LocalName"
-                                      SelectedIndex="{Binding Local, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" DropDownClosed="LocalComboEvent">
+                                      SelectedIndex="{Binding Local, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" DropDownClosed="LocalComboEvent">
                             </ComboBox>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
@@ -39,7 +47,7 @@
                         <DataTemplate>
                             <ComboBox ItemsSource="{Binding Path=PrivelCombobox, RelativeSource={RelativeSource AncestorType={x:Type Window}}}"
                                       DisplayMemberPath="PrivilegesName"
-                                      SelectedIndex="{Binding Lgota, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" DropDownClosed="PrivilegesComboEvent">
+                                      SelectedIndex="{Binding Lgota, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" DropDownClosed="PrivilegesComboEvent">
                             </ComboBox>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
@@ -62,7 +70,7 @@
                         <DataTemplate>
                             <ComboBox ItemsSource="{Binding Path=SolCombobox, RelativeSource={RelativeSource AncestorType={x:Type Window}}}"
                                       DisplayMemberPath="SolutionName"
-                                      SelectedIndex="{Binding Solution, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" DropDownClosed="SolutionComboEvent">
+                                      SelectedIndex="{Binding Solution, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" DropDownClosed="SolutionComboEvent">
                             </ComboBox>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
@@ -73,7 +81,7 @@
                         <DataTemplate>
                             <ComboBox ItemsSource="{Binding Path=PayCombobox, RelativeSource={RelativeSource AncestorType={x:Type Window}}}"
                                       DisplayMemberPath="Pay"
-                                      SelectedIndex="{Binding Pay, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" DropDownClosed="PayComboEvent">
+                                      SelectedIndex="{Binding Pay, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" DropDownClosed="PayComboEvent">
                             </ComboBox>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>

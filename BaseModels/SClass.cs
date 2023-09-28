@@ -9,7 +9,7 @@ namespace exel_for_mfc
     public partial class SClass
     {
 
-       public int IdReg { get; set; }
+        public int IdReg { get; set; }
         public string? Family { get; set; }
         public string? Name { get; set; }
         public string? Lastname { get; set; }

@@ -25,11 +25,7 @@ using Microsoft.Win32;
 using System.IO.Packaging;
 using System.Globalization;
 
-/*RowEditEnding
-Возникает при переходе пользователем на новую строку после редактирования текущей.
-Как и в случае CellEditEnding, в этот момент можно выполнить проверку достоверности и отменить изменения. 
-Обычно проверка достоверности охватывает несколько столбцов,
-например, когда значение в одном столбце не должно быть больше значения в другом столбце*/
+
 
 
 namespace exel_for_mfc
@@ -49,7 +45,6 @@ namespace exel_for_mfc
             Start();
         }
         //Запрос для заполнения таблицы
-        //Комментарий чтоб появлялся при наведении
         void Start()
         {
             using (ExDbContext db = new())
@@ -89,21 +84,61 @@ namespace exel_for_mfc
             };
         }
         //Событие редактирования ячейки
-        public async void dataGrid_CellEditEnding(object sender, DataGridCellEditEndingEventArgs e)
+        private async void dataGrid_CellEditEnding(object sender, DataGridCellEditEndingEventArgs e)
         {
+            //Считывание строки
+            SClass? a = e.Row.Item as SClass;
 
-              //Непосредственно редактирование ячейки (Обновление строки) - Заявитель - Регистр
-                using (ExDbContext db = new())
-                {
-                    //Считывание строки
-                    SClass? a = e.Row.Item as SClass;
-                    
-                    //Обновление таблицы Заявитель
-                    await db.Database.ExecuteSqlRawAsync("UPDATE Applicant SET Firstname = {0}, Middlename = {1}, Lastname = {2}, Adress = {3}, Snils = {4} WHERE Id = {5}", a.Family, a.Name, a.Lastname, a.Adress, a.Snils, a.IdApplicant);
-                    
-                    //Обновление таблицы Регистр
-                    await db.Database.ExecuteSqlRawAsync("UPDATE Registry SET SerialAndNumberSert = {0}, DateGetSert = {1}, DateAndNumbSolutionSert = {2}, Comment = {3}, Trek = {4}, MailingDate = {5} WHERE Id = {6}", a.Sernumb, a.DateGetSert, a.DateAndNumbSolutionSert, a.Comment, a.Trek, a.MailingDate, a.IdReg);
+            using ExDbContext db = new();
+
+            if (a.IdReg != 0)
+            {
+                // Редактирование ячейки (Обновление строки) - Заявитель - Регистр
+
+                //Обновление таблицы Заявитель
+                await db.Database.ExecuteSqlRawAsync("UPDATE Applicant SET Firstname = {0}, Middlename = {1}, Lastname = {2}, Adress = {3}, Snils = {4} WHERE Id = {5}", a.Family, a.Name, a.Lastname, a.Adress, a.Snils, a.IdApplicant);
+
+                //Обновление таблицы Регистр
+                await db.Database.ExecuteSqlRawAsync("UPDATE Registry SET SerialAndNumberSert = {0}, DateGetSert = {1}, DateAndNumbSolutionSert = {2}, Comment = {3}, Trek = {4}, MailingDate = {5} WHERE Id = {6}", a.Sernumb, a.DateGetSert, a.DateAndNumbSolutionSert, a.Comment, a.Trek, a.MailingDate, a.IdReg);
+            }
+
+            else if(a.IdReg == 0)
+            {
+                int temp = 0;
+
+                // Добавление записи
+                // Сначала проверка на заполнение всех полей
+                // await db.Database.ExecuteSqlRawAsync("INSERT INTO Companies (Name) VALUES ({0})", " ");
+                if (a.Family != null 
+                    && a.Name!= null
+                    && a.Lastname != null
+                    && a.Area != null
+                    && a.Local != null
+                    && a.Adress != null
+                    && a.Snils != null
+                    && a.Lgota != null)
+                { 
+                    temp++;
+                    //Сначала проверяю на наличие такого же человека в БД, если его нету,
+                    //то вставляю новую запись в таблицу Заявители,
+                    // Иначе просто беру ID того чела который уже есть в базе такой же
+                    MessageBox.Show("Проверка" + a.Area + " " + a.Local + " " + a.Lgota);
+
                 }
+
+            }
+           
+        }
+
+
+                /*RowEditEnding
+        Возникает при переходе пользователем на новую строку после редактирования текущей.
+        Как и в случае CellEditEnding, в этот момент можно выполнить проверку достоверности и отменить изменения. 
+        Обычно проверка достоверности охватывает несколько столбцов,
+        например, когда значение в одном столбце не должно быть больше значения в другом столбце*/
+        private void dataGrid_RowEditEnding(object sender, DataGridRowEditEndingEventArgs e)
+        {
+            MessageBox.Show("RowEditEnding");
         }
 
         #region События изменения значений ComboBox
@@ -380,5 +415,7 @@ namespace exel_for_mfc
         {
             
         }
+
+       
     }
 }

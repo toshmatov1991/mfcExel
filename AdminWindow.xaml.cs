@@ -14,14 +14,12 @@ using System.Windows.Shapes;
 
 namespace exel_for_mfc
 {
-    /// <summary>
-    /// Логика взаимодействия для AdminWindow.xaml
-    /// </summary>
     public partial class AdminWindow : Window
     {
         public AdminWindow()
         {
             InitializeComponent();
         }
+
     }
 }
