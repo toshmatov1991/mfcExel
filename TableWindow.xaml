@@ -14,8 +14,7 @@
                   VerticalAlignment="Top"
                   AutoGenerateColumns="False"
                   CanUserAddRows="True"
-                  CellEditEnding="dataGrid_CellEditEnding"
-                  RowEditEnding="dataGrid_RowEditEnding" PreparingCellForEdit="test_DatagridPrepar">
+                  CellEditEnding="dataGrid_CellEditEnding">
             <DataGrid.Columns>
                 <DataGridTextColumn Binding="{Binding IdReg, UpdateSourceTrigger=PropertyChanged}" IsReadOnly="True" Header="№п/п"/>
                 <DataGridTextColumn Binding="{Binding Family, UpdateSourceTrigger=PropertyChanged}" Header="Фамилия"/>

@@ -129,28 +129,23 @@ namespace exel_for_mfc
                         var result = MessageBox.Show($"{a.Family} {a.Name} {a.Lastname}\n в таблице существуют {myQuery123.Count} записи данного заявителя\nДобавить новую запись в таблицу?", "Найдены совпадения!", MessageBoxButton.YesNo, MessageBoxImage.Information);
                         if (result == MessageBoxResult.Yes)
                         {
-                            try
+                            
+                            if(a.Pay == null || a.Solution == null || a.Pay == null && a.Solution == null)
                             {
-                                if(a.Pay == null || a.Solution == null || a.Pay == null && a.Solution == null)
-                                {
-                                    //Добавить новую запись в таблицу Регистр
-                                    await db.Database.ExecuteSqlInterpolatedAsync($"INSERT INTO Registry(Applicant_FK, SerialAndNumberSert, DateGetSert, PayAmount_FK, Solution_FK, DateAndNumbSolutionSert, Comment, Trek, MailingDate) VALUES({await db.Applicants.CountAsync()}, {a.Sernumb}, {a.DateGetSert}, {null}, {null}, {a.DateAndNumbSolutionSert}, {a.Comment}, {a.Trek}, {a.MailingDate})");
-                                    await Task.Delay(100);
-                                    Start();
-                                }
+                                //Добавить новую запись в таблицу Регистр
+                                await db.Database.ExecuteSqlInterpolatedAsync($"INSERT INTO Registry(Applicant_FK, SerialAndNumberSert, DateGetSert, PayAmount_FK, Solution_FK, DateAndNumbSolutionSert, Comment, Trek, MailingDate) VALUES({await db.Applicants.CountAsync()}, {a.Sernumb}, {a.DateGetSert}, {null}, {null}, {a.DateAndNumbSolutionSert}, {a.Comment}, {a.Trek}, {a.MailingDate})");
+                                await Task.Delay(100);
+                                Start();
+                            }
 
-                                else if(a.Pay != null && a.Solution != null)
-                                {
-                                    //Добавить новую запись в таблицу Регистр
-                                    await db.Database.ExecuteSqlInterpolatedAsync($"INSERT INTO Registry(Applicant_FK, SerialAndNumberSert, DateGetSert, PayAmount_FK, Solution_FK, DateAndNumbSolutionSert, Comment, Trek, MailingDate) VALUES({await db.Applicants.CountAsync()}, {a.Sernumb}, {a.DateGetSert}, {a.Pay + 1}, {a.Solution + 1}, {a.DateAndNumbSolutionSert}, {a.Comment}, {a.Trek}, {a.MailingDate})");
-                                    await Task.Delay(100);
-                                    Start();
-                                }
-                            }
-                            catch (Exception ex)
+                            else if(a.Pay != null && a.Solution != null)
                             {
-                                MessageBox.Show(ex.Message);
+                                //Добавить новую запись в таблицу Регистр
+                                await db.Database.ExecuteSqlInterpolatedAsync($"INSERT INTO Registry(Applicant_FK, SerialAndNumberSert, DateGetSert, PayAmount_FK, Solution_FK, DateAndNumbSolutionSert, Comment, Trek, MailingDate) VALUES({await db.Applicants.CountAsync()}, {a.Sernumb}, {a.DateGetSert}, {a.Pay + 1}, {a.Solution + 1}, {a.DateAndNumbSolutionSert}, {a.Comment}, {a.Trek}, {a.MailingDate})");
+                                await Task.Delay(100);
+                                Start();
                             }
+                           
                             await Task.Delay(100);
                             Start();
                         }
@@ -162,43 +157,38 @@ namespace exel_for_mfc
 
                     else if (myQuery == null)
                     {
-                        try
+                        
+                        if (a.Lgota == null)
                         {
-                            if (a.Lgota == null)
-                            {
-                                //Добавить новую запись в таблицу заявитель
-                                await db.Database.ExecuteSqlInterpolatedAsync($"INSERT INTO Applicant(Firstname, Middlename, Lastname, Area_FK, Locality_FK, Adress, Snils, Privileges_FK) VALUES({a.Family}, {a.Name}, {a.Lastname}, {a.Area + 1}, {a.Local + 1}, {a.Adress}, {a.Snils}, {null})");
-                            }
+                            //Добавить новую запись в таблицу заявитель
+                            await db.Database.ExecuteSqlInterpolatedAsync($"INSERT INTO Applicant(Firstname, Middlename, Lastname, Area_FK, Locality_FK, Adress, Snils, Privileges_FK) VALUES({a.Family}, {a.Name}, {a.Lastname}, {a.Area + 1}, {a.Local + 1}, {a.Adress}, {a.Snils}, {null})");
+                        }
 
-                            else if (a.Area != null && a.Local != null && a.Lgota != null)
-                            {
-                                //Добавить новую запись в таблицу заявитель
-                                await db.Database.ExecuteSqlInterpolatedAsync($"INSERT INTO Applicant(Firstname, Middlename, Lastname, Area_FK, Locality_FK, Adress, Snils, Privileges_FK) VALUES({a.Family}, {a.Name}, {a.Lastname}, {a.Area + 1}, {a.Local + 1}, {a.Adress}, {a.Snils}, {a.Lgota + 1})");
-                            }
+                        else if (a.Area != null && a.Local != null && a.Lgota != null)
+                        {
+                            //Добавить новую запись в таблицу заявитель
+                            await db.Database.ExecuteSqlInterpolatedAsync($"INSERT INTO Applicant(Firstname, Middlename, Lastname, Area_FK, Locality_FK, Adress, Snils, Privileges_FK) VALUES({a.Family}, {a.Name}, {a.Lastname}, {a.Area + 1}, {a.Local + 1}, {a.Adress}, {a.Snils}, {a.Lgota + 1})");
+                        }
 
-                            var GetCountApplicant = await db.Applicants.CountAsync();
+                        var GetCountApplicant = await db.Applicants.CountAsync();
 
+                        //Добавить новую запись в таблицу Регистр
+                        if (a.Pay == null || a.Solution == null || a.Pay == null && a.Solution == null)
+                        {
                             //Добавить новую запись в таблицу Регистр
-                            if (a.Pay == null || a.Solution == null || a.Pay == null && a.Solution == null)
-                            {
-                                //Добавить новую запись в таблицу Регистр
-                                await db.Database.ExecuteSqlInterpolatedAsync($"INSERT INTO Registry(Applicant_FK, SerialAndNumberSert, DateGetSert, PayAmount_FK, Solution_FK, DateAndNumbSolutionSert, Comment, Trek, MailingDate) VALUES({await db.Applicants.CountAsync()}, {a.Sernumb}, {a.DateGetSert}, {null}, {null}, {a.DateAndNumbSolutionSert}, {a.Comment}, {a.Trek}, {a.MailingDate})");
-                                await Task.Delay(100);
-                                Start();
-                            }
+                            await db.Database.ExecuteSqlInterpolatedAsync($"INSERT INTO Registry(Applicant_FK, SerialAndNumberSert, DateGetSert, PayAmount_FK, Solution_FK, DateAndNumbSolutionSert, Comment, Trek, MailingDate) VALUES({await db.Applicants.CountAsync()}, {a.Sernumb}, {a.DateGetSert}, {null}, {null}, {a.DateAndNumbSolutionSert}, {a.Comment}, {a.Trek}, {a.MailingDate})");
+                            await Task.Delay(100);
+                            Start();
+                        }
 
-                            else if (a.Pay != null && a.Solution != null)
-                            {
-                                //Добавить новую запись в таблицу Регистр
-                                await db.Database.ExecuteSqlInterpolatedAsync($"INSERT INTO Registry(Applicant_FK, SerialAndNumberSert, DateGetSert, PayAmount_FK, Solution_FK, DateAndNumbSolutionSert, Comment, Trek, MailingDate) VALUES({await db.Applicants.CountAsync()}, {a.Sernumb}, {a.DateGetSert}, {a.Pay + 1}, {a.Solution + 1}, {a.DateAndNumbSolutionSert}, {a.Comment}, {a.Trek}, {a.MailingDate})");
-                                await Task.Delay(100);
-                                Start();
-                            }
-                        }
-                        catch (Exception ex)
+                        else if (a.Pay != null && a.Solution != null)
                         {
-                            MessageBox.Show(ex.Message);
+                            //Добавить новую запись в таблицу Регистр
+                            await db.Database.ExecuteSqlInterpolatedAsync($"INSERT INTO Registry(Applicant_FK, SerialAndNumberSert, DateGetSert, PayAmount_FK, Solution_FK, DateAndNumbSolutionSert, Comment, Trek, MailingDate) VALUES({await db.Applicants.CountAsync()}, {a.Sernumb}, {a.DateGetSert}, {a.Pay + 1}, {a.Solution + 1}, {a.DateAndNumbSolutionSert}, {a.Comment}, {a.Trek}, {a.MailingDate})");
+                            await Task.Delay(100);
+                            Start();
                         }
+                       
                     }
                 }
                
@@ -477,23 +467,5 @@ namespace exel_for_mfc
             await db.Database.ExecuteSqlRawAsync("UPDATE Registry SET Comment = {0} WHERE Id = {1}", a, (dataGrid.SelectedItem as SClass)?.IdReg);
         }
 
-
-        private void test_DatagridPrepar(object sender, DataGridPreparingCellForEditEventArgs e)
-        {
-            //Перед редактированием ячейки, как только введены данные о пользователе
-           // MessageBox.Show("RowEditEnding");
-        }
-
-
-
-            /*RowEditEnding
-            Возникает при переходе пользователем на новую строку после редактирования текущей.
-            Как и в случае CellEditEnding, в этот момент можно выполнить проверку достоверности и отменить изменения. 
-            Обычно проверка достоверности охватывает несколько столбцов,
-            например, когда значение в одном столбце не должно быть больше значения в другом столбце*/
-        private void dataGrid_RowEditEnding(object sender, DataGridRowEditEndingEventArgs e)
-        {
-            //MessageBox.Show("RowEditEnding");
-        }
     }
 }
