@@ -37,7 +37,6 @@ namespace exel_for_mfc
         public static List<Privilege>? PrivelCombobox { get; set; }
         public static List<SolutionType>? SolCombobox { get; set; }
         public static List<SClass>? MyList { get; set; }
-        private int temp = 0;
         public TableWindow()
         {
             InitializeComponent();
@@ -83,7 +82,7 @@ namespace exel_for_mfc
             };
         }
         //Событие редактирования ячейки
-        private async void dataGrid_CellEditEnding(object sender, DataGridCellEditEndingEventArgs e)
+        public async void dataGrid_CellEditEnding(object sender, DataGridCellEditEndingEventArgs e)
         {
             //Считывание строки
             SClass? a = e.Row.Item as SClass;
@@ -114,7 +113,14 @@ namespace exel_for_mfc
                     && a.Local != null
                     && a.Adress != null
                     && a.Snils != null
-                    && a.Lgota != null)
+                    && a.Lgota != null
+                    && a.Sernumb != null
+                    && a.DateGetSert != null
+                    && a.Solution != null
+                    && a.DateGetSert != null
+                    && a.Pay != null
+                    && a.Trek != null
+                    && a.MailingDate != null)
                 { 
                     //Сначала проверяю на наличие такого же человека в БД, если его нету,
                     //то вставляю новую запись в таблицу Заявители,
@@ -123,31 +129,50 @@ namespace exel_for_mfc
                     //Жесткая проверка
                     var myQuery = await db.Applicants.FromSqlRaw("SELECT * FROM Applicant WHERE Firstname LIKE {0} AND Middlename LIKE {1} AND Lastname LIKE {2} AND Adress LIKE {3} AND Snils LIKE {4}", a.Family, a.Name, a.Lastname, a.Adress, a.Snils).AsNoTracking().FirstOrDefaultAsync();
 
-                    var myQuery123 = await db.Registries.FromSqlRaw("SELECT * FROM Registry WHERE Applicant_FK = {0}", myQuery.Id).AsNoTracking().ToListAsync();
-
-                    //Мягкая првоерка - отказались от него
-                    //var myQuery = await db.Applicants.Where(u => u.Firstname.Contains(a.Family)
-                    //                                          && u.Middlename.Contains(a.Name)
-                    //                                          && u.Lastname.Contains(a.Lastname)
-                    //                                          && u.Adress.Contains(a.Adress)
-                    //                                          && u.Snils.Contains(a.Snils)).FirstOrDefaultAsync();
-
-                    if(myQuery != null && temp == 0)
+                    if (myQuery != null)
                     {
+                        var myQuery123 = await db.Registries.FromSqlRaw("SELECT * FROM Registry WHERE Applicant_FK = {0}", myQuery.Id).AsNoTracking().ToListAsync();
+
                         //Информировать что такая запись найдена
-                        temp++;
-                        MessageBox.Show($"{a.Family} {a.Name} {a.Lastname}\n в таблице существуют {myQuery123.Count} записи данного заявителя", "Найдены совпадения!", MessageBoxButton.OK, MessageBoxImage.Information);
+                        var result = MessageBox.Show($"{a.Family} {a.Name} {a.Lastname}\n в таблице существуют {myQuery123.Count} записи данного заявителя\nДобавить новую запись в таблицу?", "Найдены совпадения!", MessageBoxButton.YesNo, MessageBoxImage.Information);
+                        if (result == MessageBoxResult.Yes)
+                        {
+                            try
+                            {
+                                //Добавить новую запись в таблицу Регистр
+                                await db.Database.ExecuteSqlInterpolatedAsync($"INSERT INTO Registry(Applicant_FK, SerialAndNumberSert, DateGetSert, PayAmount_FK, Solution_FK, DateAndNumbSolutionSert, Comment, Trek, MailingDate) VALUES({await db.Applicants.CountAsync()}, {a.Sernumb}, {a.DateGetSert}, {a.Pay + 1}, {a.Solution + 1}, {a.DateAndNumbSolutionSert}, {a.Comment}, {a.Trek}, {a.MailingDate})");
+                            }
+                            catch (Exception ex)
+                            {
+                                MessageBox.Show(ex.Message);
+                            }
+
+                        }
+                        else if (result == MessageBoxResult.No)
+                            return;
+
                     }
 
 
-
-
-                    else
+                    else if (myQuery == null)
                     {
-                        MessageBox.Show("Добавить новую запись в таблицу Заявитель");
-                    }
+                        try
+                        {
+                            //Добавить новую запись в таблицу заявитель
+                            await db.Database.ExecuteSqlInterpolatedAsync($"INSERT INTO Applicant(Firstname, Middlename, Lastname, Area_FK, Locality_FK, Adress, Snils, Privileges_FK) VALUES({a.Family}, {a.Name}, {a.Lastname}, {a.Area + 1}, {a.Local + 1}, {a.Adress}, {a.Snils}, {a.Lgota + 1})");
 
-                        
+                            var GetCountApplicant = await db.Applicants.CountAsync(); 
+
+                            //Добавить новую запись в таблицу Регистр
+                            await db.Database.ExecuteSqlInterpolatedAsync($"INSERT INTO Registry(Applicant_FK, SerialAndNumberSert, DateGetSert, PayAmount_FK, Solution_FK, DateAndNumbSolutionSert, Comment, Trek, MailingDate) VALUES({GetCountApplicant}, {a.Sernumb}, {a.DateGetSert}, {a.Pay + 1}, {a.Solution + 1}, {a.DateAndNumbSolutionSert}, {a.Comment}, {a.Trek}, {a.MailingDate})");
+                        }
+                        catch (Exception ex)
+                        {
+                            MessageBox.Show(ex.Message);
+                        }
+                        //Start();
+                        //dataGrid.Items.Refresh();
+                    }
                 }
 
             }
@@ -439,7 +464,5 @@ namespace exel_for_mfc
         {
             
         }
-
-       
     }
 }
