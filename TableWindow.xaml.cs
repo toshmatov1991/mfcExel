@@ -24,9 +24,7 @@ using Newtonsoft.Json;
 using Microsoft.Win32;
 using System.IO.Packaging;
 using System.Globalization;
-
-
-
+using Microsoft.Data.SqlClient;
 
 namespace exel_for_mfc
 {
@@ -122,8 +120,21 @@ namespace exel_for_mfc
                     //Сначала проверяю на наличие такого же человека в БД, если его нету,
                     //то вставляю новую запись в таблицу Заявители,
                     // Иначе просто беру ID того чела который уже есть в базе такой же
-                    MessageBox.Show("Проверка" + a.Area + " " + a.Local + " " + a.Lgota);
 
+                    //Жесткая проверка
+                    var myQuery = await db.Applicants.FromSqlRaw("SELECT * FROM Applicant WHERE Firstname LIKE {0} AND Middlename LIKE {1} AND Lastname LIKE {2} AND Adress LIKE {3} AND Snils LIKE {4}", a.Family, a.Name, a.Lastname, a.Adress, a.Snils).FirstOrDefaultAsync();
+
+                    //Мягкая првоерка - отказались от него
+                    //var myQuery = await db.Applicants.Where(u => u.Firstname.Contains(a.Family)
+                    //                                          && u.Middlename.Contains(a.Name)
+                    //                                          && u.Lastname.Contains(a.Lastname)
+                    //                                          && u.Adress.Contains(a.Adress)
+                    //                                          && u.Snils.Contains(a.Snils)).FirstOrDefaultAsync();
+
+                    if(myQuery != null)
+                        MessageBox.Show("Такая запись найдена");
+                    else
+                        MessageBox.Show("Добавить новую запись?");
                 }
 
             }
@@ -138,7 +149,7 @@ namespace exel_for_mfc
         например, когда значение в одном столбце не должно быть больше значения в другом столбце*/
         private void dataGrid_RowEditEnding(object sender, DataGridRowEditEndingEventArgs e)
         {
-            MessageBox.Show("RowEditEnding");
+            //MessageBox.Show("RowEditEnding");
         }
 
         #region События изменения значений ComboBox
