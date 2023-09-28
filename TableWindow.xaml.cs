@@ -25,6 +25,7 @@ using Microsoft.Win32;
 using System.IO.Packaging;
 using System.Globalization;
 using Microsoft.Data.SqlClient;
+using System.Windows.Controls.Primitives;
 
 namespace exel_for_mfc
 {
@@ -36,7 +37,7 @@ namespace exel_for_mfc
         public static List<Privilege>? PrivelCombobox { get; set; }
         public static List<SolutionType>? SolCombobox { get; set; }
         public static List<SClass>? MyList { get; set; }
-
+        private int temp = 0;
         public TableWindow()
         {
             InitializeComponent();
@@ -102,8 +103,7 @@ namespace exel_for_mfc
 
             else if(a.IdReg == 0)
             {
-                int temp = 0;
-
+                
                 // Добавление записи
                 // Сначала проверка на заполнение всех полей
                 // await db.Database.ExecuteSqlRawAsync("INSERT INTO Companies (Name) VALUES ({0})", " ");
@@ -116,13 +116,14 @@ namespace exel_for_mfc
                     && a.Snils != null
                     && a.Lgota != null)
                 { 
-                    temp++;
                     //Сначала проверяю на наличие такого же человека в БД, если его нету,
                     //то вставляю новую запись в таблицу Заявители,
                     // Иначе просто беру ID того чела который уже есть в базе такой же
 
                     //Жесткая проверка
-                    var myQuery = await db.Applicants.FromSqlRaw("SELECT * FROM Applicant WHERE Firstname LIKE {0} AND Middlename LIKE {1} AND Lastname LIKE {2} AND Adress LIKE {3} AND Snils LIKE {4}", a.Family, a.Name, a.Lastname, a.Adress, a.Snils).FirstOrDefaultAsync();
+                    var myQuery = await db.Applicants.FromSqlRaw("SELECT * FROM Applicant WHERE Firstname LIKE {0} AND Middlename LIKE {1} AND Lastname LIKE {2} AND Adress LIKE {3} AND Snils LIKE {4}", a.Family, a.Name, a.Lastname, a.Adress, a.Snils).AsNoTracking().FirstOrDefaultAsync();
+
+                    var myQuery123 = await db.Registries.FromSqlRaw("SELECT * FROM Registry WHERE Applicant_FK = {0}", myQuery.Id).AsNoTracking().ToListAsync();
 
                     //Мягкая првоерка - отказались от него
                     //var myQuery = await db.Applicants.Where(u => u.Firstname.Contains(a.Family)
@@ -131,10 +132,22 @@ namespace exel_for_mfc
                     //                                          && u.Adress.Contains(a.Adress)
                     //                                          && u.Snils.Contains(a.Snils)).FirstOrDefaultAsync();
 
-                    if(myQuery != null)
-                        MessageBox.Show("Такая запись найдена");
+                    if(myQuery != null && temp == 0)
+                    {
+                        //Информировать что такая запись найдена
+                        temp++;
+                        MessageBox.Show($"{a.Family} {a.Name} {a.Lastname}\n в таблице существуют {myQuery123.Count} записи данного заявителя", "Найдены совпадения!", MessageBoxButton.OK, MessageBoxImage.Information);
+                    }
+
+
+
+
                     else
-                        MessageBox.Show("Добавить новую запись?");
+                    {
+                        MessageBox.Show("Добавить новую запись в таблицу Заявитель");
+                    }
+
+                        
                 }
 
             }
