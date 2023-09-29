@@ -5,7 +5,6 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d" Icon="Resources\logomfc.png" WindowStartupLocation="CenterScreen"
         Title="Главное окно" Height="700" Width="1300">
-
     <Grid>
         <TextBlock Text=" Быстрый поиск" HorizontalAlignment="Center" FontStyle="Italic" FontSize="20"/>
         <TextBox HorizontalAlignment="Left" FontStyle="Italic" Height="23" Width="250" VerticalContentAlignment="Center" FontSize="14" VerticalAlignment="Top" Margin="739,4,0,0" x:Name="SearchTable" KeyUp="GoSearchToTable" />

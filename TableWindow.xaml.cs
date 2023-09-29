@@ -170,7 +170,7 @@ namespace exel_for_mfc
                         {
                             //Добавить новую запись в таблицу Регистр
                             await db.Database.ExecuteSqlInterpolatedAsync($"INSERT INTO Registry(Applicant_FK, SerialAndNumberSert, DateGetSert, PayAmount_FK, Solution_FK, DateAndNumbSolutionSert, Comment, Trek, MailingDate) VALUES({await db.Applicants.CountAsync()}, {a.Sernumb}, {a.DateGetSert}, {null}, {null}, {a.DateAndNumbSolutionSert}, {a.Comment}, {a.Trek}, {a.MailingDate})");
-                            await Task.Delay(100);
+                            await Task.Delay(50);
                             Start();
                         }
 
@@ -178,7 +178,7 @@ namespace exel_for_mfc
                         {
                             //Добавить новую запись в таблицу Регистр
                             await db.Database.ExecuteSqlInterpolatedAsync($"INSERT INTO Registry(Applicant_FK, SerialAndNumberSert, DateGetSert, PayAmount_FK, Solution_FK, DateAndNumbSolutionSert, Comment, Trek, MailingDate) VALUES({await db.Applicants.CountAsync()}, {a.Sernumb}, {a.DateGetSert}, {a.Pay + 1}, {a.Solution + 1}, {a.DateAndNumbSolutionSert}, {a.Comment}, {a.Trek}, {a.MailingDate})");
-                            await Task.Delay(100);
+                            await Task.Delay(50);
                             Start();
                         }
                        
@@ -462,40 +462,38 @@ namespace exel_for_mfc
         private void GoSearchToTable(object sender, KeyEventArgs e)
         {
             //SearchTable
-            using (ExDbContext db = new())
-            {
-                MyList = (from reg in db.Registries
-                          join appl in db.Applicants on reg.ApplicantFk equals appl.Id
-                          select new SClass
-                          {
-                              IdReg = reg.Id,
-                              Family = appl.Firstname,
-                              Name = appl.Middlename,
-                              Lastname = appl.Lastname,
-                              Snils = appl.Snils,
-                              Area = appl.AreaFk - 1,
-                              Local = appl.LocalityFk - 1,
-                              Adress = appl.Adress,
-                              Lgota = appl.PrivilegesFk - 1,
-                              Pay = reg.PayAmountFk - 1,
-                              Sernumb = reg.SerialAndNumberSert,
-                              DateGetSert = reg.DateGetSert,
-                              Solution = reg.SolutionFk - 1,
-                              DateAndNumbSolutionSert = reg.DateAndNumbSolutionSert,
-                              Comment = reg.Comment,
-                              Trek = reg.Trek,
-                              MailingDate = reg.MailingDate,
-                              IdApplicant = appl.Id
-                          }).Where(u => u.Family.Contains(SearchTable.Text)
-                                     || u.Name.Contains(SearchTable.Text)
-                                     || u.Lastname.Contains(SearchTable.Text)
-                                     || u.Snils.Contains(SearchTable.Text)
-                                     || u.Adress.Contains(SearchTable.Text)
-                                     || u.Sernumb.Contains(SearchTable.Text)).AsNoTracking().ToList();
+            using ExDbContext db = new();
+            MyList = (from reg in db.Registries
+                      join appl in db.Applicants on reg.ApplicantFk equals appl.Id
+                      select new SClass
+                      {
+                          IdReg = reg.Id,
+                          Family = appl.Firstname,
+                          Name = appl.Middlename,
+                          Lastname = appl.Lastname,
+                          Snils = appl.Snils,
+                          Area = appl.AreaFk - 1,
+                          Local = appl.LocalityFk - 1,
+                          Adress = appl.Adress,
+                          Lgota = appl.PrivilegesFk - 1,
+                          Pay = reg.PayAmountFk - 1,
+                          Sernumb = reg.SerialAndNumberSert,
+                          DateGetSert = reg.DateGetSert,
+                          Solution = reg.SolutionFk - 1,
+                          DateAndNumbSolutionSert = reg.DateAndNumbSolutionSert,
+                          Comment = reg.Comment,
+                          Trek = reg.Trek,
+                          MailingDate = reg.MailingDate,
+                          IdApplicant = appl.Id
+                      }).Where(u => u.Family.Contains(SearchTable.Text)
+                                 || u.Name.Contains(SearchTable.Text)
+                                 || u.Lastname.Contains(SearchTable.Text)
+                                 || u.Snils.Contains(SearchTable.Text)
+                                 || u.Adress.Contains(SearchTable.Text)
+                                 || u.Sernumb.Contains(SearchTable.Text)).AsNoTracking().ToList();
 
-                dataGrid.ItemsSource = MyList;
-            }
-            
+            dataGrid.ItemsSource = MyList;
+
         }
     }
 }
