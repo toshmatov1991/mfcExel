@@ -26,6 +26,8 @@ using System.IO.Packaging;
 using System.Globalization;
 using Microsoft.Data.SqlClient;
 using System.Windows.Controls.Primitives;
+using System.ComponentModel;
+using System.Diagnostics;
 
 namespace exel_for_mfc
 {
@@ -37,6 +39,8 @@ namespace exel_for_mfc
         public static List<Privilege>? PrivelCombobox { get; set; }
         public static List<SolutionType>? SolCombobox { get; set; }
         public static List<SClass>? MyList { get; set; }
+    
+
         public TableWindow()
         {
             InitializeComponent();

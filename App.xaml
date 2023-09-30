@@ -4,6 +4,6 @@
              xmlns:local="clr-namespace:exel_for_mfc"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
-         
+       
     </Application.Resources>
 </Application>
