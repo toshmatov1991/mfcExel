@@ -40,40 +40,41 @@ namespace exel_for_mfc
         public static List<SolutionType>? SolCombobox { get; set; }
         public static List<SClass>? MyList { get; set; }
     
-
         public TableWindow()
         {
             InitializeComponent();
             Start();
+            
         }
+        #region База
         //Запрос для заполнения таблицы
         void Start()
         {
             using (ExDbContext db = new())
             {
                 MyList = (from reg in db.Registries
-                              join appl in db.Applicants on reg.ApplicantFk equals appl.Id
-                              select new SClass
-                              {
-                                  IdReg = reg.Id,
-                                  Family = appl.Firstname,
-                                  Name = appl.Middlename,
-                                  Lastname = appl.Lastname,
-                                  Snils = appl.Snils,
-                                  Area = appl.AreaFk - 1,
-                                  Local = appl.LocalityFk - 1,
-                                  Adress = appl.Adress,
-                                  Lgota = appl.PrivilegesFk - 1,
-                                  Pay = reg.PayAmountFk - 1,
-                                  Sernumb = reg.SerialAndNumberSert,
-                                  DateGetSert = reg.DateGetSert,
-                                  Solution = reg.SolutionFk - 1,
-                                  DateAndNumbSolutionSert = reg.DateAndNumbSolutionSert,
-                                  Comment = reg.Comment,
-                                  Trek = reg.Trek,
-                                  MailingDate = reg.MailingDate,
-                                  IdApplicant = appl.Id
-                              }).AsNoTracking().ToList();
+                          join appl in db.Applicants on reg.ApplicantFk equals appl.Id
+                          select new SClass
+                          {
+                              IdReg = reg.Id,
+                              Family = appl.Firstname,
+                              Name = appl.Middlename,
+                              Lastname = appl.Lastname,
+                              Snils = appl.Snils,
+                              Area = appl.AreaFk - 1,
+                              Local = appl.LocalityFk - 1,
+                              Adress = appl.Adress,
+                              Lgota = appl.PrivilegesFk - 1,
+                              Pay = reg.PayAmountFk - 1,
+                              Sernumb = reg.SerialAndNumberSert,
+                              DateGetSert = reg.DateGetSert,
+                              Solution = reg.SolutionFk - 1,
+                              DateAndNumbSolutionSert = reg.DateAndNumbSolutionSert,
+                              Comment = reg.Comment,
+                              Trek = reg.Trek,
+                              MailingDate = reg.MailingDate,
+                              IdApplicant = appl.Id
+                          }).ToList();
 
                 dataGrid.ItemsSource = MyList;
 
@@ -103,20 +104,20 @@ namespace exel_for_mfc
                 await db.Database.ExecuteSqlRawAsync("UPDATE Registry SET SerialAndNumberSert = {0}, DateGetSert = {1}, DateAndNumbSolutionSert = {2}, Comment = {3}, Trek = {4}, MailingDate = {5} WHERE Id = {6}", a.Sernumb, a.DateGetSert, a.DateAndNumbSolutionSert, a.Comment, a.Trek, a.MailingDate, a.IdReg);
             }
 
-            else if(a.IdReg == 0)
+            else if (a.IdReg == 0)
             {
-                
+
                 // Добавление записи
                 // Сначала проверка на заполнение всех полей
                 // await db.Database.ExecuteSqlRawAsync("INSERT INTO Companies (Name) VALUES ({0})", " ");
-                if (a.Family != null 
-                    && a.Name!= null
+                if (a.Family != null
+                    && a.Name != null
                     && a.Lastname != null
                     && a.Adress != null
                     && a.Area != null
                     && a.Local != null
                     && a.Snils != null)
-                { 
+                {
                     //Сначала проверяю на наличие такого же человека в БД, если его нету,
                     //то вставляю новую запись в таблицу Заявители,
                     // Иначе просто беру ID того чела который уже есть в базе такой же
@@ -132,7 +133,7 @@ namespace exel_for_mfc
                         var result = MessageBox.Show($"{a.Family} {a.Name} {a.Lastname}\n в таблице существуют {myQuery123.Count} записи данного заявителя\nДобавить новую запись в таблицу?", "Найдены совпадения!", MessageBoxButton.YesNo, MessageBoxImage.Information);
                         if (result == MessageBoxResult.Yes)
                         {
-                            if(a.Pay == null || a.Solution == null || a.Pay == null && a.Solution == null)
+                            if (a.Pay == null || a.Solution == null || a.Pay == null && a.Solution == null)
                             {
                                 //Добавить новую запись в таблицу Регистр
                                 await db.Database.ExecuteSqlInterpolatedAsync($"INSERT INTO Registry(Applicant_FK, SerialAndNumberSert, DateGetSert, PayAmount_FK, Solution_FK, DateAndNumbSolutionSert, Comment, Trek, MailingDate) VALUES({await db.Applicants.CountAsync()}, {a.Sernumb}, {a.DateGetSert}, {null}, {null}, {a.DateAndNumbSolutionSert}, {a.Comment}, {a.Trek}, {a.MailingDate})");
@@ -140,7 +141,7 @@ namespace exel_for_mfc
                                 Start();
                             }
 
-                            else if(a.Pay != null && a.Solution != null)
+                            else if (a.Pay != null && a.Solution != null)
                             {
                                 //Добавить новую запись в таблицу Регистр
                                 await db.Database.ExecuteSqlInterpolatedAsync($"INSERT INTO Registry(Applicant_FK, SerialAndNumberSert, DateGetSert, PayAmount_FK, Solution_FK, DateAndNumbSolutionSert, Comment, Trek, MailingDate) VALUES({await db.Applicants.CountAsync()}, {a.Sernumb}, {a.DateGetSert}, {a.Pay + 1}, {a.Solution + 1}, {a.DateAndNumbSolutionSert}, {a.Comment}, {a.Trek}, {a.MailingDate})");
@@ -156,7 +157,7 @@ namespace exel_for_mfc
 
                     else if (myQuery == null)
                     {
-                        
+
                         if (a.Lgota == null)
                         {
                             //Добавить новую запись в таблицу заявитель
@@ -185,13 +186,67 @@ namespace exel_for_mfc
                             await Task.Delay(50);
                             Start();
                         }
-                       
+
                     }
                 }
-               
+
             }
-           
+
         }
+
+        //Обновить коммент
+        private async void CommentUpdate(object sender, TextChangedEventArgs e)
+        {
+            string a = "";
+            if (e.Source.ToString().Length == 31)
+                a = null;
+
+            else
+                a = e.OriginalSource.ToString().Substring(33);
+
+            using ExDbContext db = new();
+            await db.Database.ExecuteSqlRawAsync("UPDATE Registry SET Comment = {0} WHERE Id = {1}", a, (dataGrid.SelectedItem as SClass)?.IdReg);
+        }
+
+        //Поиск
+        private void GoSearchToTable(object sender, KeyEventArgs e)
+        {
+            //SearchTable
+            using ExDbContext db = new();
+            MyList = (from reg in db.Registries
+                      join appl in db.Applicants on reg.ApplicantFk equals appl.Id
+                      select new SClass
+                      {
+                          IdReg = reg.Id,
+                          Family = appl.Firstname,
+                          Name = appl.Middlename,
+                          Lastname = appl.Lastname,
+                          Snils = appl.Snils,
+                          Area = appl.AreaFk - 1,
+                          Local = appl.LocalityFk - 1,
+                          Adress = appl.Adress,
+                          Lgota = appl.PrivilegesFk - 1,
+                          Pay = reg.PayAmountFk - 1,
+                          Sernumb = reg.SerialAndNumberSert,
+                          DateGetSert = reg.DateGetSert,
+                          Solution = reg.SolutionFk - 1,
+                          DateAndNumbSolutionSert = reg.DateAndNumbSolutionSert,
+                          Comment = reg.Comment,
+                          Trek = reg.Trek,
+                          MailingDate = reg.MailingDate,
+                          IdApplicant = appl.Id
+                      }).Where(u => u.Family.Contains(SearchTable.Text)
+                                 || u.Name.Contains(SearchTable.Text)
+                                 || u.Lastname.Contains(SearchTable.Text)
+                                 || u.Snils.Contains(SearchTable.Text)
+                                 || u.Adress.Contains(SearchTable.Text)
+                                 || u.Sernumb.Contains(SearchTable.Text)).AsNoTracking().ToList();
+
+            dataGrid.ItemsSource = MyList;
+
+        }
+
+        #endregion
 
         #region События изменения значений ComboBox
         private async void AreaComboEvent(object sender, EventArgs e)
@@ -223,6 +278,7 @@ namespace exel_for_mfc
         }
         #endregion
 
+        #region Выгрузка в Excel
         //Сохранить таблицу в Excel
         static async Task SaveDataInExel()
         {
@@ -447,57 +503,13 @@ namespace exel_for_mfc
         {
             await SaveDataInExel();
         }
+        #endregion
 
-        //Обновить коммент
-        private async void CommentUpdate(object sender, TextChangedEventArgs e)
-        {
-            string a = "";
-            if (e.Source.ToString().Length == 31)
-                a = null;
+        #region Фильтрация
+       //Использовать для данных datagrid и включить autogeneratecolumns
 
-            else
-                a = e.OriginalSource.ToString().Substring(33);
+       
 
-            using ExDbContext db = new();
-            await db.Database.ExecuteSqlRawAsync("UPDATE Registry SET Comment = {0} WHERE Id = {1}", a, (dataGrid.SelectedItem as SClass)?.IdReg);
-        }
-
-        //Поиск
-        private void GoSearchToTable(object sender, KeyEventArgs e)
-        {
-            //SearchTable
-            using ExDbContext db = new();
-            MyList = (from reg in db.Registries
-                      join appl in db.Applicants on reg.ApplicantFk equals appl.Id
-                      select new SClass
-                      {
-                          IdReg = reg.Id,
-                          Family = appl.Firstname,
-                          Name = appl.Middlename,
-                          Lastname = appl.Lastname,
-                          Snils = appl.Snils,
-                          Area = appl.AreaFk - 1,
-                          Local = appl.LocalityFk - 1,
-                          Adress = appl.Adress,
-                          Lgota = appl.PrivilegesFk - 1,
-                          Pay = reg.PayAmountFk - 1,
-                          Sernumb = reg.SerialAndNumberSert,
-                          DateGetSert = reg.DateGetSert,
-                          Solution = reg.SolutionFk - 1,
-                          DateAndNumbSolutionSert = reg.DateAndNumbSolutionSert,
-                          Comment = reg.Comment,
-                          Trek = reg.Trek,
-                          MailingDate = reg.MailingDate,
-                          IdApplicant = appl.Id
-                      }).Where(u => u.Family.Contains(SearchTable.Text)
-                                 || u.Name.Contains(SearchTable.Text)
-                                 || u.Lastname.Contains(SearchTable.Text)
-                                 || u.Snils.Contains(SearchTable.Text)
-                                 || u.Adress.Contains(SearchTable.Text)
-                                 || u.Sernumb.Contains(SearchTable.Text)).AsNoTracking().ToList();
-
-            dataGrid.ItemsSource = MyList;
-
-        }
+        #endregion
     }
 }
