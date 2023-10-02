@@ -32,16 +32,16 @@
             <RowDefinition/>
             <RowDefinition/>
         </Grid.RowDefinitions>
-        <TextBlock Text=" Быстрый поиск" VerticalAlignment="Bottom" HorizontalAlignment="Center" FontStyle="Italic" FontSize="20"/>
-        <TextBox HorizontalAlignment="Right" FontStyle="Italic" Height="23" Width="250" VerticalContentAlignment="Center" FontSize="14" VerticalAlignment="Bottom" Margin="0,4,300,0" x:Name="SearchTable" KeyUp="GoSearchToTable" />
+        <TextBlock Text=" Быстрый поиск" FontStyle="Italic" Grid.Column="5" FontSize="20"/>
+        <TextBox HorizontalAlignment="Right" FontStyle="Italic" Width="250" VerticalContentAlignment="Center" FontSize="14" Grid.Column="6" x:Name="SearchTable" KeyUp="GoSearchToTable" Grid.ColumnSpan="2" Margin="0,5,65,22" />
         <DataGrid x:Name="dataGrid"
                   Grid.ColumnSpan="8"
-                  Grid.RowSpan="10"
+                  Grid.RowSpan="12"
                   CanUserSortColumns="True"
                   AutoGenerateColumns="False"
                   CanUserAddRows="True"
-                  CellEditEnding="dataGrid_CellEditEnding" Margin="0,31,0,0">
-              <DataGrid.Columns>
+                  CellEditEnding="dataGrid_CellEditEnding" Margin="0,44,0,52">
+            <DataGrid.Columns>
                 <DataGridTextColumn Binding="{Binding IdReg, UpdateSourceTrigger=PropertyChanged}" IsReadOnly="True" Header="№п/п"/>
                 <DataGridTextColumn Binding="{Binding Family, UpdateSourceTrigger=PropertyChanged}" Header="Фамилия"/>
                 <DataGridTextColumn Binding="{Binding Name, UpdateSourceTrigger=PropertyChanged}" Header="Имя"/>
@@ -144,8 +144,8 @@
                 </DataTemplate>
             </DataGrid.RowDetailsTemplate>
         </DataGrid>
-        <Button Content="Выгрузить в Excel" HorizontalAlignment="Left" Margin="947,562,0,0" VerticalAlignment="Top" Height="42" Width="107" Click="Button_Click"/>
-       
+        <Button Content="Выгрузить в Excel" Grid.Column="6" Grid.Row="11"  Height="42" Width="107" Click="Button_Click"/>
+
         <!-- Фильтрация , это будет жестко)-->
         <!-- Главное чтоб листвиев 
         я мог создавать программно
@@ -155,10 +155,10 @@
 
 
         <!-- Фильтрация -->
-        
-        
-        
-        
-        
+
+
+
+
+
     </Grid>
 </Window>

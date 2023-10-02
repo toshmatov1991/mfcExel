@@ -186,9 +186,19 @@ namespace exel_for_mfc
             }
         }
 
-        private void AdminCell(object sender, DataGridCellEditEndingEventArgs e)
+        private async void AdminCell(object sender, DataGridCellEditEndingEventArgs e)
         {
+            //Считывание строки
+            SolutionType? a = e.Row.Item as SolutionType;
 
+            using ExDbContext db = new();
+
+            if (a.Id != 0)
+            {
+                //Обновление таблицы Выплаты
+                await db.Database.ExecuteSqlRawAsync("UPDATE SolutionType SET Login = {0}, Passwords = {1} WHERE Id = {2}", a.Login, a.Passwords, a.Id);
+            }
+          
         }
     }
 }

@@ -2,6 +2,7 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:gif="http://wpfanimatedgif.codeplex.com"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d" Icon="Resources\logomfc.png" WindowStartupLocation="CenterScreen"
         Title="Администрирование" Height="700" Width="1200">
@@ -64,7 +65,11 @@
         <DataGrid x:Name="SolutionX"
                   Grid.Row="1"
                   AutoGenerateColumns="False"
-                  CanUserAddRows="True" Grid.ColumnSpan="2" Margin="72,119,270,10" Grid.Column="1" CellEditEnding="SolutionCell">
+                  CanUserAddRows="True" 
+                  Grid.ColumnSpan="2" 
+                  Margin="72,119,270,10"
+                  Grid.Column="1"
+                  CellEditEnding="SolutionCell">
             <DataGrid.Columns>
                 <DataGridTextColumn Binding="{Binding Id, UpdateSourceTrigger=PropertyChanged}" IsReadOnly="True" Header="id" Width="50"/>
                 <DataGridTextColumn Binding="{Binding SolutionName, UpdateSourceTrigger=PropertyChanged}" Header="Тип решения" Width="300"/>
@@ -76,7 +81,11 @@
         <DataGrid x:Name="AdminsX"
                   Grid.Row="1"
                   AutoGenerateColumns="False"
-                  CanUserAddRows="True" Grid.ColumnSpan="2" Margin="125,122,19,10" Grid.Column="2" CellEditEnding="AdminCell">
+                  CanUserAddRows="False"
+                  Grid.ColumnSpan="2"
+                  Margin="125,171,19,10"
+                  Grid.Column="2"
+                  CellEditEnding="AdminCell">
             <DataGrid.Columns>
                 <DataGridTextColumn Binding="{Binding Rolle, UpdateSourceTrigger=PropertyChanged}" Header="Роль" Width="120" IsReadOnly="True"/>
                 <DataGridTextColumn Binding="{Binding Login, UpdateSourceTrigger=PropertyChanged}" Header="Логин" Width="120"/>
@@ -84,5 +93,7 @@
             </DataGrid.Columns>
         </DataGrid>
 
+        <Image gif:ImageBehavior.AnimatedSource="Resources/it.gif" Grid.Column="2" Grid.ColumnSpan="2" Margin="147,336,77,187" Grid.RowSpan="2" />
+        
     </Grid>
 </Window>
