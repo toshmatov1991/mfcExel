@@ -114,7 +114,6 @@ namespace exel_for_mfc
             login_text.BorderBrush = Brushes.Black;
         }
 
-
         private void Log(object sender, KeyEventArgs e)
         {
             if (e.Key == Key.Enter)
@@ -126,6 +125,11 @@ namespace exel_for_mfc
         {
             if (e.Key == Key.Enter) { }
                 Button_Click(sender, e);
+        }
+
+        private void Button_Click_1(object sender, RoutedEventArgs e)
+        {
+
         }
     }
 }

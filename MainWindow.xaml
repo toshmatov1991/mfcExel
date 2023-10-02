@@ -46,7 +46,7 @@
         <Button Content="Войти"
                 Grid.Row="2"
                 Background="AliceBlue"
-                FontSize="17" Margin="180,7,52,17" Grid.ColumnSpan="2"/>
-                <!--FontSize="17" Margin="180,7,52,17" Click="Button_Click" Grid.ColumnSpan="2"/>-->
+                FontSize="17" Margin="180,7,52,17" Grid.ColumnSpan="2"
+                Click="Button_Click"/>
     </Grid>
 </Window>
