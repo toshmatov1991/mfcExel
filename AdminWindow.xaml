@@ -67,7 +67,21 @@
                   CanUserAddRows="True" Grid.ColumnSpan="2" Margin="72,119,270,10" Grid.Column="1">
             <DataGrid.Columns>
                 <DataGridTextColumn Binding="{Binding Id, UpdateSourceTrigger=PropertyChanged}" IsReadOnly="True" Header="id" Width="50"/>
-                <DataGridTextColumn Binding="{Binding SolutionName, UpdateSourceTrigger=PropertyChanged}" Header="Льгота" Width="300"/>
+                <DataGridTextColumn Binding="{Binding SolutionName, UpdateSourceTrigger=PropertyChanged}" Header="Тип решения" Width="300"/>
+            </DataGrid.Columns>
+        </DataGrid>
+
+
+        <!--Логины и пароли для входа-->
+        <DataGrid x:Name="AdminsX"
+                  Grid.Row="1"
+                  AutoGenerateColumns="False"
+                  CanUserAddRows="True" Grid.ColumnSpan="2" Margin="216,116,126,13" Grid.Column="2">
+            <DataGrid.Columns>
+                <DataGridTextColumn Binding="{Binding SolutionName, UpdateSourceTrigger=PropertyChanged}" Header="Роль" Width="90" IsReadOnly="True"/>
+                <DataGridTextColumn Binding="{Binding Login, UpdateSourceTrigger=PropertyChanged}" IsReadOnly="True" Header="Логин" Width="90"/>
+                <DataGridTextColumn Binding="{Binding Passwords, UpdateSourceTrigger=PropertyChanged}" Header="Пароль" Width="90"/>
+                
             </DataGrid.Columns>
         </DataGrid>
 
