@@ -48,9 +48,33 @@ namespace exel_for_mfc
 
             SolDataGrid = db.SolutionTypes.FromSqlRaw("SELECT * FROM SolutionType").ToList();
             SolutionX.ItemsSource = SolDataGrid;
+            AdminsX.ItemsSource = SolDataGrid;
         }
 
+        private async void AreaCell(object sender, DataGridCellEditEndingEventArgs e)
+        {
+            //Считывание строки
+            Area? a = e.Row.Item as Area;
 
+            using ExDbContext db = new();
 
+            if (a.Id != 0)
+            {
+                //Обновление таблицы Район
+                await db.Database.ExecuteSqlRawAsync("UPDATE Area SET AreaName = {0} WHERE Id = {1}", a.AreaName, a.Id);
+            }
+
+            else if (a.Id == 0)
+            {
+                // Добавление записи
+                if (a.AreaName != null)
+                {
+                    //Добавить новую запись в таблицу Район
+                    await db.Database.ExecuteSqlInterpolatedAsync($"INSERT INTO Area(AreaName) VALUES({a.AreaName})");
+                    await Task.Delay(50);
+                    StartAdminWin();
+                }
+            }
+        }
     }
 }

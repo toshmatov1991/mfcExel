@@ -19,7 +19,7 @@
         <!--Район-->
         <DataGrid x:Name="AreaX"
                   AutoGenerateColumns="False"
-                  CanUserAddRows="True" Margin="10,14,10,259" Grid.RowSpan="2">
+                  CanUserAddRows="True" Margin="10,14,10,259" Grid.RowSpan="2" CellEditEnding="AreaCell">
             <DataGrid.Columns>
                 <DataGridTextColumn Binding="{Binding Id, UpdateSourceTrigger=PropertyChanged}" IsReadOnly="True" Header="id" Width="50"/>
                 <DataGridTextColumn Binding="{Binding AreaName, UpdateSourceTrigger=PropertyChanged}" Header="Район" Width="300"/>
@@ -76,12 +76,11 @@
         <DataGrid x:Name="AdminsX"
                   Grid.Row="1"
                   AutoGenerateColumns="False"
-                  CanUserAddRows="True" Grid.ColumnSpan="2" Margin="216,116,126,13" Grid.Column="2">
+                  CanUserAddRows="True" Grid.ColumnSpan="2" Margin="125,122,19,10" Grid.Column="2">
             <DataGrid.Columns>
-                <DataGridTextColumn Binding="{Binding SolutionName, UpdateSourceTrigger=PropertyChanged}" Header="Роль" Width="90" IsReadOnly="True"/>
-                <DataGridTextColumn Binding="{Binding Login, UpdateSourceTrigger=PropertyChanged}" IsReadOnly="True" Header="Логин" Width="90"/>
-                <DataGridTextColumn Binding="{Binding Passwords, UpdateSourceTrigger=PropertyChanged}" Header="Пароль" Width="90"/>
-                
+                <DataGridTextColumn Binding="{Binding Rolle, UpdateSourceTrigger=PropertyChanged}" Header="Роль" Width="120" IsReadOnly="True"/>
+                <DataGridTextColumn Binding="{Binding Login, UpdateSourceTrigger=PropertyChanged}" Header="Логин" Width="120"/>
+                <DataGridTextColumn Binding="{Binding Passwords, UpdateSourceTrigger=PropertyChanged}" Header="Пароль" Width="200"/>
             </DataGrid.Columns>
         </DataGrid>
 
