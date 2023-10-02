@@ -14,64 +14,71 @@ namespace exel_for_mfc
         public MainWindow()
         {
             InitializeComponent();
-            AdminWindow adminWindow = new();
-            adminWindow.Show();
+            Start();
+            //AdminWindow adminWindow = new();
+            //adminWindow.Show();
             //TableWindow tableWindow = new();
             //tableWindow.Show();
-            Close();
-            //Start();
-        }  
+            // Close();
 
-        //private async void Button_Click(object sender, RoutedEventArgs e)
-        //{
-        //    //При нажатии на кнопку Войти
-        //    //Вход
-        //    //Проверка на пустые поля
-        //    //Проверка входных значений
-        //    if (string.IsNullOrWhiteSpace(login_text.Text)
-        //    && string.IsNullOrWhiteSpace(password_text.Password)
-        //    || string.IsNullOrWhiteSpace(login_text.Text)
-        //    || string.IsNullOrWhiteSpace(password_text.Password))
-        //    {
-        //        MessageBox.Show("Не заполнено одно или несколько полей");
-        //        if (string.IsNullOrWhiteSpace(login_text.Text))
-        //            login_text.BorderBrush = Brushes.Red;
+        }
+
+        private async void Button_Click(object sender, RoutedEventArgs e)
+        {
+            //При нажатии на кнопку Войти
+            //Вход
+            //Проверка на пустые поля
+            //Проверка входных значений
+            if (string.IsNullOrWhiteSpace(login_text.Text)
+            && string.IsNullOrWhiteSpace(password_text.Password)
+            || string.IsNullOrWhiteSpace(login_text.Text)
+            || string.IsNullOrWhiteSpace(password_text.Password))
+            {
+                MessageBox.Show("Не заполнено одно или несколько полей", "Пропущено поле", MessageBoxButton.OK, MessageBoxImage.Stop);
+                if (string.IsNullOrWhiteSpace(login_text.Text))
+                    login_text.BorderBrush = Brushes.Red;
 
 
-        //        if (string.IsNullOrWhiteSpace(password_text.Password))
-        //            password_text.BorderBrush = Brushes.Red;
+                if (string.IsNullOrWhiteSpace(password_text.Password))
+                    password_text.BorderBrush = Brushes.Red;
 
-        //    }
-        //    else
-        //    {
-        //        int temp = 0;
-        //        using (PassContext db = new())
-        //        {
-        //            var GetUserLogPass = await db.Passwords.Where(u => u.Id == 1).FirstOrDefaultAsync();
-                   
-        //            if (GetUserLogPass.Login == login_text.Text && GetUserLogPass.Pass == MD5Hash(password_text.Password) && GetUserLogPass.Id == 1)
-        //            {
-        //                MessageBox.Show("Пользователь");
-        //                temp = 1;
-        //            }
+            }
+            else
+            {
+                //Если поля не пустые
 
-        //            if(temp == 0)
-        //            {
-        //                var GetAdminLogPass = await db.Passwords.Where(u => u.Id == 2).FirstOrDefaultAsync();
-        //                if (GetAdminLogPass.Login == login_text.Text && GetAdminLogPass.Pass == MD5Hash(password_text.Password) && GetAdminLogPass.Id == 2)
-        //                {
-        //                    MessageBox.Show("Админ");
-        //                    temp = 1;
-        //                }
-        //            }
+                int temp = 0;
+                using (ExDbContext db = new())
+                {
+                    var GetUserLogPass = await db.SolutionTypes.Where(u => u.Id == 1).FirstOrDefaultAsync();
 
-        //            if (temp == 0)
-        //            {
-        //                MessageBox.Show("Повторите попытку", "Неправильный логин или пароль", MessageBoxButton.OK);
-        //            }
-        //        }
-        //    }
-        //}
+                    if (GetUserLogPass.Login == login_text.Text && GetUserLogPass.Passwords == MD5Hash(password_text.Password) && GetUserLogPass.Id == 1)
+                    {
+                        TableWindow table = new();
+                        table.Show();
+                        temp = 1;
+                        Close();
+                    }
+
+                    if (temp == 0)
+                    {
+                        var GetAdminLogPass = await db.SolutionTypes.Where(u => u.Id == 2).FirstOrDefaultAsync();
+                        if (GetAdminLogPass.Login == login_text.Text && GetAdminLogPass.Passwords == MD5Hash(password_text.Password) && GetAdminLogPass.Id == 2)
+                        {
+                            AdminWindow admin = new();
+                            admin.Show();
+                            temp = 1;
+                            Close();
+                        }
+                    }
+
+                    if (temp == 0)
+                    {
+                        MessageBox.Show("Повторите попытку", "Неправильный логин или пароль", MessageBoxButton.OK, MessageBoxImage.Stop);
+                    }
+                }
+            }
+        }
 
         //Метод хэширования вводимого пароля
         private string MD5Hash(string input)
@@ -83,16 +90,16 @@ namespace exel_for_mfc
 
 
 
-        ////Метод хорошего старта
-        //private async void Start()
-        //{
-        //    using (PassContext db = new())
-        //    {
-        //        var start = await db.Passwords.ToListAsync();
-        //        foreach (var item in start) { }
-        //    }
-        //    login_text.Focus();
-        //}
+        //Метод хорошего старта
+        private async void Start()
+        {
+            using (ExDbContext db = new())
+            {
+                var start = await db.SolutionTypes.ToListAsync();
+                foreach (var item in start) { }
+            }
+            login_text.Focus();
+        }
 
 
 
@@ -111,16 +118,14 @@ namespace exel_for_mfc
         private void Log(object sender, KeyEventArgs e)
         {
             if (e.Key == Key.Enter)
-            {
-
-            }
-                //Button_Click(sender, e);
+                Button_Click(sender, e);
+            
         }
 
         private void Pas(object sender, KeyEventArgs e)
         {
             if (e.Key == Key.Enter) { }
-                //Button_Click(sender, e);
+                Button_Click(sender, e);
         }
     }
 }
