@@ -15,8 +15,8 @@ namespace exel_for_mfc
         {
             InitializeComponent();
             Start();
-            AdminWindow tableWindow = new();
-            tableWindow.Show();
+            //AdminWindow tableWindow = new();
+            //tableWindow.Show();
             Close();
 
         }
