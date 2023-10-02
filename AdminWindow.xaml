@@ -30,7 +30,7 @@
         <DataGrid x:Name="LocalX"
                   Grid.Column="1"
                   AutoGenerateColumns="False"
-                  CanUserAddRows="True" Grid.ColumnSpan="2" Margin="72,14,270,259" Grid.RowSpan="2">
+                  CanUserAddRows="True" Grid.ColumnSpan="2" Margin="72,14,270,259" Grid.RowSpan="2" CellEditEnding="LocalCell">
             <DataGrid.Columns>
                 <DataGridTextColumn Binding="{Binding Id, UpdateSourceTrigger=PropertyChanged}" IsReadOnly="True" Header="id" Width="50"/>
                 <DataGridTextColumn Binding="{Binding LocalName, UpdateSourceTrigger=PropertyChanged}" Header="Населенный пункт" Width="300"/>
@@ -41,7 +41,7 @@
         <DataGrid x:Name="PrivelX"
                   Grid.Column="2"
                   AutoGenerateColumns="False"
-                  CanUserAddRows="True" Grid.ColumnSpan="2" Margin="127,14,109,35">
+                  CanUserAddRows="True" Grid.ColumnSpan="2" Margin="127,14,109,35" CellEditEnding="LgotaCell">
             <DataGrid.Columns>
                 <DataGridTextColumn Binding="{Binding Id, UpdateSourceTrigger=PropertyChanged}" IsReadOnly="True" Header="id" Width="50"/>
                 <DataGridTextColumn Binding="{Binding PrivilegesName, UpdateSourceTrigger=PropertyChanged}" Header="Льгота" Width="300"/>
@@ -53,7 +53,7 @@
                   Grid.Column="0"
                   Grid.Row="1"
                   AutoGenerateColumns="False"
-                  CanUserAddRows="True" Margin="46,119,46,10">
+                  CanUserAddRows="True" Margin="46,119,46,10" CellEditEnding="PayCell">
             <DataGrid.Columns>
                 <DataGridTextColumn Binding="{Binding Id, UpdateSourceTrigger=PropertyChanged}" IsReadOnly="True" Header="id" Width="50"/>
                 <DataGridTextColumn Binding="{Binding Pay, UpdateSourceTrigger=PropertyChanged}" Header="Размер выплат" Width="300"/>
@@ -64,7 +64,7 @@
         <DataGrid x:Name="SolutionX"
                   Grid.Row="1"
                   AutoGenerateColumns="False"
-                  CanUserAddRows="True" Grid.ColumnSpan="2" Margin="72,119,270,10" Grid.Column="1">
+                  CanUserAddRows="True" Grid.ColumnSpan="2" Margin="72,119,270,10" Grid.Column="1" CellEditEnding="SolutionCell">
             <DataGrid.Columns>
                 <DataGridTextColumn Binding="{Binding Id, UpdateSourceTrigger=PropertyChanged}" IsReadOnly="True" Header="id" Width="50"/>
                 <DataGridTextColumn Binding="{Binding SolutionName, UpdateSourceTrigger=PropertyChanged}" Header="Тип решения" Width="300"/>

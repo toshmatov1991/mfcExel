@@ -74,6 +74,115 @@ namespace exel_for_mfc
                     await Task.Delay(50);
                     StartAdminWin();
                 }
+                else return;
+            }
+        }
+
+        private async void LocalCell(object sender, DataGridCellEditEndingEventArgs e)
+        {
+            //Считывание строки
+            Locality? a = e.Row.Item as Locality;
+
+            using ExDbContext db = new();
+
+            if (a.Id != 0)
+            {
+                //Обновление таблицы Населенный пункт
+                await db.Database.ExecuteSqlRawAsync("UPDATE Locality SET LocalName = {0} WHERE Id = {1}", a.LocalName, a.Id);
+            }
+
+            else if (a.Id == 0)
+            {
+                // Добавление записи
+                if (a.LocalName != null)
+                {
+                    //Добавить новую запись в таблицу Населенный пункт
+                    await db.Database.ExecuteSqlInterpolatedAsync($"INSERT INTO Locality(LocalName) VALUES({a.LocalName})");
+                    await Task.Delay(50);
+                    StartAdminWin();
+                }
+                else return;
+            }
+        }
+
+        private async void LgotaCell(object sender, DataGridCellEditEndingEventArgs e)
+        {
+            //Считывание строки
+            Privilege? a = e.Row.Item as Privilege;
+
+            using ExDbContext db = new();
+
+            if (a.Id != 0)
+            {
+                //Обновление таблицы Льгота
+                await db.Database.ExecuteSqlRawAsync("UPDATE Privileges SET PrivilegesName = {0} WHERE Id = {1}", a.PrivilegesName, a.Id);
+            }
+
+            else if (a.Id == 0)
+            {
+                // Добавление записи
+                if (a.PrivilegesName != null)
+                {
+                    //Добавить новую запись в таблицу Льгота
+                    await db.Database.ExecuteSqlInterpolatedAsync($"INSERT INTO Privileges(PrivilegesName) VALUES({a.PrivilegesName})");
+                    await Task.Delay(50);
+                    StartAdminWin();
+                }
+                else return;
+            }
+        }
+
+        private async void PayCell(object sender, DataGridCellEditEndingEventArgs e)
+        {
+            //Считывание строки
+            PayAmount? a = e.Row.Item as PayAmount;
+
+            using ExDbContext db = new();
+
+            if (a.Id != 0)
+            {
+                //Обновление таблицы Выплаты
+                await db.Database.ExecuteSqlRawAsync("UPDATE PayAmount SET PrivilegesName = {0} WHERE Id = {1}", a.Pay, a.Id);
+            }
+
+            else if (a.Id == 0)
+            {
+                // Добавление записи
+                if (a.Pay != null)
+                {
+                    //Добавить новую запись в таблицу Выплаты
+                    await db.Database.ExecuteSqlInterpolatedAsync($"INSERT INTO PayAmount(Pay) VALUES({a.Pay})");
+                    await Task.Delay(50);
+                    StartAdminWin();
+                }
+                else return;
+            }
+        }
+
+        private async void SolutionCell(object sender, DataGridCellEditEndingEventArgs e)
+        {
+            //Считывание строки
+            SolutionType? a = e.Row.Item as SolutionType;
+
+            using ExDbContext db = new();
+
+            if (a.Id != 0)
+            {
+                //Обновление таблицы Выплаты
+                await db.Database.ExecuteSqlRawAsync("UPDATE SolutionType SET SolutionName = {0} WHERE Id = {1}", a.SolutionName, a.Id);
+            }
+
+            else if (a.Id == 0)
+            {
+                // Добавление записи
+                if (a.SolutionName != null)
+                {
+                    //Добавить новую запись в таблицу Выплаты
+                    await db.Database.ExecuteSqlInterpolatedAsync($"INSERT INTO SolutionType(SolutionName) VALUES({a.SolutionName})");
+                    await Task.Delay(50);
+                    StartAdminWin();
+                }
+                else return;
             }
         }
     }
