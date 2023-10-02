@@ -110,18 +110,5 @@ namespace exel_for_mfc
         {
             login_text.BorderBrush = Brushes.Black;
         }
-
-        private void Log(object sender, KeyEventArgs e)
-        {
-            if (e.Key == Key.Enter)
-                Button_Click(sender, e);
-            
-        }
-
-        private void GoPAs(object sender, KeyEventArgs e)
-        {
-            if (e.Key == Key.Enter)
-                Button_Click(sender, e);
-        }
     }
 }

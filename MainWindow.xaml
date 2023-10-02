@@ -34,7 +34,7 @@
                  VerticalContentAlignment="Center"
                  Height="30"
                  Margin="166,23,35,0"
-                 x:Name="login_text" Grid.ColumnSpan="2" MouseEnter="Bo" KeyDown="Log"/>
+                 x:Name="login_text" Grid.ColumnSpan="2" MouseEnter="Bo"/>
         <PasswordBox PasswordChar="*"
                      Grid.Row="1"
                      FontSize="19"
@@ -42,7 +42,7 @@
                      VerticalContentAlignment="Center"
                      Height="30"
                      Margin="166,23,35,0"
-                     x:Name="password_text" Grid.ColumnSpan="2" MouseEnter="Pa" KeyUp="GoPAs"/>
+                     x:Name="password_text" Grid.ColumnSpan="2" MouseEnter="Pa"/>
         <Button Content="Войти"
                 Grid.Row="2"
                 Background="AliceBlue"
