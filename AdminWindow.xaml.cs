@@ -185,5 +185,10 @@ namespace exel_for_mfc
                 else return;
             }
         }
+
+        private void AdminCell(object sender, DataGridCellEditEndingEventArgs e)
+        {
+
+        }
     }
 }

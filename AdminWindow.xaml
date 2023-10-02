@@ -76,7 +76,7 @@
         <DataGrid x:Name="AdminsX"
                   Grid.Row="1"
                   AutoGenerateColumns="False"
-                  CanUserAddRows="True" Grid.ColumnSpan="2" Margin="125,122,19,10" Grid.Column="2">
+                  CanUserAddRows="True" Grid.ColumnSpan="2" Margin="125,122,19,10" Grid.Column="2" CellEditEnding="AdminCell">
             <DataGrid.Columns>
                 <DataGridTextColumn Binding="{Binding Rolle, UpdateSourceTrigger=PropertyChanged}" Header="Роль" Width="120" IsReadOnly="True"/>
                 <DataGridTextColumn Binding="{Binding Login, UpdateSourceTrigger=PropertyChanged}" Header="Логин" Width="120"/>
