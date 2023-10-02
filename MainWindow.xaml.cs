@@ -48,34 +48,32 @@ namespace exel_for_mfc
                 //Если поля не пустые
 
                 int temp = 0;
-                using (ExDbContext db = new())
-                {
-                    var GetUserLogPass = await db.SolutionTypes.Where(u => u.Id == 1).FirstOrDefaultAsync();
+                using ExDbContext db = new();
+                var GetUserLogPass = await db.SolutionTypes.Where(u => u.Id == 1).FirstOrDefaultAsync();
 
-                    if (GetUserLogPass.Login == login_text.Text && GetUserLogPass.Passwords == MD5Hash(password_text.Password) && GetUserLogPass.Id == 1)
+                if (GetUserLogPass.Login == login_text.Text && GetUserLogPass.Passwords == MD5Hash(password_text.Password) && GetUserLogPass.Id == 1)
+                {
+                    TableWindow table = new();
+                    table.Show();
+                    temp = 1;
+                    Close();
+                }
+
+                if (temp == 0)
+                {
+                    var GetAdminLogPass = await db.SolutionTypes.Where(u => u.Id == 2).FirstOrDefaultAsync();
+                    if (GetAdminLogPass.Login == login_text.Text && GetAdminLogPass.Passwords == MD5Hash(password_text.Password) && GetAdminLogPass.Id == 2)
                     {
-                        TableWindow table = new();
-                        table.Show();
+                        AdminWindow admin = new();
+                        admin.Show();
                         temp = 1;
                         Close();
                     }
+                }
 
-                    if (temp == 0)
-                    {
-                        var GetAdminLogPass = await db.SolutionTypes.Where(u => u.Id == 2).FirstOrDefaultAsync();
-                        if (GetAdminLogPass.Login == login_text.Text && GetAdminLogPass.Passwords == MD5Hash(password_text.Password) && GetAdminLogPass.Id == 2)
-                        {
-                            AdminWindow admin = new();
-                            admin.Show();
-                            temp = 1;
-                            Close();
-                        }
-                    }
-
-                    if (temp == 0)
-                    {
-                        MessageBox.Show("Повторите попытку", "Неправильный логин или пароль", MessageBoxButton.OK, MessageBoxImage.Stop);
-                    }
+                if (temp == 0)
+                {
+                    MessageBox.Show("Повторите попытку", "Неправильный логин или пароль", MessageBoxButton.OK, MessageBoxImage.Stop);
                 }
             }
         }
@@ -91,11 +89,11 @@ namespace exel_for_mfc
 
 
         //Метод хорошего старта
-        private async void Start()
+        private void Start()
         {
             using (ExDbContext db = new())
             {
-                var start = await db.SolutionTypes.ToListAsync();
+                var start = db.SolutionTypes.ToList();
                 foreach (var item in start) { }
             }
             login_text.Focus();
@@ -121,15 +119,10 @@ namespace exel_for_mfc
             
         }
 
-        private void Pas(object sender, KeyEventArgs e)
+        private void GoPAs(object sender, KeyEventArgs e)
         {
-            if (e.Key == Key.Enter) { }
+            if (e.Key == Key.Enter)
                 Button_Click(sender, e);
-        }
-
-        private void Button_Click_1(object sender, RoutedEventArgs e)
-        {
-
         }
     }
 }
