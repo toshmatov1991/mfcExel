@@ -15,10 +15,11 @@ namespace exel_for_mfc
         {
             InitializeComponent();
             Start();
-            //TableWindow tableWindow = new();
-            ////AdminWindow tableWindow = new();
-            //tableWindow.Show();
-            //Close();
+            //TableWindow taWindow = new();
+            //taWindow.Show();
+            AdminWindow tableWindow = new();
+            tableWindow.Show();
+            Close();
         }
 
         private async void Button_Click(object sender, RoutedEventArgs e)

@@ -1,7 +1,11 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using DocumentFormat.OpenXml.Spreadsheet;
+using Microsoft.EntityFrameworkCore;
 using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -17,13 +21,6 @@ namespace exel_for_mfc
 {
     public partial class AdminWindow : Window
     {
-        public static List<Area>? AreaDataGrid { get; set; }
-        public static List<Locality>? LocalDataGrid { get; set; }
-        public static List<PayAmount>? PayDataGrid { get; set; }
-        public static List<Privilege>? PrivelDataGrid { get; set; }
-        public static List<SolutionType>? SolDataGrid { get; set; }
-
-
         public AdminWindow()
         {
             InitializeComponent();
@@ -34,21 +31,24 @@ namespace exel_for_mfc
         {
             using ExDbContext db = new();
 
-            AreaDataGrid = db.Areas.FromSqlRaw("SELECT * FROM Area").ToList();
+            var AreaDataGrid = db.Areas.FromSqlRaw("SELECT * FROM Area").ToList();
             AreaX.ItemsSource = AreaDataGrid;
 
-            LocalDataGrid = db.Localities.FromSqlRaw("SELECT * FROM Locality").ToList();
+            var LocalDataGrid = db.Localities.FromSqlRaw("SELECT * FROM Locality").ToList();
             LocalX.ItemsSource = LocalDataGrid;
 
-            PayDataGrid = db.PayAmounts.FromSqlRaw("SELECT * FROM PayAmount").ToList();
+            var PayDataGrid = db.PayAmounts.FromSqlRaw("SELECT * FROM PayAmount").ToList();
             PayX.ItemsSource = PayDataGrid;
 
-            PrivelDataGrid = db.Privileges.FromSqlRaw("SELECT * FROM Privileges").ToList();
+            var PrivelDataGrid = db.Privileges.FromSqlRaw("SELECT * FROM Privileges").ToList();
             PrivelX.ItemsSource = PrivelDataGrid;
 
-            SolDataGrid = db.SolutionTypes.FromSqlRaw("SELECT * FROM SolutionType").ToList();
+            var SolDataGrid = db.SolutionTypes.FromSqlRaw("SELECT * FROM SolutionType").ToList();
             SolutionX.ItemsSource = SolDataGrid;
-            AdminsX.ItemsSource = SolDataGrid;
+
+            var SolDataGridForAdmin = db.SolutionTypes.FromSqlRaw("SELECT * FROM SolutionType").Take(2).ToList();
+            AdminsX.ItemsSource = SolDataGridForAdmin;
+
         }
 
         private async void AreaCell(object sender, DataGridCellEditEndingEventArgs e)
@@ -195,10 +195,20 @@ namespace exel_for_mfc
 
             if (a.Id != 0)
             {
-                //Обновление таблицы Выплаты
-                await db.Database.ExecuteSqlRawAsync("UPDATE SolutionType SET Login = {0}, Passwords = {1} WHERE Id = {2}", a.Login, a.Passwords, a.Id);
+                //Обновление таблицы Логинов и паролей
+                await db.Database.ExecuteSqlRawAsync("UPDATE SolutionType SET Login = {0}, Passwords = {1} WHERE Id = {2}", a.Login, MD5Hash(a.Passwords), a.Id);
+                StartAdminWin();
             }
-          
+
+            //Метод хэширования вводимого пароля
+            static string MD5Hash(string input)
+            {
+                var md5 = MD5.Create();
+                var hash = md5.ComputeHash(Encoding.UTF8.GetBytes(input));
+                return Convert.ToBase64String(hash);
+            }
         }
+
+        
     }
 }

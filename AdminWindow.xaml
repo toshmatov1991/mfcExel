@@ -20,7 +20,15 @@
         <!--Район-->
         <DataGrid x:Name="AreaX"
                   AutoGenerateColumns="False"
-                  CanUserAddRows="True" Margin="10,14,10,259" Grid.RowSpan="2" CellEditEnding="AreaCell">
+                  CanUserAddRows="True" 
+                  Margin="10,14,10,259"
+                  Grid.RowSpan="2" 
+                  CellEditEnding="AreaCell">
+            <!--<DataGrid.ContextMenu>
+                <ContextMenu>
+                    <MenuItem Header="Удалить"/>
+                </ContextMenu>
+            </DataGrid.ContextMenu>-->
             <DataGrid.Columns>
                 <DataGridTextColumn Binding="{Binding Id, UpdateSourceTrigger=PropertyChanged}" IsReadOnly="True" Header="id" Width="50"/>
                 <DataGridTextColumn Binding="{Binding AreaName, UpdateSourceTrigger=PropertyChanged}" Header="Район" Width="300"/>
@@ -77,11 +85,11 @@
         </DataGrid>
 
 
-        <!--Логины и пароли для входа-->
+        <!-- Логины и пароли -->
         <DataGrid x:Name="AdminsX"
                   Grid.Row="1"
-                  AutoGenerateColumns="False"
                   CanUserAddRows="False"
+                   AutoGenerateColumns="False"
                   Grid.ColumnSpan="2"
                   Margin="125,171,19,10"
                   Grid.Column="2"
