@@ -210,9 +210,8 @@ namespace exel_for_mfc
                             return;
                     }
 
-                    else if (myQuery == null)
+                    else if (myQuery == null && myQuerySnils == null)
                     {
-
                         if (a.Lgota == null)
                         {
                             //Добавить новую запись в таблицу заявитель
@@ -244,9 +243,7 @@ namespace exel_for_mfc
 
                     }
                 }
-
             }
-
         }
 
         //Обновить коммент
