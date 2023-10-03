@@ -125,6 +125,10 @@ namespace exel_for_mfc
                     //Жуткая проверка
                     var myQuery = await db.Applicants.FromSqlRaw("SELECT * FROM Applicant WHERE Firstname LIKE {0} AND Middlename LIKE {1} AND Lastname LIKE {2} AND Adress LIKE {3} AND Snils LIKE {4}", a.Family, a.Name, a.Lastname, a.Adress, a.Snils).AsNoTracking().FirstOrDefaultAsync();
 
+                    //Отдельная проверка Снилса
+                    var myQuerySnils = await db.Applicants.FromSqlRaw("SELECT * FROM Applicant WHERE Snils LIKE {0}", a.Snils).AsNoTracking().FirstOrDefaultAsync();
+
+
                     if (myQuery != null)
                     {
                         var myQuery123 = await db.Registries.FromSqlRaw("SELECT * FROM Registry WHERE Applicant_FK = {0}", myQuery.Id).AsNoTracking().ToListAsync();
@@ -133,6 +137,18 @@ namespace exel_for_mfc
                         var result = MessageBox.Show($"{a.Family} {a.Name} {a.Lastname}\n в таблице существуют {myQuery123.Count} записи данного заявителя\nДобавить новую запись в таблицу?", "Найдены совпадения!", MessageBoxButton.YesNo, MessageBoxImage.Information);
                         if (result == MessageBoxResult.Yes)
                         {
+                            if (a.Lgota == null)
+                            {
+                                //Добавить новую запись в таблицу заявитель
+                                await db.Database.ExecuteSqlInterpolatedAsync($"INSERT INTO Applicant(Firstname, Middlename, Lastname, Area_FK, Locality_FK, Adress, Snils, Privileges_FK) VALUES({a.Family}, {a.Name}, {a.Lastname}, {a.Area + 1}, {a.Local + 1}, {a.Adress}, {a.Snils}, {null})");
+                            }
+
+                            else if (a.Area != null && a.Local != null && a.Lgota != null)
+                            {
+                                //Добавить новую запись в таблицу заявитель
+                                await db.Database.ExecuteSqlInterpolatedAsync($"INSERT INTO Applicant(Firstname, Middlename, Lastname, Area_FK, Locality_FK, Adress, Snils, Privileges_FK) VALUES({a.Family}, {a.Name}, {a.Lastname}, {a.Area + 1}, {a.Local + 1}, {a.Adress}, {a.Snils}, {a.Lgota + 1})");
+                            }
+
                             if (a.Pay == null || a.Solution == null || a.Pay == null && a.Solution == null)
                             {
                                 //Добавить новую запись в таблицу Регистр
@@ -154,6 +170,45 @@ namespace exel_for_mfc
 
                     }
 
+
+                    //Обработка снилса
+                    else if (myQuerySnils != null)
+                    {
+                        var result = MessageBox.Show($"в таблице существуют записи данного заявителя\nДобавить новую запись в таблицу?", "Найдены совпадения!", MessageBoxButton.YesNo, MessageBoxImage.Information);
+                        if (result == MessageBoxResult.Yes)
+                        {
+                            if (a.Lgota == null)
+                            {
+                                //Добавить новую запись в таблицу заявитель
+                                await db.Database.ExecuteSqlInterpolatedAsync($"INSERT INTO Applicant(Firstname, Middlename, Lastname, Area_FK, Locality_FK, Adress, Snils, Privileges_FK) VALUES({a.Family}, {a.Name}, {a.Lastname}, {a.Area + 1}, {a.Local + 1}, {a.Adress}, {a.Snils}, {null})");
+                            }
+
+                            else if (a.Area != null && a.Local != null && a.Lgota != null)
+                            {
+                                //Добавить новую запись в таблицу заявитель
+                                await db.Database.ExecuteSqlInterpolatedAsync($"INSERT INTO Applicant(Firstname, Middlename, Lastname, Area_FK, Locality_FK, Adress, Snils, Privileges_FK) VALUES({a.Family}, {a.Name}, {a.Lastname}, {a.Area + 1}, {a.Local + 1}, {a.Adress}, {a.Snils}, {a.Lgota + 1})");
+                            }
+
+                            //Добавить новую запись в таблицу Регистр
+                            if (a.Pay == null || a.Solution == null || a.Pay == null && a.Solution == null)
+                            {
+                                //Добавить новую запись в таблицу Регистр
+                                await db.Database.ExecuteSqlInterpolatedAsync($"INSERT INTO Registry(Applicant_FK, SerialAndNumberSert, DateGetSert, PayAmount_FK, Solution_FK, DateAndNumbSolutionSert, Comment, Trek, MailingDate) VALUES({await db.Applicants.CountAsync()}, {a.Sernumb}, {a.DateGetSert}, {null}, {null}, {a.DateAndNumbSolutionSert}, {a.Comment}, {a.Trek}, {a.MailingDate})");
+                                await Task.Delay(50);
+                                Start();
+                            }
+
+                            else if (a.Pay != null && a.Solution != null)
+                            {
+                                //Добавить новую запись в таблицу Регистр
+                                await db.Database.ExecuteSqlInterpolatedAsync($"INSERT INTO Registry(Applicant_FK, SerialAndNumberSert, DateGetSert, PayAmount_FK, Solution_FK, DateAndNumbSolutionSert, Comment, Trek, MailingDate) VALUES({await db.Applicants.CountAsync()}, {a.Sernumb}, {a.DateGetSert}, {a.Pay + 1}, {a.Solution + 1}, {a.DateAndNumbSolutionSert}, {a.Comment}, {a.Trek}, {a.MailingDate})");
+                                await Task.Delay(50);
+                                Start();
+                            }
+                        }
+                        else if (result == MessageBoxResult.No)
+                            return;
+                    }
 
                     else if (myQuery == null)
                     {
