@@ -80,7 +80,7 @@
                   CellEditEnding="SolutionCell">
             <DataGrid.Columns>
                 <DataGridTextColumn Binding="{Binding Id, UpdateSourceTrigger=PropertyChanged}" IsReadOnly="True" Header="id" Width="50"/>
-                <DataGridTextColumn Binding="{Binding SolutionName, UpdateSourceTrigger=PropertyChanged}" Header="Тип решения" Width="300"/>
+                <DataGridTextColumn Binding="{Binding SolutionName, UpdateSourceTrigger=PropertyChanged}" IsReadOnly="True" Header="Тип решения" Width="300"/>
             </DataGrid.Columns>
         </DataGrid>
 
