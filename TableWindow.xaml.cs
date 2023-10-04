@@ -141,27 +141,20 @@ namespace exel_for_mfc
                                              ap.Lastname,
                                              r.SerialAndNumberSert,
                                              r.DateGetSert,
-                                             r.SolutionFk
+                                             sol = r.SolutionFk
                                          };
+
 
 
                         string str = "";
 
-
                         foreach (var item in myQuery1234)
                         {
-                            str += $"Id-{item.Id} {item.Firstname} {item.Middlename} {item.Lastname} {item.SerialAndNumberSert} {item.DateGetSert} {item.SolutionFk + 1}\n";
+                            str += $"\nId-{item.Id} {item.Firstname} {item.Middlename.Substring(0,1)}. {item.Lastname.Substring(0, 1)}. {item.SerialAndNumberSert} {Convert.ToDateTime(item.DateGetSert).ToString("d", new CultureInfo("Ru-ru"))} {ReturnStr(item.sol)}\n";
                         }
-
-                        
-
-
 
                         //Информировать что такая запись найдена
                         var result = MessageBox.Show($"{str}\n в таблице существуют записи данного заявителя\nДобавить новую запись в таблицу?", "Найдены совпадения!", MessageBoxButton.YesNo, MessageBoxImage.Information);
-
-                       
-
 
 
                         if (result == MessageBoxResult.Yes)
@@ -217,16 +210,17 @@ namespace exel_for_mfc
                                               ap.Lastname,
                                               r.SerialAndNumberSert,
                                               r.DateGetSert,
-                                              r.SolutionFk
+                                              sol = r.SolutionFk
                                           };
+
+
 
                         string str = "";
 
                         foreach (var item in myQuery1234)
                         {
-                            str += $"Id-{item.Id} {item.Firstname} {item.Middlename} {item.Lastname} {item.SerialAndNumberSert} {Convert.ToDateTime(item.DateGetSert).ToString("d", new CultureInfo("Ru-ru"))} {item.SolutionFk + 1}\n";
+                            str += $"\nId-{item.Id} {item.Firstname} {item.Middlename.Substring(0, 1)}. {item.Lastname.Substring(0, 1)}. {item.SerialAndNumberSert} {Convert.ToDateTime(item.DateGetSert).ToString("d", new CultureInfo("Ru-ru"))} {ReturnStr(item.sol)}\n";
                         }
-
 
                         //Информировать что такая запись найдена
                         var result = MessageBox.Show($"{str}\n в таблице существуют записи данного заявителя\nДобавить новую запись в таблицу?", "Найдены совпадения!", MessageBoxButton.YesNo, MessageBoxImage.Information);
@@ -310,6 +304,21 @@ namespace exel_for_mfc
                 }
             }
 
+
+            //Возвращю тип решения (строку)
+            string ReturnStr(int? t)
+            {
+                if (t == 1)
+                    return "Выдан";
+
+                else if (t == 2)
+                    return "Отказан";
+
+                else if (t == 3)
+                    return "Аннулир.";
+
+                else return "";
+            }
         }
 
         //Обновить коммент
