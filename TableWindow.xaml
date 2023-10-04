@@ -32,8 +32,18 @@
             <RowDefinition/>
             <RowDefinition/>
         </Grid.RowDefinitions>
-        <TextBlock Text=" Быстрый поиск" FontStyle="Italic" Grid.Column="5" FontSize="20"/>
-        <TextBox HorizontalAlignment="Right" FontStyle="Italic" Width="250" VerticalContentAlignment="Center" FontSize="14" Grid.Column="6" x:Name="SearchTable" KeyUp="GoSearchToTable" Grid.ColumnSpan="2" Margin="0,5,65,22" />
+        <TextBlock Text=" Быстрый поиск"
+                   FontStyle="Italic"
+                   Grid.Column="5"
+                   VerticalAlignment="Center"
+                   FontSize="20"/>
+        <TextBox FontStyle="Italic"
+                 VerticalContentAlignment="Center"
+                 FontSize="14" 
+                 Grid.Column="6"
+                 x:Name="SearchTable"
+                 KeyUp="GoSearchToTable"
+                 Grid.ColumnSpan="2"/>
         <DataGrid x:Name="dataGrid"
                   Grid.ColumnSpan="8"
                   Grid.RowSpan="12"
@@ -52,7 +62,7 @@
                         <DataTemplate>
                             <ComboBox ItemsSource="{Binding Path=AreaCombobox, RelativeSource={RelativeSource AncestorType={x:Type Window}}}"
                                       DisplayMemberPath="AreaName"
-                                      SelectedIndex="{Binding Area, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" DropDownClosed="AreaComboEvent"/>
+                                      SelectedIndex="{Binding Area, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" DropDownClosed="AreaComboEvent" MouseDoubleClick="AreaExeption" KeyDown="AreaKeyDown" KeyUp="AreaKeyUp"/>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
@@ -144,7 +154,14 @@
                 </DataTemplate>
             </DataGrid.RowDetailsTemplate>
         </DataGrid>
-        <Button Content="Выгрузить в Excel" Grid.Column="6" Grid.Row="11"  Height="42" Width="107" Click="Button_Click"/>
+        <Button Content="Выгрузить в Excel"
+                Grid.Column="6"
+                Grid.RowSpan="2"
+                Background="LightGreen"
+                Grid.Row="11"
+                Height="42"
+                Width="107"
+                Click="Button_Click"/>
 
         <!-- Фильтрация , это будет жестко)-->
         <!-- Главное чтоб листвиев 

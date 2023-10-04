@@ -33,6 +33,7 @@ namespace exel_for_mfc
 {
     public partial class TableWindow : Window
     {
+        #region База
         public static List<Area>? AreaCombobox { get; set; }
         public static List<Locality>? LocalCombobox { get; set; }
         public static List<PayAmount>? PayCombobox { get; set; }
@@ -46,7 +47,6 @@ namespace exel_for_mfc
             Start();
         }
 
-        #region База
         //Запрос для заполнения таблицы
         void Start()
         {
@@ -634,6 +634,36 @@ namespace exel_for_mfc
 
         #region Фильтрация
         //Использовать для данных datagrid и включить autogeneratecolumns
+
+
+
+
+
+
+
+
+
+
+        #endregion
+
+        #region Обработка возможных исключений
+        private void AreaExeption(object sender, MouseButtonEventArgs e)
+        {
+            return;
+        }
+        private void AreaKeyDown(object sender, KeyEventArgs e)
+        {
+            return;
+        }
+
+        private void AreaKeyUp(object sender, KeyEventArgs e)
+        {
+            return;
+        }
+
+
+
+
 
 
 
