@@ -369,7 +369,13 @@ namespace exel_for_mfc
                                  || u.Adress.Contains(SearchTable.Text)
                                  || u.Sernumb.Contains(SearchTable.Text)).AsNoTracking().ToList();
 
-            dataGrid.ItemsSource = MyList;
+            if (MyList == null)
+                return;
+            else
+            {
+                dataGrid.ItemsSource = MyList;
+            }
+                
 
         }
 
@@ -655,17 +661,10 @@ namespace exel_for_mfc
         {
             return;
         }
-
         private void AreaKeyUp(object sender, KeyEventArgs e)
         {
             return;
         }
-
-
-
-
-
-
 
         #endregion
     }
