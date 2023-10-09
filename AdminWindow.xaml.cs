@@ -1,9 +1,14 @@
-﻿using DocumentFormat.OpenXml.Spreadsheet;
+﻿using ClosedXML.Excel;
+using DocumentFormat.OpenXml;
+using DocumentFormat.OpenXml.Packaging;
+using DocumentFormat.OpenXml.Spreadsheet;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Win32;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Data;
+using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
@@ -26,7 +31,7 @@ namespace exel_for_mfc
             InitializeComponent();
             StartAdminWin();
         }
-
+        #region Редактирование таблиц
         private void StartAdminWin()
         {
             using ExDbContext db = new();
@@ -208,7 +213,77 @@ namespace exel_for_mfc
                 return Convert.ToBase64String(hash);
             }
         }
+        #endregion
 
-        
+        [Obsolete]
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            //Интеграция
+            OpenFileDialog of = new()
+            {
+                Filter = "Excel Files|*.xls;*.xlsx;*.xlsm"
+            };
+            /*
+             1 - фамилия
+             2 - имя
+             3 - отчество
+             4 - снилс
+             5 - район
+             6 - населенный пункт
+             7 - адрес
+             8 - льгота будет Contains
+             9 - серия и номер сертификата
+            10 - дата выдачи
+            11 - решение
+            12 - дата и номер решения по сертификату
+            13 - Выплата
+            14 - Трек
+            15 - Дата отправки почтой
+            16 - Коммент
+            Предусмотреть NULL
+             */
+            if (of.ShowDialog() == true)
+            {
+                using (FileStream fs = new FileStream(of.FileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+                {
+                    using (SpreadsheetDocument doc = SpreadsheetDocument.Open(fs, false))
+                    {
+                        WorkbookPart workbookPart = doc.WorkbookPart;
+                        SharedStringTablePart sstpart = workbookPart.GetPartsOfType<SharedStringTablePart>().First();
+                        SharedStringTable sst = sstpart.SharedStringTable;
+
+                        WorksheetPart worksheetPart = workbookPart.WorksheetParts.First();
+                        Worksheet sheet = worksheetPart.Worksheet;
+
+                        var cells = sheet.Descendants<Cell>();
+                        int temp = 0;
+                        //Второе условие срабатывает на цифры
+                        // One way: go through each cell in the sheet
+                        foreach (Cell cell in cells)
+                        {
+                            if ((cell.DataType != null) && (cell.DataType == CellValues.SharedString))
+                            {
+                                int ssid = int.Parse(cell.CellValue.Text);
+                                string str = sst.ChildElements[ssid].InnerText;
+                                MessageBox.Show($"{str} ");
+                            }
+                            else if (cell.CellValue != null)
+                            {
+                                MessageBox.Show($"числа {cell.CellValue.Text}");
+                            }
+                            else if (cell.DataType == null)
+                            {
+                                MessageBox.Show($"NULL");
+                            }
+
+
+
+
+                        }
+                    }
+                }
+
+            }
+        }
     }
 }

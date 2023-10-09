@@ -318,7 +318,7 @@ namespace exel_for_mfc
 
 
             //Возвращю тип решения (строку)
-            string ReturnStr(int? t)
+            static string ReturnStr(int? t)
             {
                 if (t == 1)
                     return "Выдан";

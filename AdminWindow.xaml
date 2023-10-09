@@ -101,7 +101,15 @@
             </DataGrid.Columns>
         </DataGrid>
 
-        <Image gif:ImageBehavior.AnimatedSource="Resources/it.gif" Grid.Column="2" Grid.ColumnSpan="2" Margin="147,336,77,187" Grid.RowSpan="2" />
-        
+        <Image gif:ImageBehavior.AnimatedSource="Resources/it.gif" Grid.Column="2" Grid.ColumnSpan="2" Margin="231,336,-7,187" Grid.RowSpan="2" />
+        <Button 
+            Content="Интеграция"
+            Background="Brown"
+            Foreground="AliceBlue"
+            FontSize="25"
+            Grid.Column="2"
+            Margin="70,10,70,257"
+            RenderTransformOrigin="0.661,0.384"
+            Grid.Row="1" Click="Button_Click"/>
     </Grid>
 </Window>
