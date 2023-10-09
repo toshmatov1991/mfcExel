@@ -462,7 +462,28 @@ namespace exel_for_mfc
             //Функция возврата Льгота
             static int ReturnIdPriv(string str)
             {
-                return 0;
+                int idPriv = 0;
+                using (ExDbContext db = new())
+                {
+                    var equalPriv = db.Privileges.AsNoTracking().Where(u => u.PrivilegesName == str).FirstOrDefault();
+                    if (equalPriv != null)
+                        idPriv = equalPriv.Id;
+
+                    else if (equalPriv == null)
+                    {
+                        Privilege privilege = new();
+                        privilege.PrivilegesName = str;
+                        db.Privileges.Add(privilege);
+                        db.SaveChanges();
+                        // И ветнуть id нового
+                        var getIdLast = db.Privileges.AsNoTracking().LastOrDefaultAsync();
+                        if (getIdLast != null)
+                            idPriv = getIdLast.Id;
+                        else
+                            MessageBox.Show("Произошла непредвиденная ошибка", "Это не конец");
+                    }
+                }
+                return idPriv;
             }
 
             //Функция возврата Решение
