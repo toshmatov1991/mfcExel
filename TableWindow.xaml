@@ -89,11 +89,6 @@
                 </DataGridTemplateColumn>
                 <DataGridTextColumn Binding="{Binding Sernumb, UpdateSourceTrigger=PropertyChanged}" Header="Серия и № сертификата"/>
                 <DataGridTemplateColumn Header="Дата выдачи" Width="120" CanUserSort="True" >
-                    <DataGridTemplateColumn.CellTemplate>
-                        <DataTemplate>
-                            <TextBox Text="{Binding DateGetSert, StringFormat=dd.MM.yyyy, UpdateSourceTrigger=PropertyChanged}" />
-                        </DataTemplate>
-                    </DataGridTemplateColumn.CellTemplate>
                     <DataGridTemplateColumn.CellEditingTemplate>
                         <DataTemplate>
                             <DatePicker SelectedDate="{Binding DateGetSert, StringFormat=dd.MM.yyyy, UpdateSourceTrigger=PropertyChanged}" />
@@ -123,11 +118,6 @@
                 </DataGridTemplateColumn>
                 <DataGridTextColumn Binding="{Binding Trek, UpdateSourceTrigger=PropertyChanged}" Header="Трек"/>
                 <DataGridTemplateColumn Header="Дата отправки почтой" CanUserSort="True">
-                    <DataGridTemplateColumn.CellTemplate>
-                        <DataTemplate>
-                            <TextBox Text="{Binding MailingDate, StringFormat=dd.MM.yyyy, UpdateSourceTrigger=PropertyChanged}" />
-                        </DataTemplate>
-                    </DataGridTemplateColumn.CellTemplate>
                     <DataGridTemplateColumn.CellEditingTemplate>
                         <DataTemplate>
                             <DatePicker SelectedDate="{Binding MailingDate, StringFormat=dd.MM.yyyy, UpdateSourceTrigger=PropertyChanged}" />
