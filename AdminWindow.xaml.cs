@@ -2,6 +2,7 @@
 using DocumentFormat.OpenXml;
 using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Spreadsheet;
+using DocumentFormat.OpenXml.Wordprocessing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Win32;
 using System;
@@ -239,7 +240,6 @@ namespace exel_for_mfc
             13 - Выплата
             14 - Трек
             15 - Дата отправки почтой
-            16 - Коммент
             Предусмотреть NULL
              */
             if (of.ShowDialog() == true)
@@ -256,33 +256,225 @@ namespace exel_for_mfc
                         Worksheet sheet = worksheetPart.Worksheet;
 
                         var cells = sheet.Descendants<Cell>();
+                        var app = new Applicant();
+                        var reg = new Registry();
                         int temp = 0;
+
                         //Второе условие срабатывает на цифры
-                        // One way: go through each cell in the sheet
+                        //Просто адский цикл
                         foreach (Cell cell in cells)
                         {
-                            if ((cell.DataType != null) && (cell.DataType == CellValues.SharedString))
+
+                            switch (temp)
                             {
-                                int ssid = int.Parse(cell.CellValue.Text);
-                                string str = sst.ChildElements[ssid].InnerText;
-                                MessageBox.Show($"{str} ");
+                                case 0: break;
+                                case 1: //Фамилия //Проверка на NULL каждой строки
+                                    if ((cell.DataType != null) && (cell.DataType == CellValues.SharedString))
+                                    {
+                                        int s1 = int.Parse(cell.CellValue.Text);
+                                        string str1 = sst.ChildElements[s1].InnerText;
+                                        app.Firstname = str1;
+                                    }
+                                    //Числа
+                                    else if (cell.CellValue != null)
+                                    {
+                                        app.Firstname = cell.CellValue.Text;
+                                    }
+
+                                    //NULL
+                                    else if (cell.DataType == null)
+                                    {
+                                        app.Firstname = null;
+                                    }
+                                    break;
+
+                                case 2: //Имя
+                                    if ((cell.DataType != null) && (cell.DataType == CellValues.SharedString))
+                                    {
+                                        int s2 = int.Parse(cell.CellValue.Text);
+                                        string str2 = sst.ChildElements[s2].InnerText;
+                                        app.Middlename = str2;
+                                    }
+                                    //Числа
+                                    else if (cell.CellValue != null)
+                                    {
+                                        app.Middlename = cell.CellValue.Text;
+                                    }
+                                    //NULL
+                                    else if (cell.DataType == null)
+                                    {
+                                        app.Middlename = null;
+                                    }
+                                    break;
+
+                                case 3: //Отчество
+                                    if ((cell.DataType != null) && (cell.DataType == CellValues.SharedString))
+                                    {
+                                        int s3 = int.Parse(cell.CellValue.Text);
+                                        string str3 = sst.ChildElements[s3].InnerText;
+                                        app.Lastname = str3;
+                                    }
+                                    //Числа
+                                    else if (cell.CellValue != null)
+                                    {
+                                        app.Lastname = cell.CellValue.Text;
+                                    }
+
+                                    //NULL
+                                    else if (cell.DataType == null)
+                                    {
+                                        app.Lastname = null;
+                                    }
+                                    break;
+
+                                case 4: //Снилс
+                                    if ((cell.DataType != null) && (cell.DataType == CellValues.SharedString))
+                                    {
+                                        int s3 = int.Parse(cell.CellValue.Text);
+                                        string str3 = sst.ChildElements[s3].InnerText;
+                                        app.Snils = str3;
+                                    }
+                                    //Числа
+                                    else if (cell.CellValue != null)
+                                    {
+                                        app.Snils = cell.CellValue.Text;
+                                    }
+
+                                    //NULL
+                                    else if (cell.DataType == null)
+                                    {
+                                        app.Snils = null;
+                                    }
+                                    break;
+
+                                case 5: //Район //Нужно получить значение иначе просто нулл
+                                    if ((cell.DataType != null) && (cell.DataType == CellValues.SharedString))
+                                    {
+                                        int s3 = int.Parse(cell.CellValue.Text);
+                                        string str3 = sst.ChildElements[s3].InnerText;
+                                        app.AreaFk = ReturnIdArea(str3);
+                                    }
+
+                                    //Числа
+                                    else if (cell.CellValue != null)
+                                    {
+                                        app.AreaFk = null;
+                                    }
+
+                                    //NULL
+                                    else if (cell.DataType == null)
+                                    {
+                                        app.AreaFk = null;
+                                    }
+                                    break;
+
+                                case 6:  //Населенный пункт
+                                    Console.WriteLine("Ваше имя - Sam");
+                                    break;
+                                case 7:
+                                    Console.WriteLine("Ваше имя - Sam");
+                                    break;
+                                case 8:
+                                    Console.WriteLine("Ваше имя - Sam");
+                                    break;
+                                case 9:
+                                    Console.WriteLine("Ваше имя - Sam");
+                                    break;
+                                case 10:
+                                    Console.WriteLine("Ваше имя - Sam");
+                                    break;
+                                case 11:
+                                    Console.WriteLine("Ваше имя - Sam");
+                                    break;
+                                case 12:
+                                    Console.WriteLine("Ваше имя - Sam");
+                                    break;
+                                case 13:
+                                    Console.WriteLine("Ваше имя - Sam");
+                                    break;
+                                case 14:
+                                    Console.WriteLine("Ваше имя - Sam");
+                                    break;
+                                case 15: //Контрольное условие и вставка
+                                    Console.WriteLine("Ваше имя - Sam");
+                                    break;
                             }
-                            else if (cell.CellValue != null)
-                            {
-                                MessageBox.Show($"числа {cell.CellValue.Text}");
-                            }
-                            else if (cell.DataType == null)
-                            {
-                                MessageBox.Show($"NULL");
-                            }
-
-
-
-
                         }
                     }
                 }
 
+            }
+
+            //Функция возврата Района
+            static int ReturnIdArea(string str)
+            {
+                int idArea = 0;
+                using (ExDbContext db = new())
+                {
+                    var equalArea = db.Areas.AsNoTracking().Where(u => u.AreaName == str).FirstOrDefault();
+                    if (equalArea != null)
+                        idArea = equalArea.Id;
+                    
+                    else if(equalArea == null)
+                    {
+                        Area area = new();
+                        area.AreaName = str;
+                        db.Areas.Add(area);
+                        db.SaveChanges();
+                        // И ветнуть id нового
+                        var getIdLast = db.Areas.AsNoTracking().LastOrDefaultAsync();
+                        if (getIdLast != null)
+                            idArea = getIdLast.Id;
+                        else
+                            MessageBox.Show("Произошла непредвиденная ошибка", "Это не конец");
+                    }
+                }
+                return idArea;
+            }
+
+            //Функция возврата Населенного пункта
+            static int ReturnIdLocal(string str)
+            {
+                int idLocal = 0;
+                using (ExDbContext db = new())
+                {
+                    var equalLoc = db.Localities.AsNoTracking().Where(u => u.LocalName == str).FirstOrDefault();
+                    if (equalLoc != null)
+                        idLocal = equalLoc.Id;
+
+                    else if (equalLoc == null)
+                    {
+                        Locality loc = new();
+                        loc.LocalName = str;
+                        db.Localities.Add(loc);
+                        db.SaveChanges();
+                        // И ветнуть id нового
+                        var getIdLast = db.Localities.AsNoTracking().LastOrDefaultAsync();
+                        if (getIdLast != null)
+                            idLocal = getIdLast.Id;
+                        else
+                            MessageBox.Show("Произошла непредвиденная ошибка", "Это не конец");
+                    }
+                }
+                return idLocal;
+            }
+
+            //Функция возврата Льгота
+            static int ReturnIdPriv(string str)
+            {
+                return 0;
+            }
+
+            //Функция возврата Решение
+            static int ReturnIdSol(string str)
+            {
+                return 0;
+            }
+
+            //Функция возврата Выплата
+            static int ReturnIdPay(string str)
+            {
+                return 0;
             }
         }
     }
