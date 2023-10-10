@@ -52,7 +52,6 @@ namespace exel_for_mfc
         {
             await GoStart();
         }
-
         async Task GoStart()
         {
             await Task.Run(() =>
@@ -440,220 +439,231 @@ namespace exel_for_mfc
         //Сохранить таблицу в Excel
         static async Task SaveDataInExel()
         {
-            await Task.Run(async () =>
+            try
             {
-                SaveFileDialog dialog = new SaveFileDialog();
-                dialog.Filter = "Execl files (*.xlsx)|*.xlsx";
-
-                if (dialog.ShowDialog() == true)
+                await Task.Run(async () =>
                 {
-                    // Lets converts our object data to Datatable for a simplified logic.
-                    // Datatable is most easy way to deal with complex datatypes for easy reading and formatting. 
-                    DataTable table = (DataTable)JsonConvert.DeserializeObject(JsonConvert.SerializeObject(MyList), typeof(DataTable));
+                    SaveFileDialog dialog = new SaveFileDialog();
+                    dialog.Filter = "Execl files (*.xlsx)|*.xlsx";
 
-                    using (SpreadsheetDocument document = SpreadsheetDocument.Create(dialog.FileName, SpreadsheetDocumentType.Workbook))
+                    if (dialog.ShowDialog() == true)
                     {
-                        WorkbookPart workbookPart = document.AddWorkbookPart();
-                        workbookPart.Workbook = new Workbook();
+                        // Lets converts our object data to Datatable for a simplified logic.
+                        // Datatable is most easy way to deal with complex datatypes for easy reading and formatting. 
+                        DataTable table = (DataTable)JsonConvert.DeserializeObject(JsonConvert.SerializeObject(MyList), typeof(DataTable));
 
-                        WorksheetPart worksheetPart = workbookPart.AddNewPart<WorksheetPart>();
-
-                        var sheetData = new SheetData();
-
-                        worksheetPart.Worksheet = new Worksheet(sheetData);
-
-                        // Create custom widths for columns - Здесь задаем ширину колонок
-                        Columns lstColumns = worksheetPart.Worksheet.GetFirstChild<Columns>();
-                        bool needToInsertColumns = false;
-                        if (lstColumns == null)
+                        using (SpreadsheetDocument document = SpreadsheetDocument.Create(dialog.FileName, SpreadsheetDocumentType.Workbook))
                         {
-                            lstColumns = new Columns();
-                            needToInsertColumns = true;
-                        }
-                        // Min = 1, Max = 1 ==> Apply this to column 1 (A)
-                        // Min = 2, Max = 2 ==> Apply this to column 2 (B)
-                        // Width = 25 ==> Set the width to 25
-                        // CustomWidth = true ==> Tell Excel to use the custom width
-                        lstColumns.Append(new Column() { Min = 1, Max = 1, Width = 7, CustomWidth = true });  // id
-                        lstColumns.Append(new Column() { Min = 2, Max = 2, Width = 20, CustomWidth = true }); // f
-                        lstColumns.Append(new Column() { Min = 3, Max = 3, Width = 20, CustomWidth = true }); // n
-                        lstColumns.Append(new Column() { Min = 4, Max = 4, Width = 20, CustomWidth = true }); // l
-                        lstColumns.Append(new Column() { Min = 5, Max = 5, Width = 15, CustomWidth = true }); // snils
-                        lstColumns.Append(new Column() { Min = 6, Max = 6, Width = 25, CustomWidth = true }); // район
-                        lstColumns.Append(new Column() { Min = 7, Max = 7, Width = 25, CustomWidth = true }); // населенный
-                        lstColumns.Append(new Column() { Min = 8, Max = 8, Width = 30, CustomWidth = true }); // адрес
-                        lstColumns.Append(new Column() { Min = 9, Max = 9, Width = 35, CustomWidth = true }); // льгота
-                        lstColumns.Append(new Column() { Min = 10, Max = 10, Width = 18, CustomWidth = true }); // размер выплаты
-                        lstColumns.Append(new Column() { Min = 11, Max = 11, Width = 30, CustomWidth = true }); // серия и номер серта
-                        lstColumns.Append(new Column() { Min = 12, Max = 12, Width = 20, CustomWidth = true }); // дата выдачи серта
-                        lstColumns.Append(new Column() { Min = 13, Max = 13, Width = 15, CustomWidth = true }); // решение
-                        lstColumns.Append(new Column() { Min = 14, Max = 14, Width = 25, CustomWidth = true }); // дата и номер решения
-                        lstColumns.Append(new Column() { Min = 15, Max = 15, Width = 25, CustomWidth = true }); // трек
-                        lstColumns.Append(new Column() { Min = 16, Max = 16, Width = 25, CustomWidth = true }); // дата отправки почтой
-                        lstColumns.Append(new Column() { Min = 17, Max = 17, Width = 15, CustomWidth = true }); // дата отправки почтой
-                        // Only insert the columns if we had to create a new columns element
-                        if (needToInsertColumns)
-                            worksheetPart.Worksheet.InsertAt(lstColumns, 0);
+                            WorkbookPart workbookPart = document.AddWorkbookPart();
+                            workbookPart.Workbook = new Workbook();
 
+                            WorksheetPart worksheetPart = workbookPart.AddNewPart<WorksheetPart>();
 
+                            var sheetData = new SheetData();
 
+                            worksheetPart.Worksheet = new Worksheet(sheetData);
 
-                        Sheets sheets = workbookPart.Workbook.AppendChild(new Sheets());
-                        Sheet sheet = new() { Id = workbookPart.GetIdOfPart(worksheetPart), SheetId = 1, Name = "Sheet1" };
-
-                        sheets.Append(sheet);
-
-                        Row headerRow = new();
-
-                        //Здесь постройка и название колонок
-                        List<string> columns = new();
-                        foreach (DataColumn column in table.Columns)
-                        {
-                            columns.Add(column.ColumnName);
-                            Cell cell = new()
+                            // Create custom widths for columns - Здесь задаем ширину колонок
+                            Columns lstColumns = worksheetPart.Worksheet.GetFirstChild<Columns>();
+                            bool needToInsertColumns = false;
+                            if (lstColumns == null)
                             {
-                                DataType = CellValues.String,
-                                CellValue = new CellValue(DoOperation(column.ColumnName))
-                            };
-                            headerRow.AppendChild(cell);
+                                lstColumns = new Columns();
+                                needToInsertColumns = true;
+                            }
+                            // Min = 1, Max = 1 ==> Apply this to column 1 (A)
+                            // Min = 2, Max = 2 ==> Apply this to column 2 (B)
+                            // Width = 25 ==> Set the width to 25
+                            // CustomWidth = true ==> Tell Excel to use the custom width
+                            lstColumns.Append(new Column() { Min = 1, Max = 1, Width = 7, CustomWidth = true });  // id
+                            lstColumns.Append(new Column() { Min = 2, Max = 2, Width = 20, CustomWidth = true }); // f
+                            lstColumns.Append(new Column() { Min = 3, Max = 3, Width = 20, CustomWidth = true }); // n
+                            lstColumns.Append(new Column() { Min = 4, Max = 4, Width = 20, CustomWidth = true }); // l
+                            lstColumns.Append(new Column() { Min = 5, Max = 5, Width = 15, CustomWidth = true }); // snils
+                            lstColumns.Append(new Column() { Min = 6, Max = 6, Width = 25, CustomWidth = true }); // район
+                            lstColumns.Append(new Column() { Min = 7, Max = 7, Width = 25, CustomWidth = true }); // населенный
+                            lstColumns.Append(new Column() { Min = 8, Max = 8, Width = 30, CustomWidth = true }); // адрес
+                            lstColumns.Append(new Column() { Min = 9, Max = 9, Width = 35, CustomWidth = true }); // льгота
+                            lstColumns.Append(new Column() { Min = 10, Max = 10, Width = 18, CustomWidth = true }); // размер выплаты
+                            lstColumns.Append(new Column() { Min = 11, Max = 11, Width = 30, CustomWidth = true }); // серия и номер серта
+                            lstColumns.Append(new Column() { Min = 12, Max = 12, Width = 20, CustomWidth = true }); // дата выдачи серта
+                            lstColumns.Append(new Column() { Min = 13, Max = 13, Width = 15, CustomWidth = true }); // решение
+                            lstColumns.Append(new Column() { Min = 14, Max = 14, Width = 25, CustomWidth = true }); // дата и номер решения
+                            lstColumns.Append(new Column() { Min = 15, Max = 15, Width = 25, CustomWidth = true }); // трек
+                            lstColumns.Append(new Column() { Min = 16, Max = 16, Width = 25, CustomWidth = true }); // дата отправки почтой
+                            lstColumns.Append(new Column() { Min = 17, Max = 17, Width = 15, CustomWidth = true }); // дата отправки почтой
+                                                                                                                    // Only insert the columns if we had to create a new columns element
+                            if (needToInsertColumns)
+                                worksheetPart.Worksheet.InsertAt(lstColumns, 0);
 
-                        }
 
-                        sheetData.AppendChild(headerRow);
 
-                        //Данные заносятся здесь
-                        foreach (DataRow dsrow in table.Rows)
-                        {
-                            Row newRow = new Row();
 
-                            foreach (string col in columns)
+                            Sheets sheets = workbookPart.Workbook.AppendChild(new Sheets());
+                            Sheet sheet = new() { Id = workbookPart.GetIdOfPart(worksheetPart), SheetId = 1, Name = "Sheet1" };
+
+                            sheets.Append(sheet);
+
+                            Row headerRow = new();
+
+                            //Здесь постройка и название колонок
+                            List<string> columns = new();
+                            foreach (DataColumn column in table.Columns)
                             {
-                                if (col == "Area")
+                                columns.Add(column.ColumnName);
+                                Cell cell = new()
                                 {
-                                    Cell cell = new()
+                                    DataType = CellValues.String,
+                                    CellValue = new CellValue(DoOperation(column.ColumnName))
+                                };
+                                headerRow.AppendChild(cell);
+
+                            }
+
+                            sheetData.AppendChild(headerRow);
+
+                            //Данные заносятся здесь
+                            foreach (DataRow dsrow in table.Rows)
+                            {
+                                Row newRow = new Row();
+
+                                foreach (string col in columns)
+                                {
+                                    if (col == "Area")
                                     {
-                                        DataType = CellValues.String,
-                                        CellValue = new CellValue(dsrow[col].ToString())//Тут значение Id
-                                    };
-                                    using (ExDbContext db = new())
-                                    {
+                                        Cell cell = new()
+                                        {
+                                            DataType = CellValues.String,
+                                            CellValue = new CellValue(dsrow[col].ToString())//Тут значение Id
+                                        };
+                                        using ExDbContext db = new();
                                         var GetNameOfArea = await db.Areas.Where(u => u.Id == Convert.ToInt32(cell.CellValue.Text) + 1).FirstOrDefaultAsync();
                                         cell.CellValue = new CellValue(GetNameOfArea.AreaName);
                                         newRow.AppendChild(cell);
                                     }
-                                }
 
-                                else if (col == "Local")
-                                {
-                                    Cell cell = new Cell();
-                                    cell.DataType = CellValues.String;
-                                    cell.CellValue = new CellValue(dsrow[col].ToString());//Тут значение Id
-                                    using (ExDbContext db = new())
+                                    else if (col == "Local")
                                     {
+                                        Cell cell = new Cell
+                                        {
+                                            DataType = CellValues.String,
+                                            CellValue = new CellValue(dsrow[col].ToString())//Тут значение Id
+                                        };
+                                        using ExDbContext db = new();
                                         var GetNameOfLocal = await db.Localities.Where(u => u.Id == Convert.ToInt32(cell.CellValue.Text) + 1).FirstOrDefaultAsync();
                                         cell.CellValue = new CellValue(GetNameOfLocal.LocalName);
                                         newRow.AppendChild(cell);
                                     }
-                                }
 
-                                else if (col == "Lgota")
-                                {
-                                    Cell cell = new()
+                                    else if (col == "Lgota")
                                     {
-                                        DataType = CellValues.String,
-                                        CellValue = new CellValue(dsrow[col].ToString())//Тут значение Id
-                                    };
-                                    using (ExDbContext db = new())
-                                    {
+                                        Cell cell = new()
+                                        {
+                                            DataType = CellValues.String,
+                                            CellValue = new CellValue(dsrow[col].ToString())//Тут значение Id
+                                        };
+                                        using ExDbContext db = new();
                                         var GetNameOfLocal = await db.Privileges.Where(u => u.Id == Convert.ToInt32(cell.CellValue.Text) + 1).FirstOrDefaultAsync();
                                         cell.CellValue = new CellValue(GetNameOfLocal.PrivilegesName);
                                         newRow.AppendChild(cell);
                                     }
-                                }
 
-                                else if (col == "Pay")
-                                {
-                                    Cell cell = new Cell();
-                                    cell.DataType = CellValues.String;
-                                    cell.CellValue = new CellValue(dsrow[col].ToString());//Тут значение Id
-                                    using (ExDbContext db = new())
+                                    else if (col == "Pay")
                                     {
+                                        Cell cell = new Cell();
+                                        cell.DataType = CellValues.String;
+                                        cell.CellValue = new CellValue(dsrow[col].ToString());//Тут значение Id
+                                        using ExDbContext db = new();
                                         var GetNameOfLocal = await db.PayAmounts.Where(u => u.Id == Convert.ToInt32(cell.CellValue.Text) + 1).FirstOrDefaultAsync();
                                         cell.CellValue = new CellValue((decimal)GetNameOfLocal.Pay);
                                         newRow.AppendChild(cell);
                                     }
-                                }
 
-                                else if (col == "Solution")
-                                {
-                                    Cell cell = new Cell();
-                                    cell.DataType = CellValues.String;
-                                    cell.CellValue = new CellValue(dsrow[col].ToString());//Тут значение Id
-                                    using (ExDbContext db = new())
+                                    else if (col == "Solution")
                                     {
+                                        Cell cell = new Cell();
+                                        cell.DataType = CellValues.String;
+                                        cell.CellValue = new CellValue(dsrow[col].ToString());//Тут значение Id
+                                        using ExDbContext db = new();
                                         var GetNameOfLocal = await db.SolutionTypes.Where(u => u.Id == Convert.ToInt32(cell.CellValue.Text) + 1).FirstOrDefaultAsync();
                                         cell.CellValue = new CellValue(GetNameOfLocal.SolutionName);
                                         newRow.AppendChild(cell);
                                     }
-                                }
 
-                                else if (col == "DateGetSert" || col == "MailingDate")
-                                {
-                                    Cell cell = new()
+                                    else if (col == "DateGetSert" || col == "MailingDate")
                                     {
-                                        DataType = CellValues.String,
-                                        CellValue = new CellValue(Convert.ToDateTime(dsrow[col].ToString()).ToString("d", new CultureInfo("Ru-ru")))//Тут значение Id
-                                    };
-                                    newRow.AppendChild(cell);
-                                }
+                                        Cell cell = new Cell();
+                                        cell.DataType = CellValues.String; 
+                                        cell.CellValue = new CellValue(dsrow[col].ToString());//Тут значение Id
+                                        if(cell.InnerText == "")
+                                        {
+                                            newRow.AppendChild(cell);
+                                        }
 
-                                else if (col == "IdApplicant")
-                                    continue;
+                                        else
+                                        {
+                                            cell.DataType = CellValues.String;
+                                            cell.CellValue = new CellValue(Convert.ToDateTime(dsrow[col].ToString()).ToString("d"));//Тут значение Id
+                                            
+                                             newRow.AppendChild(cell);
+                                        }
+                                       
+                                    }
 
-                                else
-                                {
-                                    Cell cell = new()
+                                    else if (col == "IdApplicant")
+                                        continue;
+
+                                    else
                                     {
-                                        DataType = CellValues.String,
-                                        CellValue = new CellValue(dsrow[col].ToString())//Тут значение Id
-                                    };
-                                    newRow.AppendChild(cell);
+                                        Cell cell = new()
+                                        {
+                                            DataType = CellValues.String,
+                                            CellValue = new CellValue(dsrow[col].ToString())//Тут значение Id
+                                        };
+                                        newRow.AppendChild(cell);
+                                    }
                                 }
+                                sheetData.AppendChild(newRow);
                             }
-                            sheetData.AppendChild(newRow);
+
+                            workbookPart.Workbook.Save();
                         }
 
-                        workbookPart.Workbook.Save();
+
                     }
 
-
-                }
-
-                static string DoOperation(string str)
-                {
-                    switch (str)
+                    static string DoOperation(string str)
                     {
-                        case "IdReg": return "№ п/п";
-                        case "Family": return "Фамилия";
-                        case "Name": return "Имя";
-                        case "Lastname": return "Отчество";
-                        case "Snils": return "Снилс";
-                        case "Area": return "Район";
-                        case "Local": return "Населенный пункт";
-                        case "Adress": return "Адрес";
-                        case "Lgota": return "Льгота";
-                        case "Sernumb": return "Серия и номер сертификата";
-                        case "DateGetSert": return "Дата выдачи сертификата";
-                        case "Solution": return "Решение";
-                        case "DateAndNumbSolutionSert": return "Дата и номер решения";
-                        case "Trek": return "Трек";
-                        case "Pay": return "Размер выплаты";
-                        case "MailingDate": return "Дата отправки";
-                        case "Comment": return "Комментарий";
-                        default: return "";
+                        return str switch
+                        {
+                            "IdReg" => "№ п/п",
+                            "Family" => "Фамилия",
+                            "Name" => "Имя",
+                            "Lastname" => "Отчество",
+                            "Snils" => "Снилс",
+                            "Area" => "Район",
+                            "Local" => "Населенный пункт",
+                            "Adress" => "Адрес",
+                            "Lgota" => "Льгота",
+                            "Sernumb" => "Серия и номер сертификата",
+                            "DateGetSert" => "Дата выдачи сертификата",
+                            "Solution" => "Решение",
+                            "DateAndNumbSolutionSert" => "Дата и номер решения",
+                            "Trek" => "Трек",
+                            "Pay" => "Размер выплаты",
+                            "MailingDate" => "Дата отправки",
+                            "Comment" => "Комментарий",
+                            _ => "",
+                        };
                     }
-                }
-            });
+                });
+            }
+            catch (Exception ex)
+            {
+
+                MessageBox.Show(ex.Message);
+            }
+         
         }
 
         //Выгрузить в Excel
@@ -693,9 +703,9 @@ namespace exel_for_mfc
 
         #endregion
 
-        private void Button_Click_1(object sender, RoutedEventArgs e)
+        private async void Button_Click_1(object sender, RoutedEventArgs e)
         {
-            Start();  
+            await GoStart();  
         }
     }
 }

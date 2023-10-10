@@ -92,7 +92,7 @@
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <TextBlock Text="{Binding DateGetSert,
-                                                 StringFormat=dd/MM/yyyy}" />
+                                                 StringFormat=dd.MM.yyyy}" />
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                     <DataGridTemplateColumn.CellEditingTemplate>
@@ -127,7 +127,7 @@
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <TextBlock Text="{Binding MailingDate,
-                                                 StringFormat=dd/MM/yyyy}" />
+                                                 StringFormat=dd.MM.yyyy}" />
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                     <DataGridTemplateColumn.CellEditingTemplate>
@@ -164,15 +164,7 @@
                 Height="42"
                 Width="107"
                 Click="Button_Click"/>
-        <Button Grid.Column="5" Content="Обновить таблицу" HorizontalAlignment="Left" Height="37" Margin="28,46,0,0" Grid.Row="11" VerticalAlignment="Top" RenderTransformOrigin="0.5,0.5" Grid.RowSpan="2" Click="Button_Click_1">
-            <Button.RenderTransform>
-                <TransformGroup>
-                    <ScaleTransform/>
-                    <SkewTransform/>
-                    <RotateTransform Angle="47.471"/>
-                    <TranslateTransform/>
-                </TransformGroup>
-            </Button.RenderTransform>
+        <Button Grid.Column="5" Background="Yellow" Content="Обновить таблицу" HorizontalAlignment="Left" Height="37" Margin="40,34,0,0" Grid.Row="11" VerticalAlignment="Top" RenderTransformOrigin="0.5,0.5" Grid.RowSpan="2" Click="Button_Click_1">
         </Button>
 
         <!-- Фильтрация , это будет жестко)-->
