@@ -48,7 +48,7 @@
         <DataGrid x:Name="dataGrid"
                   Grid.ColumnSpan="8"
                   Grid.RowSpan="12"
-                  CanUserSortColumns="True"
+                  CanUserDeleteRows="False"
                   AutoGenerateColumns="False"
                   CanUserAddRows="True"
                   CellEditEnding="dataGrid_CellEditEnding" Margin="0,44,0,52">
@@ -59,7 +59,7 @@
                             <DataTemplate>
                                 <StackPanel Orientation="Horizontal">
                                     <TextBlock Text="{Binding}" Margin="10 5"/>
-                                    
+                                    <Button x:Name="btnFilter" Width="19">[X]</Button>
                                 </StackPanel>
                             </DataTemplate>
                         </Setter.Value>
