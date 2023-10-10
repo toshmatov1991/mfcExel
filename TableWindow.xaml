@@ -155,7 +155,7 @@
                 <DataGridTextColumn Binding="{Binding Comment, UpdateSourceTrigger=PropertyChanged}" Header="" Visibility="Hidden"/>
             </DataGrid.Columns>
 
-            <!-- Отображение комментария при выделении строки -->
+            <!-- Отображение комментария при выделении строки --><!--
             <DataGrid.RowDetailsTemplate>
                 <DataTemplate>
                     <StackPanel Orientation="Horizontal" Height="33" VerticalAlignment="Center">
@@ -170,7 +170,7 @@
                                  Foreground="Black"/>
                     </StackPanel>
                 </DataTemplate>
-            </DataGrid.RowDetailsTemplate>
+            </DataGrid.RowDetailsTemplate>-->
         </DataGrid>
         <Button Content="Выгрузить в Excel"
                 Grid.Column="6"
