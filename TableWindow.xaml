@@ -35,15 +35,16 @@
         <TextBlock Text=" Быстрый поиск"
                    FontStyle="Italic"
                    Grid.Column="5"
-                   VerticalAlignment="Center"
-                   FontSize="20"/>
+                   VerticalAlignment="Top"
+                   FontSize="18"/>
         <TextBox FontStyle="Italic"
+                 VerticalAlignment="Top"
                  VerticalContentAlignment="Center"
                  FontSize="14" 
                  Grid.Column="6"
                  x:Name="SearchTable"
                  KeyUp="GoSearchToTable"
-                 Grid.ColumnSpan="2"/>
+                 Grid.ColumnSpan="2" Height="24"/>
         <DataGrid x:Name="dataGrid"
                   Grid.ColumnSpan="8"
                   Grid.RowSpan="12"
@@ -51,6 +52,20 @@
                   AutoGenerateColumns="False"
                   CanUserAddRows="True"
                   CellEditEnding="dataGrid_CellEditEnding" Margin="0,44,0,52">
+            <DataGrid.Resources>
+                <Style TargetType="DataGridColumnHeader">
+                    <Setter Property="ContentTemplate">
+                        <Setter.Value>
+                            <DataTemplate>
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="{Binding}" Margin="10 5"/>
+                                    
+                                </StackPanel>
+                            </DataTemplate>
+                        </Setter.Value>
+                    </Setter>
+                </Style>
+            </DataGrid.Resources>
             <DataGrid.Columns>
                 <DataGridTextColumn Binding="{Binding IdReg, UpdateSourceTrigger=PropertyChanged}" IsReadOnly="True" Header="№п/п"/>
                 <DataGridTextColumn Binding="{Binding Family, UpdateSourceTrigger=PropertyChanged}" Header="Фамилия"/>
