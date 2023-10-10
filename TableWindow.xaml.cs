@@ -48,43 +48,56 @@ namespace exel_for_mfc
         }
 
         //Запрос для заполнения таблицы
-        void Start()
+        async void Start()
         {
-            using (ExDbContext db = new())
-            {
-                MyList = (from reg in db.Registries
-                          join appl in db.Applicants on reg.ApplicantFk equals appl.Id
-                          select new SClass
-                          {
-                              IdReg = reg.Id,
-                              Family = appl.Firstname,
-                              Name = appl.Middlename,
-                              Lastname = appl.Lastname,
-                              Snils = appl.Snils,
-                              Area = appl.AreaFk - 1,
-                              Local = appl.LocalityFk - 1,
-                              Adress = appl.Adress,
-                              Lgota = appl.PrivilegesFk - 1,
-                              Pay = reg.PayAmountFk - 1,
-                              Sernumb = reg.SerialAndNumberSert,
-                              DateGetSert = reg.DateGetSert,
-                              Solution = reg.SolutionFk - 1,
-                              DateAndNumbSolutionSert = reg.DateAndNumbSolutionSert,
-                              Comment = reg.Comment,
-                              Trek = reg.Trek,
-                              MailingDate = reg.MailingDate,
-                              IdApplicant = appl.Id
-                          }).AsNoTracking().ToList();
-
-                dataGrid.ItemsSource = MyList;
-
-                AreaCombobox = db.Areas.FromSqlRaw("SELECT * FROM Area").AsNoTracking().ToList();
-                LocalCombobox = db.Localities.FromSqlRaw("SELECT * FROM Locality").AsNoTracking().ToList();
-                PayCombobox = db.PayAmounts.FromSqlRaw("SELECT * FROM PayAmount").AsNoTracking().ToList();
-                PrivelCombobox = db.Privileges.FromSqlRaw("SELECT * FROM Privileges").AsNoTracking().ToList();
-                SolCombobox = db.SolutionTypes.FromSqlRaw("SELECT * FROM SolutionType").AsNoTracking().ToList();
-            };
+            await GoStart();
         }
+
+        async Task GoStart()
+        {
+            await Task.Run(() =>
+            {
+                Dispatcher.Invoke(() =>
+                {
+                    using (ExDbContext db = new())
+                    {
+                        MyList = (from reg in db.Registries
+                                  join appl in db.Applicants on reg.ApplicantFk equals appl.Id
+                                  select new SClass
+                                  {
+                                      IdReg = reg.Id,
+                                      Family = appl.Firstname,
+                                      Name = appl.Middlename,
+                                      Lastname = appl.Lastname,
+                                      Snils = appl.Snils,
+                                      Area = appl.AreaFk - 1,
+                                      Local = appl.LocalityFk - 1,
+                                      Adress = appl.Adress,
+                                      Lgota = appl.PrivilegesFk - 1,
+                                      Pay = reg.PayAmountFk - 1,
+                                      Sernumb = reg.SerialAndNumberSert,
+                                      DateGetSert = reg.DateGetSert,
+                                      Solution = reg.SolutionFk - 1,
+                                      DateAndNumbSolutionSert = reg.DateAndNumbSolutionSert,
+                                      Comment = reg.Comment,
+                                      Trek = reg.Trek,
+                                      MailingDate = reg.MailingDate,
+                                      IdApplicant = appl.Id
+                                  }).AsNoTracking().ToList();
+
+                        dataGrid.ItemsSource = MyList;
+
+                        AreaCombobox = db.Areas.FromSqlRaw("SELECT * FROM Area").AsNoTracking().ToList();
+                        LocalCombobox = db.Localities.FromSqlRaw("SELECT * FROM Locality").AsNoTracking().ToList();
+                        PayCombobox = db.PayAmounts.FromSqlRaw("SELECT * FROM PayAmount").AsNoTracking().ToList();
+                        PrivelCombobox = db.Privileges.FromSqlRaw("SELECT * FROM Privileges").AsNoTracking().ToList();
+                        SolCombobox = db.SolutionTypes.FromSqlRaw("SELECT * FROM SolutionType").AsNoTracking().ToList();
+                    };
+                });
+            });
+        }
+
+
 
         //Событие редактирования ячейки
         public async void dataGrid_CellEditEnding(object sender, DataGridCellEditEndingEventArgs e)
