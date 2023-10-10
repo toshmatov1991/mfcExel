@@ -215,7 +215,7 @@ namespace exel_for_mfc
             }
         }
         #endregion
-
+        #region Интеграция
         [Obsolete]
         private void Button_Click(object sender, RoutedEventArgs e)
         {
@@ -265,18 +265,18 @@ namespace exel_for_mfc
                     //Просто адский цикл
                     foreach (Row row in rows)
                     {
-                       
+
                         foreach (Cell cell in row.Elements<Cell>())
                         {
                             switch (temp)
                             {
                                 case 0: //Фамилия **************************************
-                                    if(prov == 0)
+                                    if (prov == 0)
                                     {
                                         prov = 1;
                                         break;
                                     }
-                                    else if(prov != 0)
+                                    else if (prov != 0)
                                     {
                                         if ((cell.DataType != null) && (cell.DataType == CellValues.SharedString))
                                         {
@@ -296,7 +296,7 @@ namespace exel_for_mfc
                                             app.Firstname = null;
                                         }
                                         temp++;
-                                        
+
                                     }
                                     break;
 
@@ -607,7 +607,7 @@ namespace exel_for_mfc
                                     temp = 0;
                                     using (ExDbContext db = new())
                                     {
-                                        
+
                                         db.Applicants.Add(app);
                                         db.SaveChanges();
                                         //Делай запрос чтоб получить данного заявителя и вставлю id в idApplicant
@@ -635,147 +635,140 @@ namespace exel_for_mfc
             }
         }
 
-
-
-
-
-
-
-
         //Функция возврата Района
         static int ReturnIdArea(string str)
+        {
+            int idArea = 0;
+            using (ExDbContext db = new())
             {
-                int idArea = 0;
-                using (ExDbContext db = new())
-                {
-                    var equalArea = db.Areas.AsNoTracking().Where(u => u.AreaName == str).FirstOrDefault();
-                    if (equalArea != null)
-                        idArea = equalArea.Id;
-                    
-                    else if(equalArea == null)
-                    {
-                        Area area = new();
-                        area.AreaName = str;
-                        db.Areas.Add(area);
-                        db.SaveChanges();
-                        // И ветнуть id нового
-                        var getIdLast = db.Areas.AsNoTracking().OrderBy(u => u.Id).LastOrDefaultAsync();
-                        if (getIdLast != null)
-                            idArea = getIdLast.Id;
-                        else
-                            MessageBox.Show("Произошла непредвиденная ошибка", "Это не конец");
-                    }
-                }
-                return idArea;
-            }
+                var equalArea = db.Areas.AsNoTracking().Where(u => u.AreaName == str).FirstOrDefault();
+                if (equalArea != null)
+                    idArea = equalArea.Id;
 
-            //Функция возврата Населенного пункта
-            static int ReturnIdLocal(string str)
+                else if (equalArea == null)
+                {
+                    Area area = new();
+                    area.AreaName = str;
+                    db.Areas.Add(area);
+                    db.SaveChanges();
+                    // И ветнуть id нового
+                    var getIdLast = db.Areas.AsNoTracking().OrderBy(u => u.Id).LastOrDefaultAsync();
+                    if (getIdLast != null)
+                        idArea = getIdLast.Id;
+                    else
+                        MessageBox.Show("Произошла непредвиденная ошибка", "Это не конец");
+                }
+            }
+            return idArea;
+        }
+
+        //Функция возврата Населенного пункта
+        static int ReturnIdLocal(string str)
+        {
+            int idLocal = 0;
+            using (ExDbContext db = new())
             {
-                int idLocal = 0;
-                using (ExDbContext db = new())
+                var equalLoc = db.Localities.AsNoTracking().Where(u => u.LocalName == str).FirstOrDefault();
+                if (equalLoc != null)
+                    idLocal = equalLoc.Id;
+
+                else if (equalLoc == null)
                 {
-                    var equalLoc = db.Localities.AsNoTracking().Where(u => u.LocalName == str).FirstOrDefault();
-                    if (equalLoc != null)
-                        idLocal = equalLoc.Id;
-
-                    else if (equalLoc == null)
-                    {
-                        Locality loc = new();
-                        loc.LocalName = str;
-                        db.Localities.Add(loc);
-                        db.SaveChanges();
-                        // И ветнуть id нового
-                        var getIdLast = db.Localities.AsNoTracking().OrderBy(u => u.Id).LastOrDefaultAsync();
-                        if (getIdLast != null)
-                            idLocal = getIdLast.Id;
-                        else
-                            MessageBox.Show("Произошла непредвиденная ошибка", "Это не конец");
-                    }
+                    Locality loc = new();
+                    loc.LocalName = str;
+                    db.Localities.Add(loc);
+                    db.SaveChanges();
+                    // И ветнуть id нового
+                    var getIdLast = db.Localities.AsNoTracking().OrderBy(u => u.Id).LastOrDefaultAsync();
+                    if (getIdLast != null)
+                        idLocal = getIdLast.Id;
+                    else
+                        MessageBox.Show("Произошла непредвиденная ошибка", "Это не конец");
                 }
-                return idLocal;
             }
+            return idLocal;
+        }
 
-            //Функция возврата Льгота
-            static int ReturnIdPriv(string str)
+        //Функция возврата Льгота
+        static int ReturnIdPriv(string str)
+        {
+            int idPriv = 0;
+            using (ExDbContext db = new())
             {
-                int idPriv = 0;
-                using (ExDbContext db = new())
+                var equalPriv = db.Privileges.AsNoTracking().Where(u => u.PrivilegesName == str).FirstOrDefault();
+                if (equalPriv != null)
+                    idPriv = equalPriv.Id;
+
+                else if (equalPriv == null)
                 {
-                    var equalPriv = db.Privileges.AsNoTracking().Where(u => u.PrivilegesName == str).FirstOrDefault();
-                    if (equalPriv != null)
-                        idPriv = equalPriv.Id;
-
-                    else if (equalPriv == null)
-                    {
-                        Privilege privilege = new();
-                        privilege.PrivilegesName = str;
-                        db.Privileges.Add(privilege);
-                        db.SaveChanges();
-                        // И ветнуть id нового
-                        var getIdLast = db.Privileges.AsNoTracking().OrderBy(u => u.Id).LastOrDefaultAsync();
-                        if (getIdLast != null)
-                            idPriv = getIdLast.Id;
-                        else
-                            MessageBox.Show("Произошла непредвиденная ошибка", "Это не конец");
-                    }
+                    Privilege privilege = new();
+                    privilege.PrivilegesName = str;
+                    db.Privileges.Add(privilege);
+                    db.SaveChanges();
+                    // И ветнуть id нового
+                    var getIdLast = db.Privileges.AsNoTracking().OrderBy(u => u.Id).LastOrDefaultAsync();
+                    if (getIdLast != null)
+                        idPriv = getIdLast.Id;
+                    else
+                        MessageBox.Show("Произошла непредвиденная ошибка", "Это не конец");
                 }
-                return idPriv;
             }
+            return idPriv;
+        }
 
-            //Функция возврата Решение
-            static int ReturnIdSol(string str)
+        //Функция возврата Решение
+        static int ReturnIdSol(string str)
+        {
+            int idSol = 0;
+            using (ExDbContext db = new())
             {
-                int idSol = 0;
-                using (ExDbContext db = new())
+                var equalSol = db.SolutionTypes.AsNoTracking().Where(u => u.SolutionName == str).FirstOrDefault();
+                if (equalSol != null)
+                    idSol = equalSol.Id;
+
+                else if (equalSol == null)
                 {
-                    var equalSol = db.SolutionTypes.AsNoTracking().Where(u => u.SolutionName == str).FirstOrDefault();
-                    if (equalSol != null)
-                        idSol = equalSol.Id;
-
-                    else if (equalSol == null)
-                    {
-                        SolutionType solution = new();
-                        solution.SolutionName = str;
-                        db.SolutionTypes.Add(solution);
-                        db.SaveChanges();
-                        // И ветнуть id нового
-                        var getIdLast = db.SolutionTypes.AsNoTracking().OrderBy(u => u.Id).LastOrDefaultAsync();
-                        if (getIdLast != null)
-                            idSol = getIdLast.Id;
-                        else
-                            MessageBox.Show("Произошла непредвиденная ошибка", "Это не конец");
-                    }
+                    SolutionType solution = new();
+                    solution.SolutionName = str;
+                    db.SolutionTypes.Add(solution);
+                    db.SaveChanges();
+                    // И ветнуть id нового
+                    var getIdLast = db.SolutionTypes.AsNoTracking().OrderBy(u => u.Id).LastOrDefaultAsync();
+                    if (getIdLast != null)
+                        idSol = getIdLast.Id;
+                    else
+                        MessageBox.Show("Произошла непредвиденная ошибка", "Это не конец");
                 }
-                return idSol;
             }
+            return idSol;
+        }
 
-            //Функция возврата Выплата
-            static int ReturnIdPay(string str)
+        //Функция возврата Выплата
+        static int ReturnIdPay(string str)
+        {
+            int idPay = 0;
+            using (ExDbContext db = new())
             {
-                int idPay = 0;
-                using (ExDbContext db = new())
-                {
-                    var equalPay = db.PayAmounts.AsNoTracking().Where(u => u.Pay == Convert.ToDecimal(str)).FirstOrDefault();
-                    if (equalPay != null)
-                        idPay = equalPay.Id;
+                var equalPay = db.PayAmounts.AsNoTracking().Where(u => u.Pay == Convert.ToDecimal(str)).FirstOrDefault();
+                if (equalPay != null)
+                    idPay = equalPay.Id;
 
-                    else if (equalPay == null)
-                    {
-                        PayAmount pays = new();
-                        pays.Pay = Convert.ToDecimal(str);
-                        db.PayAmounts.Add(pays);
-                        db.SaveChanges();
-                        // И ветнуть id нового
-                        var getIdLast = db.PayAmounts.AsNoTracking().OrderBy(u => u.Id).LastOrDefaultAsync();
-                        if (getIdLast != null)
-                            idPay = getIdLast.Id;
-                        else
-                            MessageBox.Show("Произошла непредвиденная ошибка", "Это не конец");
-                    }
+                else if (equalPay == null)
+                {
+                    PayAmount pays = new();
+                    pays.Pay = Convert.ToDecimal(str);
+                    db.PayAmounts.Add(pays);
+                    db.SaveChanges();
+                    // И ветнуть id нового
+                    var getIdLast = db.PayAmounts.AsNoTracking().OrderBy(u => u.Id).LastOrDefaultAsync();
+                    if (getIdLast != null)
+                        idPay = getIdLast.Id;
+                    else
+                        MessageBox.Show("Произошла непредвиденная ошибка", "Это не конец");
                 }
-                return idPay;
             }
-        
+            return idPay;
+        }
+        #endregion
     }
 }
