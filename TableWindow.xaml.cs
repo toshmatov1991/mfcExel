@@ -679,5 +679,10 @@ namespace exel_for_mfc
         }
 
         #endregion
+
+        private void Button_Click_1(object sender, RoutedEventArgs e)
+        {
+            Start();  
+        }
     }
 }

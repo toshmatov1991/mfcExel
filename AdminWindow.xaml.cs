@@ -1,5 +1,4 @@
-﻿using ClosedXML.Excel;
-using DocumentFormat.OpenXml;
+﻿using DocumentFormat.OpenXml;
 using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Spreadsheet;
 using DocumentFormat.OpenXml.Wordprocessing;
@@ -9,6 +8,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Data;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
@@ -244,51 +244,63 @@ namespace exel_for_mfc
              */
             if (of.ShowDialog() == true)
             {
-                using (FileStream fs = new FileStream(of.FileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+                using FileStream fs = new(of.FileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+                using SpreadsheetDocument doc = SpreadsheetDocument.Open(fs, false);
+                WorkbookPart workbookPart = doc.WorkbookPart;
+                SharedStringTablePart sstpart = workbookPart.GetPartsOfType<SharedStringTablePart>().First();
+                SharedStringTable sst = sstpart.SharedStringTable;
+
+                WorksheetPart worksheetPart = workbookPart.WorksheetParts.First();
+                Worksheet sheet = worksheetPart.Worksheet;
+
+                var cells = sheet.Descendants<Cell>();
+                var rows = sheet.Descendants<Row>();
+                var app = new Applicant();
+                var reg = new Registry();
+                int temp = 0;
+                int prov = 0;
+                try
                 {
-                    using (SpreadsheetDocument doc = SpreadsheetDocument.Open(fs, false))
+                    //Второе условие срабатывает на цифры
+                    //Просто адский цикл
+                    foreach (Row row in rows)
                     {
-                        WorkbookPart workbookPart = doc.WorkbookPart;
-                        SharedStringTablePart sstpart = workbookPart.GetPartsOfType<SharedStringTablePart>().First();
-                        SharedStringTable sst = sstpart.SharedStringTable;
-
-                        WorksheetPart worksheetPart = workbookPart.WorksheetParts.First();
-                        Worksheet sheet = worksheetPart.Worksheet;
-
-                        var cells = sheet.Descendants<Cell>();
-                        var app = new Applicant();
-                        var reg = new Registry();
-                        int temp = 0;
-
-                        //Второе условие срабатывает на цифры
-                        //Просто адский цикл
-                        foreach (Cell cell in cells)
+                       
+                        foreach (Cell cell in row.Elements<Cell>())
                         {
-
                             switch (temp)
                             {
-                                case 0: break;
-                                case 1: //Фамилия //Проверка на NULL каждой строки
-                                    if ((cell.DataType != null) && (cell.DataType == CellValues.SharedString))
+                                case 0: //Фамилия **************************************
+                                    if(prov == 0)
                                     {
-                                        int s1 = int.Parse(cell.CellValue.Text);
-                                        string str1 = sst.ChildElements[s1].InnerText;
-                                        app.Firstname = str1;
+                                        prov = 1;
+                                        break;
                                     }
-                                    //Числа
-                                    else if (cell.CellValue != null)
+                                    else if(prov != 0)
                                     {
-                                        app.Firstname = cell.CellValue.Text;
-                                    }
+                                        if ((cell.DataType != null) && (cell.DataType == CellValues.SharedString))
+                                        {
+                                            int s1 = int.Parse(cell.CellValue.Text);
+                                            string str1 = sst.ChildElements[s1].InnerText;
+                                            app.Firstname = str1;
+                                        }
+                                        //Числа
+                                        else if (cell.CellValue != null)
+                                        {
+                                            app.Firstname = cell.CellValue.Text;
+                                        }
 
-                                    //NULL
-                                    else if (cell.DataType == null)
-                                    {
-                                        app.Firstname = null;
+                                        //NULL
+                                        else if (cell.DataType == null)
+                                        {
+                                            app.Firstname = null;
+                                        }
+                                        temp++;
+                                        
                                     }
                                     break;
 
-                                case 2: //Имя
+                                case 1: //Имя **************************************
                                     if ((cell.DataType != null) && (cell.DataType == CellValues.SharedString))
                                     {
                                         int s2 = int.Parse(cell.CellValue.Text);
@@ -305,9 +317,10 @@ namespace exel_for_mfc
                                     {
                                         app.Middlename = null;
                                     }
+                                    temp++;
                                     break;
 
-                                case 3: //Отчество
+                                case 2: //Отчество **************************************
                                     if ((cell.DataType != null) && (cell.DataType == CellValues.SharedString))
                                     {
                                         int s3 = int.Parse(cell.CellValue.Text);
@@ -325,9 +338,10 @@ namespace exel_for_mfc
                                     {
                                         app.Lastname = null;
                                     }
+                                    temp++;
                                     break;
 
-                                case 4: //Снилс
+                                case 3: //Снилс **************************************
                                     if ((cell.DataType != null) && (cell.DataType == CellValues.SharedString))
                                     {
                                         int s3 = int.Parse(cell.CellValue.Text);
@@ -345,9 +359,10 @@ namespace exel_for_mfc
                                     {
                                         app.Snils = null;
                                     }
+                                    temp++;
                                     break;
 
-                                case 5: //Район //Нужно получить значение иначе просто нулл
+                                case 4: //Район **************************************
                                     if ((cell.DataType != null) && (cell.DataType == CellValues.SharedString))
                                     {
                                         int s3 = int.Parse(cell.CellValue.Text);
@@ -366,47 +381,269 @@ namespace exel_for_mfc
                                     {
                                         app.AreaFk = null;
                                     }
+                                    temp++;
                                     break;
 
-                                case 6:  //Населенный пункт
-                                    Console.WriteLine("Ваше имя - Sam");
+                                case 5:  //Населенный пункт **************************************
+                                    if ((cell.DataType != null) && (cell.DataType == CellValues.SharedString))
+                                    {
+                                        int s3 = int.Parse(cell.CellValue.Text);
+                                        string str3 = sst.ChildElements[s3].InnerText;
+                                        app.LocalityFk = ReturnIdLocal(str3);
+                                    }
+
+                                    //Числа
+                                    else if (cell.CellValue != null)
+                                    {
+                                        app.LocalityFk = null;
+                                    }
+
+                                    //NULL
+                                    else if (cell.DataType == null)
+                                    {
+                                        app.LocalityFk = null;
+                                    }
+                                    temp++;
                                     break;
-                                case 7:
-                                    Console.WriteLine("Ваше имя - Sam");
+
+                                case 6: //Адрес **************************************
+                                    if ((cell.DataType != null) && (cell.DataType == CellValues.SharedString))
+                                    {
+                                        int s3 = int.Parse(cell.CellValue.Text);
+                                        string str3 = sst.ChildElements[s3].InnerText;
+                                        app.Adress = str3;
+                                    }
+
+                                    //Числа
+                                    else if (cell.CellValue != null)
+                                    {
+                                        app.Adress = cell.CellValue.Text;
+                                    }
+
+                                    //NULL
+                                    else if (cell.DataType == null)
+                                    {
+                                        app.Adress = null;
+                                    }
+                                    temp++;
                                     break;
-                                case 8:
-                                    Console.WriteLine("Ваше имя - Sam");
+                                case 7:  //Льгота **************************************
+                                    if ((cell.DataType != null) && (cell.DataType == CellValues.SharedString))
+                                    {
+                                        int s3 = int.Parse(cell.CellValue.Text);
+                                        string str3 = sst.ChildElements[s3].InnerText;
+                                        app.PrivilegesFk = ReturnIdPriv(str3);
+                                    }
+
+                                    //Числа
+                                    else if (cell.CellValue != null)
+                                    {
+                                        app.PrivilegesFk = null;
+                                    }
+
+                                    //NULL
+                                    else if (cell.DataType == null)
+                                    {
+                                        app.PrivilegesFk = null;
+                                    }
+                                    temp++;
                                     break;
-                                case 9:
-                                    Console.WriteLine("Ваше имя - Sam");
+
+                                case 8:   //Серия и номер сертификата **************************************
+                                    if ((cell.DataType != null) && (cell.DataType == CellValues.SharedString))
+                                    {
+                                        int s3 = int.Parse(cell.CellValue.Text);
+                                        string str3 = sst.ChildElements[s3].InnerText;
+                                        reg.SerialAndNumberSert = str3;
+                                    }
+
+                                    //Числа
+                                    else if (cell.CellValue != null)
+                                    {
+                                        reg.SerialAndNumberSert = cell.CellValue.Text;
+                                    }
+
+                                    //NULL
+                                    else if (cell.DataType == null)
+                                    {
+                                        reg.SerialAndNumberSert = null;
+                                    }
+                                    temp++;
                                     break;
-                                case 10:
-                                    Console.WriteLine("Ваше имя - Sam");
+
+                                case 9: //Дата выдачи сертификата **************************************
+                                    if ((cell.DataType != null) && (cell.DataType == CellValues.SharedString))
+                                    {
+                                        double s3 = double.Parse(cell.CellValue.Text);
+                                        reg.DateGetSert = DateTime.FromOADate(s3);
+                                    }
+
+                                    //Числа
+                                    else if (cell.CellValue != null)
+                                    {
+                                        double s3 = double.Parse(cell.CellValue.Text);
+                                        reg.DateGetSert = DateTime.FromOADate(s3);
+                                    }
+
+                                    //NULL
+                                    else if (cell.DataType == null)
+                                    {
+                                        reg.DateGetSert = null;
+                                    }
+                                    temp++;
                                     break;
-                                case 11:
-                                    Console.WriteLine("Ваше имя - Sam");
+
+                                case 10: //Решение **************************************
+                                    if ((cell.DataType != null) && (cell.DataType == CellValues.SharedString))
+                                    {
+                                        int s3 = int.Parse(cell.CellValue.Text);
+                                        string str3 = sst.ChildElements[s3].InnerText;
+                                        reg.SolutionFk = ReturnIdSol(str3);
+                                    }
+
+                                    //Числа
+                                    else if (cell.CellValue != null)
+                                    {
+                                        reg.SolutionFk = null;
+                                    }
+
+                                    //NULL
+                                    else if (cell.DataType == null)
+                                    {
+                                        reg.SolutionFk = null;
+                                    }
+                                    temp++;
                                     break;
-                                case 12:
-                                    Console.WriteLine("Ваше имя - Sam");
+
+                                case 11: //Дата и номер решения по сертификату **************************************
+                                    if ((cell.DataType != null) && (cell.DataType == CellValues.SharedString))
+                                    {
+                                        int s3 = int.Parse(cell.CellValue.Text);
+                                        string str3 = sst.ChildElements[s3].InnerText;
+                                        reg.DateAndNumbSolutionSert = str3;
+                                    }
+
+                                    //Числа
+                                    else if (cell.CellValue != null)
+                                    {
+                                        reg.DateAndNumbSolutionSert = cell.CellValue.Text;
+                                    }
+
+                                    //NULL
+                                    else if (cell.DataType == null)
+                                    {
+                                        reg.DateAndNumbSolutionSert = null;
+                                    }
+                                    temp++;
                                     break;
-                                case 13:
-                                    Console.WriteLine("Ваше имя - Sam");
+
+                                case 12: //Выплата **************************************
+                                    if ((cell.DataType != null) && (cell.DataType == CellValues.SharedString))
+                                    {
+                                        int s3 = int.Parse(cell.CellValue.Text);
+                                        string str3 = sst.ChildElements[s3].InnerText;
+                                        reg.PayAmountFk = ReturnIdPay(str3);
+                                    }
+
+                                    //Числа
+                                    else if (cell.CellValue != null)
+                                    {
+                                        reg.PayAmountFk = ReturnIdPay(cell.CellValue.Text);
+                                    }
+
+                                    //NULL
+                                    else if (cell.DataType == null)
+                                    {
+                                        reg.PayAmountFk = null;
+                                    }
+                                    temp++;
                                     break;
-                                case 14:
-                                    Console.WriteLine("Ваше имя - Sam");
+
+                                case 13: //Трек **************************************
+                                    if ((cell.DataType != null) && (cell.DataType == CellValues.SharedString))
+                                    {
+                                        int s3 = int.Parse(cell.CellValue.Text);
+                                        string str3 = sst.ChildElements[s3].InnerText;
+                                        reg.Trek = str3;
+                                    }
+
+                                    //Числа
+                                    else if (cell.CellValue != null)
+                                    {
+                                        reg.Trek = cell.CellValue.Text;
+                                    }
+
+                                    //NULL
+                                    else if (cell.DataType == null)
+                                    {
+                                        reg.Trek = null;
+                                    }
+                                    temp++;
                                     break;
-                                case 15: //Контрольное условие и вставка
-                                    Console.WriteLine("Ваше имя - Sam");
+
+                                case 14: //Дата отправки почтой **************************************
+                                    if ((cell.DataType != null) && (cell.DataType == CellValues.SharedString))
+                                    {
+                                        double s3 = double.Parse(cell.CellValue.Text);
+                                        reg.DateGetSert = DateTime.FromOADate(s3);
+                                    }
+
+                                    //Числа
+                                    else if (cell.CellValue != null)
+                                    {
+                                        double s3 = double.Parse(cell.CellValue.Text);
+                                        reg.DateGetSert = DateTime.FromOADate(s3);
+                                    }
+
+                                    //NULL
+                                    else if (cell.DataType == null)
+                                    {
+                                        reg.MailingDate = null;
+                                    }
+                                    temp++;
+                                    break;
+
+                                case 15: //Контрольное условие и вставка **************************************
+                                    temp = 0;
+                                    using (ExDbContext db = new())
+                                    {
+                                        
+                                        db.Applicants.Add(app);
+                                        db.SaveChanges();
+                                        //Делай запрос чтоб получить данного заявителя и вставлю id в idApplicant
+                                        //и потом добавлю это в таблицу Регистр
+                                        var getLastApp = db.Applicants.AsNoTracking().OrderBy(u => u.Id).LastOrDefault();
+                                        if (getLastApp != null)
+                                            reg.ApplicantFk = getLastApp.Id;
+                                        else
+                                            reg.ApplicantFk = null;
+                                        db.Registries.Add(reg);
+                                        db.SaveChanges();
+                                        app = new Applicant();
+                                        reg = new Registry();
+                                    }
                                     break;
                             }
                         }
                     }
                 }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message);
+                }
 
             }
+        }
 
-            //Функция возврата Района
-            static int ReturnIdArea(string str)
+
+
+
+
+
+
+
+        //Функция возврата Района
+        static int ReturnIdArea(string str)
             {
                 int idArea = 0;
                 using (ExDbContext db = new())
@@ -422,7 +659,7 @@ namespace exel_for_mfc
                         db.Areas.Add(area);
                         db.SaveChanges();
                         // И ветнуть id нового
-                        var getIdLast = db.Areas.AsNoTracking().LastOrDefaultAsync();
+                        var getIdLast = db.Areas.AsNoTracking().OrderBy(u => u.Id).LastOrDefaultAsync();
                         if (getIdLast != null)
                             idArea = getIdLast.Id;
                         else
@@ -449,7 +686,7 @@ namespace exel_for_mfc
                         db.Localities.Add(loc);
                         db.SaveChanges();
                         // И ветнуть id нового
-                        var getIdLast = db.Localities.AsNoTracking().LastOrDefaultAsync();
+                        var getIdLast = db.Localities.AsNoTracking().OrderBy(u => u.Id).LastOrDefaultAsync();
                         if (getIdLast != null)
                             idLocal = getIdLast.Id;
                         else
@@ -476,7 +713,7 @@ namespace exel_for_mfc
                         db.Privileges.Add(privilege);
                         db.SaveChanges();
                         // И ветнуть id нового
-                        var getIdLast = db.Privileges.AsNoTracking().LastOrDefaultAsync();
+                        var getIdLast = db.Privileges.AsNoTracking().OrderBy(u => u.Id).LastOrDefaultAsync();
                         if (getIdLast != null)
                             idPriv = getIdLast.Id;
                         else
@@ -489,14 +726,56 @@ namespace exel_for_mfc
             //Функция возврата Решение
             static int ReturnIdSol(string str)
             {
-                return 0;
+                int idSol = 0;
+                using (ExDbContext db = new())
+                {
+                    var equalSol = db.SolutionTypes.AsNoTracking().Where(u => u.SolutionName == str).FirstOrDefault();
+                    if (equalSol != null)
+                        idSol = equalSol.Id;
+
+                    else if (equalSol == null)
+                    {
+                        SolutionType solution = new();
+                        solution.SolutionName = str;
+                        db.SolutionTypes.Add(solution);
+                        db.SaveChanges();
+                        // И ветнуть id нового
+                        var getIdLast = db.SolutionTypes.AsNoTracking().OrderBy(u => u.Id).LastOrDefaultAsync();
+                        if (getIdLast != null)
+                            idSol = getIdLast.Id;
+                        else
+                            MessageBox.Show("Произошла непредвиденная ошибка", "Это не конец");
+                    }
+                }
+                return idSol;
             }
 
             //Функция возврата Выплата
             static int ReturnIdPay(string str)
             {
-                return 0;
+                int idPay = 0;
+                using (ExDbContext db = new())
+                {
+                    var equalPay = db.PayAmounts.AsNoTracking().Where(u => u.Pay == Convert.ToDecimal(str)).FirstOrDefault();
+                    if (equalPay != null)
+                        idPay = equalPay.Id;
+
+                    else if (equalPay == null)
+                    {
+                        PayAmount pays = new();
+                        pays.Pay = Convert.ToDecimal(str);
+                        db.PayAmounts.Add(pays);
+                        db.SaveChanges();
+                        // И ветнуть id нового
+                        var getIdLast = db.PayAmounts.AsNoTracking().OrderBy(u => u.Id).LastOrDefaultAsync();
+                        if (getIdLast != null)
+                            idPay = getIdLast.Id;
+                        else
+                            MessageBox.Show("Произошла непредвиденная ошибка", "Это не конец");
+                    }
+                }
+                return idPay;
             }
-        }
+        
     }
 }

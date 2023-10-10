@@ -89,6 +89,12 @@
                 </DataGridTemplateColumn>
                 <DataGridTextColumn Binding="{Binding Sernumb, UpdateSourceTrigger=PropertyChanged}" Header="Серия и № сертификата"/>
                 <DataGridTemplateColumn Header="Дата выдачи" Width="120" CanUserSort="True" >
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding DateGetSert,
+                                                 StringFormat=dd/MM/yyyy}" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
                     <DataGridTemplateColumn.CellEditingTemplate>
                         <DataTemplate>
                             <DatePicker SelectedDate="{Binding DateGetSert, StringFormat=dd.MM.yyyy, UpdateSourceTrigger=PropertyChanged}" />
@@ -118,9 +124,15 @@
                 </DataGridTemplateColumn>
                 <DataGridTextColumn Binding="{Binding Trek, UpdateSourceTrigger=PropertyChanged}" Header="Трек"/>
                 <DataGridTemplateColumn Header="Дата отправки почтой" CanUserSort="True">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding MailingDate,
+                                                 StringFormat=dd/MM/yyyy}" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
                     <DataGridTemplateColumn.CellEditingTemplate>
                         <DataTemplate>
-                            <DatePicker SelectedDate="{Binding MailingDate, StringFormat=dd.MM.yyyy, UpdateSourceTrigger=PropertyChanged}" />
+                            <DatePicker SelectedDate="{Binding MailingDate, UpdateSourceTrigger=PropertyChanged}" />
                         </DataTemplate>
                     </DataGridTemplateColumn.CellEditingTemplate>
                 </DataGridTemplateColumn>
@@ -152,12 +164,22 @@
                 Height="42"
                 Width="107"
                 Click="Button_Click"/>
+        <Button Grid.Column="5" Content="Обновить таблицу" HorizontalAlignment="Left" Height="37" Margin="28,46,0,0" Grid.Row="11" VerticalAlignment="Top" RenderTransformOrigin="0.5,0.5" Grid.RowSpan="2" Click="Button_Click_1">
+            <Button.RenderTransform>
+                <TransformGroup>
+                    <ScaleTransform/>
+                    <SkewTransform/>
+                    <RotateTransform Angle="47.471"/>
+                    <TranslateTransform/>
+                </TransformGroup>
+            </Button.RenderTransform>
+        </Button>
 
         <!-- Фильтрация , это будет жестко)-->
         <!-- Главное чтоб листвиев 
         я мог создавать программно
         Чтоб он создавался в результате запроса -->
-        
+
 
 
         <!-- Фильтрация -->
