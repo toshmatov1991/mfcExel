@@ -130,201 +130,202 @@ namespace exel_for_mfc
                     && a.Local != null
                     && a.Snils != null)
                 {
-                    //Сначала проверяю на наличие такого же человека в БД, если его нету,
-                    //то вставляю новую запись в таблицу Заявители,
-                    // Иначе просто беру ID того чела который уже есть в базе такой же
+                    
+                        //Сначала проверяю на наличие такого же человека в БД, если его нету,
+                        //то вставляю новую запись в таблицу Заявители,
+                        // Иначе просто беру ID того чела который уже есть в базе такой же
 
-                    //Жуткая проверка
-                    var myQuery = await db.Applicants.FromSqlRaw("SELECT * FROM Applicant WHERE Firstname LIKE {0} AND Middlename LIKE {1} AND Lastname LIKE {2} AND Adress LIKE {3} AND Snils LIKE {4}", a.Family, a.Name, a.Lastname, a.Adress, a.Snils).AsNoTracking().FirstOrDefaultAsync();
+                        //Жуткая проверка
+                        var myQuery = await db.Applicants.FromSqlRaw("SELECT * FROM Applicant WHERE Firstname LIKE {0} AND Middlename LIKE {1} AND Lastname LIKE {2} AND Adress LIKE {3} AND Snils LIKE {4}", a.Family, a.Name, a.Lastname, a.Adress, a.Snils).AsNoTracking().FirstOrDefaultAsync();
 
-                    //Отдельная проверка Снилса
-                    var myQuerySnils = await db.Applicants.FromSqlRaw("SELECT * FROM Applicant WHERE Snils LIKE {0}", a.Snils).AsNoTracking().FirstOrDefaultAsync();
+                        //Отдельная проверка Снилса
+                        var myQuerySnils = await db.Applicants.FromSqlRaw("SELECT * FROM Applicant WHERE Snils LIKE {0}", a.Snils).AsNoTracking().FirstOrDefaultAsync();
 
-                    if (myQuery != null)
-                    {
-                        var myQuery1234 = from r in db.Registries.AsNoTracking()
-                                         join ap in db.Applicants.AsNoTracking() on r.ApplicantFk equals ap.Id
-                                         where ap.Snils == myQuery.Snils
-                                         select new 
-                                         { 
-                                             r.Id,
-                                             ap.Firstname, 
-                                             ap.Middlename, 
-                                             ap.Lastname,
-                                             r.SerialAndNumberSert,
-                                             r.DateGetSert,
-                                             sol = r.SolutionFk
-                                         };
-
-
-
-                        string str = "";
-
-                        if (myQuery1234 == null)
-                            return;
-                        else
+                        if (myQuery != null)
                         {
-                            foreach (var item in myQuery1234)
-                            {
-                                str += $"\nId-{item.Id} {item.Firstname} {item.Middlename.Substring(0, 1)}. {item.Lastname.Substring(0, 1)}. {item.SerialAndNumberSert} {Convert.ToDateTime(item.DateGetSert).ToString("d", new CultureInfo("Ru-ru"))} {ReturnStr(item.sol)}\n";
-                            }
+                            var myQuery1234 = from r in db.Registries.AsNoTracking()
+                                              join ap in db.Applicants.AsNoTracking() on r.ApplicantFk equals ap.Id
+                                              where ap.Snils == myQuery.Snils
+                                              select new
+                                              {
+                                                  r.Id,
+                                                  ap.Firstname,
+                                                  ap.Middlename,
+                                                  ap.Lastname,
+                                                  r.SerialAndNumberSert,
+                                                  r.DateGetSert,
+                                                  sol = r.SolutionFk
+                                              };
 
-                            //Информировать что такая запись найдена
-                            var result = MessageBox.Show($"{str}\n в таблице существуют записи данного заявителя\nДобавить новую запись в таблицу?", "Найдены совпадения!", MessageBoxButton.YesNo, MessageBoxImage.Information);
 
-                            if (result == MessageBoxResult.Yes)
-                            {
-                                if (a.Lgota == null)
-                                {
-                                    //Добавить новую запись в таблицу заявитель
-                                    await db.Database.ExecuteSqlInterpolatedAsync($"INSERT INTO Applicant(Firstname, Middlename, Lastname, Area_FK, Locality_FK, Adress, Snils, Privileges_FK) VALUES({a.Family}, {a.Name}, {a.Lastname}, {a.Area + 1}, {a.Local + 1}, {a.Adress}, {a.Snils}, {null})");
-                                }
 
-                                else if (a.Area != null && a.Local != null && a.Lgota != null)
-                                {
-                                    //Добавить новую запись в таблицу заявитель
-                                    await db.Database.ExecuteSqlInterpolatedAsync($"INSERT INTO Applicant(Firstname, Middlename, Lastname, Area_FK, Locality_FK, Adress, Snils, Privileges_FK) VALUES({a.Family}, {a.Name}, {a.Lastname}, {a.Area + 1}, {a.Local + 1}, {a.Adress}, {a.Snils}, {a.Lgota + 1})");
-                                }
+                            string str = "";
 
-                                //Запрос на получение Id последнего заявителя в таблице Applicant
-                                var getIdLastApp = await db.Applicants.AsNoTracking().OrderBy(u => u.Id).LastOrDefaultAsync();
-
-                                if (a.Pay == null || a.Solution == null || a.Pay == null && a.Solution == null)
-                                {
-                                    //Добавить новую запись в таблицу Регистр
-                                    await db.Database.ExecuteSqlInterpolatedAsync($"INSERT INTO Registry(Applicant_FK, SerialAndNumberSert, DateGetSert, PayAmount_FK, Solution_FK, DateAndNumbSolutionSert, Comment, Trek, MailingDate) VALUES({getIdLastApp.Id}, {a.Sernumb}, {a.DateGetSert}, {null}, {null}, {a.DateAndNumbSolutionSert}, {a.Comment}, {a.Trek}, {a.MailingDate})");
-                                    await Task.Delay(50);
-                                    Start();
-                                }
-
-                                else if (a.Pay != null && a.Solution != null)
-                                {
-                                    //Добавить новую запись в таблицу Регистр
-                                    await db.Database.ExecuteSqlInterpolatedAsync($"INSERT INTO Registry(Applicant_FK, SerialAndNumberSert, DateGetSert, PayAmount_FK, Solution_FK, DateAndNumbSolutionSert, Comment, Trek, MailingDate) VALUES({getIdLastApp.Id}, {a.Sernumb}, {a.DateGetSert}, {a.Pay + 1}, {a.Solution + 1}, {a.DateAndNumbSolutionSert}, {a.Comment}, {a.Trek}, {a.MailingDate})");
-                                    await Task.Delay(50);
-                                    Start();
-                                }
-                            }
-                            else if (result == MessageBoxResult.No)
+                            if (myQuery1234 == null)
                                 return;
+                            else
+                            {
+                                foreach (var item in myQuery1234)
+                                {
+                                    str += $"\nId-{item.Id} {item.Firstname} {item.Middlename.Substring(0, 1)}. {item.Lastname.Substring(0, 1)}. {item.SerialAndNumberSert} {Convert.ToDateTime(item.DateGetSert).ToString("d", new CultureInfo("Ru-ru"))} {ReturnStr(item.sol)}\n";
+                                }
+
+                                //Информировать что такая запись найдена
+                                var result = MessageBox.Show($"{str}\n в таблице существуют записи данного заявителя\nДобавить новую запись в таблицу?", "Найдены совпадения!", MessageBoxButton.YesNo, MessageBoxImage.Information);
+
+                                if (result == MessageBoxResult.Yes)
+                                {
+                                    if (a.Lgota == null)
+                                    {
+                                        //Добавить новую запись в таблицу заявитель
+                                        await db.Database.ExecuteSqlInterpolatedAsync($"INSERT INTO Applicant(Firstname, Middlename, Lastname, Area_FK, Locality_FK, Adress, Snils, Privileges_FK) VALUES({a.Family}, {a.Name}, {a.Lastname}, {a.Area + 1}, {a.Local + 1}, {a.Adress}, {a.Snils}, {null})");
+                                    }
+
+                                    else if (a.Area != null && a.Local != null && a.Lgota != null)
+                                    {
+                                        //Добавить новую запись в таблицу заявитель
+                                        await db.Database.ExecuteSqlInterpolatedAsync($"INSERT INTO Applicant(Firstname, Middlename, Lastname, Area_FK, Locality_FK, Adress, Snils, Privileges_FK) VALUES({a.Family}, {a.Name}, {a.Lastname}, {a.Area + 1}, {a.Local + 1}, {a.Adress}, {a.Snils}, {a.Lgota + 1})");
+                                    }
+
+                                    //Запрос на получение Id последнего заявителя в таблице Applicant
+                                    var getIdLastApp = await db.Applicants.AsNoTracking().OrderBy(u => u.Id).LastOrDefaultAsync();
+
+                                    if (a.Pay == null || a.Solution == null || a.Pay == null && a.Solution == null)
+                                    {
+                                        //Добавить новую запись в таблицу Регистр
+                                        await db.Database.ExecuteSqlInterpolatedAsync($"INSERT INTO Registry(Applicant_FK, SerialAndNumberSert, DateGetSert, PayAmount_FK, Solution_FK, DateAndNumbSolutionSert, Comment, Trek, MailingDate) VALUES({getIdLastApp.Id}, {a.Sernumb}, {a.DateGetSert}, {null}, {null}, {a.DateAndNumbSolutionSert}, {a.Comment}, {a.Trek}, {a.MailingDate})");
+                                        await Task.Delay(50);
+                                        Start();
+                                    }
+
+                                    else if (a.Pay != null && a.Solution != null)
+                                    {
+                                        //Добавить новую запись в таблицу Регистр
+                                        await db.Database.ExecuteSqlInterpolatedAsync($"INSERT INTO Registry(Applicant_FK, SerialAndNumberSert, DateGetSert, PayAmount_FK, Solution_FK, DateAndNumbSolutionSert, Comment, Trek, MailingDate) VALUES({getIdLastApp.Id}, {a.Sernumb}, {a.DateGetSert}, {a.Pay + 1}, {a.Solution + 1}, {a.DateAndNumbSolutionSert}, {a.Comment}, {a.Trek}, {a.MailingDate})");
+                                        await Task.Delay(50);
+                                        Start();
+                                    }
+                                }
+                                else if (result == MessageBoxResult.No)
+                                    return;
+                            }
+
+
+
+
                         }
 
-
-                       
-
-                    }
-
-                    //Обработка снилса
-                    else if (myQuerySnils != null)
-                    {
-
-                        var myQuery1234 = from r in db.Registries.AsNoTracking()
-                                          join ap in db.Applicants.AsNoTracking() on r.ApplicantFk equals ap.Id
-                                          where ap.Snils == myQuery.Snils
-                                          select new
-                                          {
-                                              r.Id,
-                                              ap.Firstname,
-                                              ap.Middlename,
-                                              ap.Lastname,
-                                              r.SerialAndNumberSert,
-                                              r.DateGetSert,
-                                              sol = r.SolutionFk
-                                          };
-
-
-
-                        string str = "";
-
-                        if (myQuery1234 == null)
-                            return;
-                        else
+                        //Обработка снилса
+                        else if (myQuerySnils != null)
                         {
-                            foreach (var item in myQuery1234)
+
+                            var myQuery1234 = from r in db.Registries.AsNoTracking()
+                                              join ap in db.Applicants.AsNoTracking() on r.ApplicantFk equals ap.Id
+                                              where ap.Snils == myQuerySnils.Snils
+                                              select new
+                                              {
+                                                  r.Id,
+                                                  ap.Firstname,
+                                                  ap.Middlename,
+                                                  ap.Lastname,
+                                                  r.SerialAndNumberSert,
+                                                  r.DateGetSert,
+                                                  sol = r.SolutionFk
+                                              };
+
+
+
+                            string str = "";
+
+                            if (myQuery1234 == null)
+                                return;
+                            else
                             {
-                                str += $"\nId-{item.Id} {item.Firstname} {item.Middlename.Substring(0, 1)}. {item.Lastname.Substring(0, 1)}. {item.SerialAndNumberSert} {Convert.ToDateTime(item.DateGetSert).ToString("d", new CultureInfo("Ru-ru"))} {ReturnStr(item.sol)}\n";
+                                foreach (var item in myQuery1234)
+                                {
+                                    str += $"\nId-{item.Id} {item.Firstname} {item.Middlename.Substring(0, 1)}. {item.Lastname.Substring(0, 1)}. {item.SerialAndNumberSert} {Convert.ToDateTime(item.DateGetSert).ToString("d", new CultureInfo("Ru-ru"))} {ReturnStr(item.sol)}\n";
+                                }
+
+                                //Информировать что такая запись найдена
+                                var result = MessageBox.Show($"{str}\n в таблице существуют записи данного заявителя\nДобавить новую запись в таблицу?", "Найдены совпадения!", MessageBoxButton.YesNo, MessageBoxImage.Information);
+
+                                if (result == MessageBoxResult.Yes)
+                                {
+                                    if (a.Lgota == null)
+                                    {
+                                        //Добавить новую запись в таблицу заявитель
+                                        await db.Database.ExecuteSqlInterpolatedAsync($"INSERT INTO Applicant(Firstname, Middlename, Lastname, Area_FK, Locality_FK, Adress, Snils, Privileges_FK) VALUES({a.Family}, {a.Name}, {a.Lastname}, {a.Area + 1}, {a.Local + 1}, {a.Adress}, {a.Snils}, {null})");
+                                    }
+
+                                    else if (a.Area != null && a.Local != null && a.Lgota != null)
+                                    {
+                                        //Добавить новую запись в таблицу заявитель
+                                        await db.Database.ExecuteSqlInterpolatedAsync($"INSERT INTO Applicant(Firstname, Middlename, Lastname, Area_FK, Locality_FK, Adress, Snils, Privileges_FK) VALUES({a.Family}, {a.Name}, {a.Lastname}, {a.Area + 1}, {a.Local + 1}, {a.Adress}, {a.Snils}, {a.Lgota + 1})");
+                                    }
+
+
+                                    //Запрос на получение Id последнего заявителя в таблице Applicant
+                                    var getIdLastApp = await db.Applicants.AsNoTracking().OrderBy(u => u.Id).LastOrDefaultAsync();
+
+                                    //Добавить новую запись в таблицу Регистр
+                                    if (a.Pay == null || a.Solution == null || a.Pay == null && a.Solution == null)
+                                    {
+                                        //Добавить новую запись в таблицу Регистр
+                                        await db.Database.ExecuteSqlInterpolatedAsync($"INSERT INTO Registry(Applicant_FK, SerialAndNumberSert, DateGetSert, PayAmount_FK, Solution_FK, DateAndNumbSolutionSert, Comment, Trek, MailingDate) VALUES({getIdLastApp.Id}, {a.Sernumb}, {a.DateGetSert}, {null}, {null}, {a.DateAndNumbSolutionSert}, {a.Comment}, {a.Trek}, {a.MailingDate})");
+                                        await Task.Delay(50);
+                                        Start();
+                                    }
+
+                                    else if (a.Pay != null && a.Solution != null)
+                                    {
+                                        //Добавить новую запись в таблицу Регистр
+                                        await db.Database.ExecuteSqlInterpolatedAsync($"INSERT INTO Registry(Applicant_FK, SerialAndNumberSert, DateGetSert, PayAmount_FK, Solution_FK, DateAndNumbSolutionSert, Comment, Trek, MailingDate) VALUES({getIdLastApp.Id}, {a.Sernumb}, {a.DateGetSert}, {a.Pay + 1}, {a.Solution + 1}, {a.DateAndNumbSolutionSert}, {a.Comment}, {a.Trek}, {a.MailingDate})");
+                                        await Task.Delay(50);
+                                        Start();
+                                    }
+                                }
+                                else if (result == MessageBoxResult.No)
+                                    return;
+                            }
+                        }
+
+                        else if (myQuery == null && myQuerySnils == null)
+                        {
+                            if (a.Lgota == null)
+                            {
+                                //Добавить новую запись в таблицу заявитель
+                                await db.Database.ExecuteSqlInterpolatedAsync($"INSERT INTO Applicant(Firstname, Middlename, Lastname, Area_FK, Locality_FK, Adress, Snils, Privileges_FK) VALUES({a.Family}, {a.Name}, {a.Lastname}, {a.Area + 1}, {a.Local + 1}, {a.Adress}, {a.Snils}, {null})");
                             }
 
-                            //Информировать что такая запись найдена
-                            var result = MessageBox.Show($"{str}\n в таблице существуют записи данного заявителя\nДобавить новую запись в таблицу?", "Найдены совпадения!", MessageBoxButton.YesNo, MessageBoxImage.Information);
-
-                            if (result == MessageBoxResult.Yes)
+                            else if (a.Area != null && a.Local != null && a.Lgota != null)
                             {
-                                if (a.Lgota == null)
-                                {
-                                    //Добавить новую запись в таблицу заявитель
-                                    await db.Database.ExecuteSqlInterpolatedAsync($"INSERT INTO Applicant(Firstname, Middlename, Lastname, Area_FK, Locality_FK, Adress, Snils, Privileges_FK) VALUES({a.Family}, {a.Name}, {a.Lastname}, {a.Area + 1}, {a.Local + 1}, {a.Adress}, {a.Snils}, {null})");
-                                }
-
-                                else if (a.Area != null && a.Local != null && a.Lgota != null)
-                                {
-                                    //Добавить новую запись в таблицу заявитель
-                                    await db.Database.ExecuteSqlInterpolatedAsync($"INSERT INTO Applicant(Firstname, Middlename, Lastname, Area_FK, Locality_FK, Adress, Snils, Privileges_FK) VALUES({a.Family}, {a.Name}, {a.Lastname}, {a.Area + 1}, {a.Local + 1}, {a.Adress}, {a.Snils}, {a.Lgota + 1})");
-                                }
+                                //Добавить новую запись в таблицу заявитель
+                                await db.Database.ExecuteSqlInterpolatedAsync($"INSERT INTO Applicant(Firstname, Middlename, Lastname, Area_FK, Locality_FK, Adress, Snils, Privileges_FK) VALUES({a.Family}, {a.Name}, {a.Lastname}, {a.Area + 1}, {a.Local + 1}, {a.Adress}, {a.Snils}, {a.Lgota + 1})");
+                            }
 
 
-                                //Запрос на получение Id последнего заявителя в таблице Applicant
-                                var getIdLastApp = await db.Applicants.AsNoTracking().OrderBy(u => u.Id).LastOrDefaultAsync();
+                            //Запрос на получение Id последнего заявителя в таблице Applicant
+                            var getIdLastApp = await db.Applicants.AsNoTracking().OrderBy(u => u.Id).LastOrDefaultAsync();
 
+
+                            //Добавить новую запись в таблицу Регистр
+                            if (a.Pay == null || a.Solution == null || a.Pay == null && a.Solution == null)
+                            {
                                 //Добавить новую запись в таблицу Регистр
-                                if (a.Pay == null || a.Solution == null || a.Pay == null && a.Solution == null)
-                                {
-                                    //Добавить новую запись в таблицу Регистр
-                                    await db.Database.ExecuteSqlInterpolatedAsync($"INSERT INTO Registry(Applicant_FK, SerialAndNumberSert, DateGetSert, PayAmount_FK, Solution_FK, DateAndNumbSolutionSert, Comment, Trek, MailingDate) VALUES({getIdLastApp.Id}, {a.Sernumb}, {a.DateGetSert}, {null}, {null}, {a.DateAndNumbSolutionSert}, {a.Comment}, {a.Trek}, {a.MailingDate})");
-                                    await Task.Delay(50);
-                                    Start();
-                                }
-
-                                else if (a.Pay != null && a.Solution != null)
-                                {
-                                    //Добавить новую запись в таблицу Регистр
-                                    await db.Database.ExecuteSqlInterpolatedAsync($"INSERT INTO Registry(Applicant_FK, SerialAndNumberSert, DateGetSert, PayAmount_FK, Solution_FK, DateAndNumbSolutionSert, Comment, Trek, MailingDate) VALUES({getIdLastApp.Id}, {a.Sernumb}, {a.DateGetSert}, {a.Pay + 1}, {a.Solution + 1}, {a.DateAndNumbSolutionSert}, {a.Comment}, {a.Trek}, {a.MailingDate})");
-                                    await Task.Delay(50);
-                                    Start();
-                                }
+                                await db.Database.ExecuteSqlInterpolatedAsync($"INSERT INTO Registry(Applicant_FK, SerialAndNumberSert, DateGetSert, PayAmount_FK, Solution_FK, DateAndNumbSolutionSert, Comment, Trek, MailingDate) VALUES({getIdLastApp.Id}, {a.Sernumb}, {a.DateGetSert}, {null}, {null}, {a.DateAndNumbSolutionSert}, {a.Comment}, {a.Trek}, {a.MailingDate})");
+                                await Task.Delay(50);
+                                Start();
                             }
-                            else if (result == MessageBoxResult.No)
-                                return;
+
+                            else if (a.Pay != null && a.Solution != null)
+                            {
+                                //Добавить новую запись в таблицу Регистр
+                                await db.Database.ExecuteSqlInterpolatedAsync($"INSERT INTO Registry(Applicant_FK, SerialAndNumberSert, DateGetSert, PayAmount_FK, Solution_FK, DateAndNumbSolutionSert, Comment, Trek, MailingDate) VALUES({getIdLastApp.Id}, {a.Sernumb}, {a.DateGetSert}, {a.Pay + 1}, {a.Solution + 1}, {a.DateAndNumbSolutionSert}, {a.Comment}, {a.Trek}, {a.MailingDate})");
+                                await Task.Delay(50);
+                                Start();
+                            }
+
                         }
-                    }
-
-                    else if (myQuery == null && myQuerySnils == null)
-                    {
-                        if (a.Lgota == null)
-                        {
-                            //Добавить новую запись в таблицу заявитель
-                            await db.Database.ExecuteSqlInterpolatedAsync($"INSERT INTO Applicant(Firstname, Middlename, Lastname, Area_FK, Locality_FK, Adress, Snils, Privileges_FK) VALUES({a.Family}, {a.Name}, {a.Lastname}, {a.Area + 1}, {a.Local + 1}, {a.Adress}, {a.Snils}, {null})");
-                        }
-
-                        else if (a.Area != null && a.Local != null && a.Lgota != null)
-                        {
-                            //Добавить новую запись в таблицу заявитель
-                            await db.Database.ExecuteSqlInterpolatedAsync($"INSERT INTO Applicant(Firstname, Middlename, Lastname, Area_FK, Locality_FK, Adress, Snils, Privileges_FK) VALUES({a.Family}, {a.Name}, {a.Lastname}, {a.Area + 1}, {a.Local + 1}, {a.Adress}, {a.Snils}, {a.Lgota + 1})");
-                        }
-
-
-                        //Запрос на получение Id последнего заявителя в таблице Applicant
-                        var getIdLastApp = await db.Applicants.AsNoTracking().OrderBy(u => u.Id).LastOrDefaultAsync();
-
-
-                        //Добавить новую запись в таблицу Регистр
-                        if (a.Pay == null || a.Solution == null || a.Pay == null && a.Solution == null)
-                        {
-                            //Добавить новую запись в таблицу Регистр
-                            await db.Database.ExecuteSqlInterpolatedAsync($"INSERT INTO Registry(Applicant_FK, SerialAndNumberSert, DateGetSert, PayAmount_FK, Solution_FK, DateAndNumbSolutionSert, Comment, Trek, MailingDate) VALUES({getIdLastApp.Id}, {a.Sernumb}, {a.DateGetSert}, {null}, {null}, {a.DateAndNumbSolutionSert}, {a.Comment}, {a.Trek}, {a.MailingDate})");
-                            await Task.Delay(50);
-                            Start();
-                        }
-
-                        else if (a.Pay != null && a.Solution != null)
-                        {
-                            //Добавить новую запись в таблицу Регистр
-                            await db.Database.ExecuteSqlInterpolatedAsync($"INSERT INTO Registry(Applicant_FK, SerialAndNumberSert, DateGetSert, PayAmount_FK, Solution_FK, DateAndNumbSolutionSert, Comment, Trek, MailingDate) VALUES({getIdLastApp.Id}, {a.Sernumb}, {a.DateGetSert}, {a.Pay + 1}, {a.Solution + 1}, {a.DateAndNumbSolutionSert}, {a.Comment}, {a.Trek}, {a.MailingDate})");
-                            await Task.Delay(50);
-                            Start();
-                        }
-
-                    }
                 }
             }
 
@@ -332,16 +333,14 @@ namespace exel_for_mfc
             //Возвращю тип решения (строку)
             static string ReturnStr(int? t)
             {
-                if (t == 1)
-                    return "Выдан";
-
-                else if (t == 2)
-                    return "Отказан";
-
+               if(t == 1)
+                   return "Выдан";
+               else if(t == 2)
+                    return "Отказ";
                 else if (t == 3)
                     return "Аннулир.";
-
                 else return "";
+
             }
         }
 
