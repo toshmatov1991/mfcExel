@@ -258,26 +258,22 @@ namespace exel_for_mfc
                 var app = new Applicant();
                 var reg = new Registry();
                 int temp = 0;
-                int prov = 0;
                 try
                 {
                     //Второе условие срабатывает на цифры
                     //Просто адский цикл
                     foreach (Row row in rows)
                     {
-
                         foreach (Cell cell in row.Elements<Cell>())
                         {
                             switch (temp)
                             {
-                                case 0: //Фамилия **************************************
-                                    if (prov == 0)
-                                    {
-                                        prov = 1;
-                                        break;
-                                    }
-                                    else if (prov != 0)
-                                    {
+                                case 0:
+                                     //Числа
+                                        var rew = cell.CellValue.Text;
+                                    temp++; 
+                                    break;   
+                                case 1: //Фамилия **************************************
                                         if ((cell.DataType != null) && (cell.DataType == CellValues.SharedString))
                                         {
                                             int s1 = int.Parse(cell.CellValue.Text);
@@ -297,10 +293,10 @@ namespace exel_for_mfc
                                         }
                                         temp++;
 
-                                    }
+                                    
                                     break;
 
-                                case 1: //Имя **************************************
+                                case 2: //Имя **************************************
                                     if ((cell.DataType != null) && (cell.DataType == CellValues.SharedString))
                                     {
                                         int s2 = int.Parse(cell.CellValue.Text);
@@ -320,7 +316,7 @@ namespace exel_for_mfc
                                     temp++;
                                     break;
 
-                                case 2: //Отчество **************************************
+                                case 3: //Отчество **************************************
                                     if ((cell.DataType != null) && (cell.DataType == CellValues.SharedString))
                                     {
                                         int s3 = int.Parse(cell.CellValue.Text);
@@ -341,7 +337,7 @@ namespace exel_for_mfc
                                     temp++;
                                     break;
 
-                                case 3: //Снилс **************************************
+                                case 4: //Снилс **************************************
                                     if ((cell.DataType != null) && (cell.DataType == CellValues.SharedString))
                                     {
                                         int s3 = int.Parse(cell.CellValue.Text);
@@ -362,7 +358,7 @@ namespace exel_for_mfc
                                     temp++;
                                     break;
 
-                                case 4: //Район **************************************
+                                case 5: //Район **************************************
                                     if ((cell.DataType != null) && (cell.DataType == CellValues.SharedString))
                                     {
                                         int s3 = int.Parse(cell.CellValue.Text);
@@ -384,7 +380,7 @@ namespace exel_for_mfc
                                     temp++;
                                     break;
 
-                                case 5:  //Населенный пункт **************************************
+                                case 6:  //Населенный пункт **************************************
                                     if ((cell.DataType != null) && (cell.DataType == CellValues.SharedString))
                                     {
                                         int s3 = int.Parse(cell.CellValue.Text);
@@ -406,7 +402,7 @@ namespace exel_for_mfc
                                     temp++;
                                     break;
 
-                                case 6: //Адрес **************************************
+                                case 7: //Адрес **************************************
                                     if ((cell.DataType != null) && (cell.DataType == CellValues.SharedString))
                                     {
                                         int s3 = int.Parse(cell.CellValue.Text);
@@ -427,7 +423,7 @@ namespace exel_for_mfc
                                     }
                                     temp++;
                                     break;
-                                case 7:  //Льгота **************************************
+                                case 8:  //Льгота **************************************
                                     if ((cell.DataType != null) && (cell.DataType == CellValues.SharedString))
                                     {
                                         int s3 = int.Parse(cell.CellValue.Text);
@@ -449,7 +445,7 @@ namespace exel_for_mfc
                                     temp++;
                                     break;
 
-                                case 8:   //Серия и номер сертификата **************************************
+                                case 9:   //Серия и номер сертификата **************************************
                                     if ((cell.DataType != null) && (cell.DataType == CellValues.SharedString))
                                     {
                                         int s3 = int.Parse(cell.CellValue.Text);
@@ -471,15 +467,9 @@ namespace exel_for_mfc
                                     temp++;
                                     break;
 
-                                case 9: //Дата выдачи сертификата **************************************
-                                    if ((cell.DataType != null) && (cell.DataType == CellValues.SharedString))
-                                    {
-                                        double s3 = double.Parse(cell.CellValue.Text);
-                                        reg.DateGetSert = DateTime.FromOADate(s3);
-                                    }
-
+                                case 10: //Дата выдачи сертификата **************************************
                                     //Числа
-                                    else if (cell.CellValue != null)
+                                    if (cell.CellValue != null)
                                     {
                                         double s3 = double.Parse(cell.CellValue.Text);
                                         reg.DateGetSert = DateTime.FromOADate(s3);
@@ -493,7 +483,7 @@ namespace exel_for_mfc
                                     temp++;
                                     break;
 
-                                case 10: //Решение **************************************
+                                case 11: //Решение **************************************
                                     if ((cell.DataType != null) && (cell.DataType == CellValues.SharedString))
                                     {
                                         int s3 = int.Parse(cell.CellValue.Text);
@@ -515,7 +505,7 @@ namespace exel_for_mfc
                                     temp++;
                                     break;
 
-                                case 11: //Дата и номер решения по сертификату **************************************
+                                case 12: //Дата и номер решения по сертификату **************************************
                                     if ((cell.DataType != null) && (cell.DataType == CellValues.SharedString))
                                     {
                                         int s3 = int.Parse(cell.CellValue.Text);
@@ -537,7 +527,7 @@ namespace exel_for_mfc
                                     temp++;
                                     break;
 
-                                case 12: //Выплата **************************************
+                                case 13: //Выплата **************************************
                                     if ((cell.DataType != null) && (cell.DataType == CellValues.SharedString))
                                     {
                                         int s3 = int.Parse(cell.CellValue.Text);
@@ -559,7 +549,7 @@ namespace exel_for_mfc
                                     temp++;
                                     break;
 
-                                case 13: //Трек **************************************
+                                case 14: //Трек **************************************
                                     if ((cell.DataType != null) && (cell.DataType == CellValues.SharedString))
                                     {
                                         int s3 = int.Parse(cell.CellValue.Text);
@@ -581,15 +571,9 @@ namespace exel_for_mfc
                                     temp++;
                                     break;
 
-                                case 14: //Дата отправки почтой **************************************
-                                    if ((cell.DataType != null) && (cell.DataType == CellValues.SharedString))
-                                    {
-                                        double s3 = double.Parse(cell.CellValue.Text);
-                                        reg.DateGetSert = DateTime.FromOADate(s3);
-                                    }
-
+                                case 15: //Дата отправки почтой **************************************
                                     //Числа
-                                    else if (cell.CellValue != null)
+                                    if (cell.CellValue != null)
                                     {
                                         double s3 = double.Parse(cell.CellValue.Text);
                                         reg.DateGetSert = DateTime.FromOADate(s3);
@@ -600,10 +584,8 @@ namespace exel_for_mfc
                                     {
                                         reg.MailingDate = null;
                                     }
-                                    temp++;
-                                    break;
 
-                                case 15: //Контрольное условие и вставка **************************************
+                                    //Контрольное условие и вставка **************************************
                                     temp = 0;
                                     using (ExDbContext db = new())
                                     {
@@ -623,6 +605,9 @@ namespace exel_for_mfc
                                         reg = new Registry();
                                     }
                                     break;
+
+                                   
+
                             }
                         }
                     }
@@ -655,8 +640,8 @@ namespace exel_for_mfc
                     var getIdLast = db.Areas.AsNoTracking().OrderBy(u => u.Id).LastOrDefaultAsync();
                     if (getIdLast != null)
                         idArea = getIdLast.Id;
-                    else
-                        MessageBox.Show("Произошла непредвиденная ошибка", "Это не конец");
+                    
+                       
                 }
             }
             return idArea;
@@ -682,8 +667,7 @@ namespace exel_for_mfc
                     var getIdLast = db.Localities.AsNoTracking().OrderBy(u => u.Id).LastOrDefaultAsync();
                     if (getIdLast != null)
                         idLocal = getIdLast.Id;
-                    else
-                        MessageBox.Show("Произошла непредвиденная ошибка", "Это не конец");
+                    else return 0;
                 }
             }
             return idLocal;
@@ -709,8 +693,8 @@ namespace exel_for_mfc
                     var getIdLast = db.Privileges.AsNoTracking().OrderBy(u => u.Id).LastOrDefaultAsync();
                     if (getIdLast != null)
                         idPriv = getIdLast.Id;
-                    else
-                        MessageBox.Show("Произошла непредвиденная ошибка", "Это не конец");
+                    else return 0;
+                   
                 }
             }
             return idPriv;
@@ -736,8 +720,7 @@ namespace exel_for_mfc
                     var getIdLast = db.SolutionTypes.AsNoTracking().OrderBy(u => u.Id).LastOrDefaultAsync();
                     if (getIdLast != null)
                         idSol = getIdLast.Id;
-                    else
-                        MessageBox.Show("Произошла непредвиденная ошибка", "Это не конец");
+                    else return 0;
                 }
             }
             return idSol;
@@ -763,8 +746,7 @@ namespace exel_for_mfc
                     var getIdLast = db.PayAmounts.AsNoTracking().OrderBy(u => u.Id).LastOrDefaultAsync();
                     if (getIdLast != null)
                         idPay = getIdLast.Id;
-                    else
-                        MessageBox.Show("Произошла непредвиденная ошибка", "Это не конец");
+                    else return 0;
                 }
             }
             return idPay;
