@@ -534,12 +534,21 @@ namespace exel_for_mfc
                                         Cell cell = new()
                                         {
                                             DataType = CellValues.String,
-                                            CellValue = new CellValue(dsrow[col].ToString())//Тут значение Id
+                                            CellValue = new CellValue(dsrow[col].ToString())//Тут значение Id 
                                         };
-                                        using ExDbContext db = new();
-                                        var GetNameOfArea = await db.Areas.Where(u => u.Id == Convert.ToInt32(cell.CellValue.Text) + 1).FirstOrDefaultAsync();
-                                        cell.CellValue = new CellValue(GetNameOfArea.AreaName);
-                                        newRow.AppendChild(cell);
+                                        
+                                        if (cell.InnerText == "")
+                                        {
+                                            newRow.AppendChild(cell);
+                                        }
+                                        else
+                                        {
+                                            using ExDbContext db = new();
+                                            var GetNameOfArea = await db.Areas.Where(u => u.Id == Convert.ToInt32(cell.CellValue.Text) + 1).FirstOrDefaultAsync();
+                                            cell.CellValue = new CellValue(GetNameOfArea.AreaName);
+                                            newRow.AppendChild(cell);
+                                        }
+                                       
                                     }
 
                                     else if (col == "Local")
@@ -549,10 +558,17 @@ namespace exel_for_mfc
                                             DataType = CellValues.String,
                                             CellValue = new CellValue(dsrow[col].ToString())//Тут значение Id
                                         };
-                                        using ExDbContext db = new();
-                                        var GetNameOfLocal = await db.Localities.Where(u => u.Id == Convert.ToInt32(cell.CellValue.Text) + 1).FirstOrDefaultAsync();
-                                        cell.CellValue = new CellValue(GetNameOfLocal.LocalName);
-                                        newRow.AppendChild(cell);
+                                        if (cell.InnerText == "")
+                                        {
+                                            newRow.AppendChild(cell);
+                                        }
+                                        else
+                                        {
+                                            using ExDbContext db = new();
+                                            var GetNameOfLocal = await db.Localities.Where(u => u.Id == Convert.ToInt32(cell.CellValue.Text) + 1).FirstOrDefaultAsync();
+                                            cell.CellValue = new CellValue(GetNameOfLocal.LocalName);
+                                            newRow.AppendChild(cell);
+                                        }
                                     }
 
                                     else if (col == "Lgota")
@@ -562,10 +578,17 @@ namespace exel_for_mfc
                                             DataType = CellValues.String,
                                             CellValue = new CellValue(dsrow[col].ToString())//Тут значение Id
                                         };
-                                        using ExDbContext db = new();
-                                        var GetNameOfLocal = await db.Privileges.Where(u => u.Id == Convert.ToInt32(cell.CellValue.Text) + 1).FirstOrDefaultAsync();
-                                        cell.CellValue = new CellValue(GetNameOfLocal.PrivilegesName);
-                                        newRow.AppendChild(cell);
+                                        if (cell.InnerText == "")
+                                        {
+                                            newRow.AppendChild(cell);
+                                        }
+                                        else
+                                        {
+                                            using ExDbContext db = new();
+                                            var GetNameOfLocal = await db.Privileges.Where(u => u.Id == Convert.ToInt32(cell.CellValue.Text) + 1).FirstOrDefaultAsync();
+                                            cell.CellValue = new CellValue(GetNameOfLocal.PrivilegesName);
+                                            newRow.AppendChild(cell);
+                                        }
                                     }
 
                                     else if (col == "Pay")
@@ -573,10 +596,17 @@ namespace exel_for_mfc
                                         Cell cell = new Cell();
                                         cell.DataType = CellValues.String;
                                         cell.CellValue = new CellValue(dsrow[col].ToString());//Тут значение Id
-                                        using ExDbContext db = new();
-                                        var GetNameOfLocal = await db.PayAmounts.Where(u => u.Id == Convert.ToInt32(cell.CellValue.Text) + 1).FirstOrDefaultAsync();
-                                        cell.CellValue = new CellValue((decimal)GetNameOfLocal.Pay);
-                                        newRow.AppendChild(cell);
+                                        if (cell.InnerText == "")
+                                        {
+                                            newRow.AppendChild(cell);
+                                        }
+                                        else
+                                        {
+                                            using ExDbContext db = new();
+                                            var GetNameOfLocal = await db.PayAmounts.Where(u => u.Id == Convert.ToInt32(cell.CellValue.Text) + 1).FirstOrDefaultAsync();
+                                            cell.CellValue = new CellValue((decimal)GetNameOfLocal.Pay);
+                                            newRow.AppendChild(cell);
+                                        }
                                     }
 
                                     else if (col == "Solution")
@@ -584,10 +614,17 @@ namespace exel_for_mfc
                                         Cell cell = new Cell();
                                         cell.DataType = CellValues.String;
                                         cell.CellValue = new CellValue(dsrow[col].ToString());//Тут значение Id
-                                        using ExDbContext db = new();
-                                        var GetNameOfLocal = await db.SolutionTypes.Where(u => u.Id == Convert.ToInt32(cell.CellValue.Text) + 1).FirstOrDefaultAsync();
-                                        cell.CellValue = new CellValue(GetNameOfLocal.SolutionName);
-                                        newRow.AppendChild(cell);
+                                        if (cell.InnerText == "")
+                                        {
+                                            newRow.AppendChild(cell);
+                                        }
+                                        else
+                                        {
+                                            using ExDbContext db = new();
+                                            var GetNameOfLocal = await db.SolutionTypes.Where(u => u.Id == Convert.ToInt32(cell.CellValue.Text) + 1).FirstOrDefaultAsync();
+                                            cell.CellValue = new CellValue(GetNameOfLocal.SolutionName);
+                                            newRow.AppendChild(cell);
+                                        }
                                     }
 
                                     else if (col == "DateGetSert" || col == "MailingDate")
