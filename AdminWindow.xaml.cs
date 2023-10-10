@@ -217,61 +217,69 @@ namespace exel_for_mfc
         #endregion
         #region Интеграция
         [Obsolete]
-        private void Button_Click(object sender, RoutedEventArgs e)
+        private async void Button_Click(object sender, RoutedEventArgs e)
         {
+            await GoIntegration();
+        }
+
+        //Хочу в ТГУ
+        static async Task GoIntegration()
+        {
+            await Task.Run(() =>
+            {
             //Интеграция
             OpenFileDialog of = new()
             {
                 Filter = "Excel Files|*.xls;*.xlsx;*.xlsm"
             };
-            /*
-             1 - фамилия
-             2 - имя
-             3 - отчество
-             4 - снилс
-             5 - район
-             6 - населенный пункт
-             7 - адрес
-             8 - льгота будет Contains
-             9 - серия и номер сертификата
-            10 - дата выдачи
-            11 - решение
-            12 - дата и номер решения по сертификату
-            13 - Выплата
-            14 - Трек
-            15 - Дата отправки почтой
-            Предусмотреть NULL
-             */
-            if (of.ShowDialog() == true)
-            {
-                using FileStream fs = new(of.FileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
-                using SpreadsheetDocument doc = SpreadsheetDocument.Open(fs, false);
-                WorkbookPart workbookPart = doc.WorkbookPart;
-                SharedStringTablePart sstpart = workbookPart.GetPartsOfType<SharedStringTablePart>().First();
-                SharedStringTable sst = sstpart.SharedStringTable;
-
-                WorksheetPart worksheetPart = workbookPart.WorksheetParts.First();
-                Worksheet sheet = worksheetPart.Worksheet;
-
-                var cells = sheet.Descendants<Cell>();
-                var rows = sheet.Descendants<Row>();
-                var app = new Applicant();
-                var reg = new Registry();
-                int temp = 0;
-                try
+                /*
+                 1 - фамилия
+                 2 - имя
+                 3 - отчество
+                 4 - снилс
+                 5 - район
+                 6 - населенный пункт
+                 7 - адрес
+                 8 - льгота будет Contains
+                 9 - серия и номер сертификата
+                10 - дата выдачи
+                11 - решение
+                12 - дата и номер решения по сертификату
+                13 - Выплата
+                14 - Трек
+                15 - Дата отправки почтой
+                Предусмотреть NULL
+                 */
+                if (of.ShowDialog() == true)
                 {
-                    //Второе условие срабатывает на цифры
-                    //Просто адский цикл
-                    foreach (Row row in rows)
+                    using FileStream fs = new(of.FileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+                    using SpreadsheetDocument doc = SpreadsheetDocument.Open(fs, false);
+                    WorkbookPart workbookPart = doc.WorkbookPart;
+                    SharedStringTablePart sstpart = workbookPart.GetPartsOfType<SharedStringTablePart>().First();
+                    SharedStringTable sst = sstpart.SharedStringTable;
+
+                    WorksheetPart worksheetPart = workbookPart.WorksheetParts.First();
+                    Worksheet sheet = worksheetPart.Worksheet;
+
+                    var cells = sheet.Descendants<Cell>();
+                    var rows = sheet.Descendants<Row>();
+                    var app = new Applicant();
+                    var reg = new Registry();
+                    int temp = 0;
+                    try
                     {
-                        foreach (Cell cell in row.Elements<Cell>())
+                        //Второе условие срабатывает на цифры
+                        //Просто адский цикл
+                        foreach (Row row in rows)
                         {
-                            switch (temp)
+                            foreach (Cell cell in row.Elements<Cell>())
                             {
-                                case 0:
-                                    temp++; 
-                                    break;   
-                                case 1: //Фамилия **************************************
+                                switch (temp)
+                                {
+                                    case 0:
+                                        temp++;
+                                        break;
+                                    case 1: //Фамилия **************************************
                                         if ((cell.DataType != null) && (cell.DataType == CellValues.SharedString))
                                         {
                                             int s1 = int.Parse(cell.CellValue.Text);
@@ -291,333 +299,334 @@ namespace exel_for_mfc
                                         }
                                         temp++;
 
-                                    
-                                    break;
 
-                                case 2: //Имя **************************************
-                                    if ((cell.DataType != null) && (cell.DataType == CellValues.SharedString))
-                                    {
-                                        int s2 = int.Parse(cell.CellValue.Text);
-                                        string str2 = sst.ChildElements[s2].InnerText;
-                                        app.Middlename = str2;
-                                    }
-                                    //Числа
-                                    else if (cell.CellValue != null)
-                                    {
-                                        app.Middlename = cell.CellValue.Text;
-                                    }
-                                    //NULL
-                                    else if (cell.DataType == null)
-                                    {
-                                        app.Middlename = null;
-                                    }
-                                    temp++;
-                                    break;
+                                        break;
 
-                                case 3: //Отчество **************************************
-                                    if ((cell.DataType != null) && (cell.DataType == CellValues.SharedString))
-                                    {
-                                        int s3 = int.Parse(cell.CellValue.Text);
-                                        string str3 = sst.ChildElements[s3].InnerText;
-                                        app.Lastname = str3;
-                                    }
-                                    //Числа
-                                    else if (cell.CellValue != null)
-                                    {
-                                        app.Lastname = cell.CellValue.Text;
-                                    }
+                                    case 2: //Имя **************************************
+                                        if ((cell.DataType != null) && (cell.DataType == CellValues.SharedString))
+                                        {
+                                            int s2 = int.Parse(cell.CellValue.Text);
+                                            string str2 = sst.ChildElements[s2].InnerText;
+                                            app.Middlename = str2;
+                                        }
+                                        //Числа
+                                        else if (cell.CellValue != null)
+                                        {
+                                            app.Middlename = cell.CellValue.Text;
+                                        }
+                                        //NULL
+                                        else if (cell.DataType == null)
+                                        {
+                                            app.Middlename = null;
+                                        }
+                                        temp++;
+                                        break;
 
-                                    //NULL
-                                    else if (cell.DataType == null)
-                                    {
-                                        app.Lastname = null;
-                                    }
-                                    temp++;
-                                    break;
+                                    case 3: //Отчество **************************************
+                                        if ((cell.DataType != null) && (cell.DataType == CellValues.SharedString))
+                                        {
+                                            int s3 = int.Parse(cell.CellValue.Text);
+                                            string str3 = sst.ChildElements[s3].InnerText;
+                                            app.Lastname = str3;
+                                        }
+                                        //Числа
+                                        else if (cell.CellValue != null)
+                                        {
+                                            app.Lastname = cell.CellValue.Text;
+                                        }
 
-                                case 4: //Снилс **************************************
-                                    if ((cell.DataType != null) && (cell.DataType == CellValues.SharedString))
-                                    {
-                                        int s3 = int.Parse(cell.CellValue.Text);
-                                        string str3 = sst.ChildElements[s3].InnerText;
-                                        app.Snils = str3;
-                                    }
-                                    //Числа
-                                    else if (cell.CellValue != null)
-                                    {
-                                        app.Snils = cell.CellValue.Text;
-                                    }
+                                        //NULL
+                                        else if (cell.DataType == null)
+                                        {
+                                            app.Lastname = null;
+                                        }
+                                        temp++;
+                                        break;
 
-                                    //NULL
-                                    else if (cell.DataType == null)
-                                    {
-                                        app.Snils = null;
-                                    }
-                                    temp++;
-                                    break;
+                                    case 4: //Снилс **************************************
+                                        if ((cell.DataType != null) && (cell.DataType == CellValues.SharedString))
+                                        {
+                                            int s3 = int.Parse(cell.CellValue.Text);
+                                            string str3 = sst.ChildElements[s3].InnerText;
+                                            app.Snils = str3;
+                                        }
+                                        //Числа
+                                        else if (cell.CellValue != null)
+                                        {
+                                            app.Snils = cell.CellValue.Text;
+                                        }
 
-                                case 5: //Район **************************************
-                                    if ((cell.DataType != null) && (cell.DataType == CellValues.SharedString))
-                                    {
-                                        int s3 = int.Parse(cell.CellValue.Text);
-                                        string str3 = sst.ChildElements[s3].InnerText;
-                                        app.AreaFk = ReturnIdArea(str3);
-                                    }
+                                        //NULL
+                                        else if (cell.DataType == null)
+                                        {
+                                            app.Snils = null;
+                                        }
+                                        temp++;
+                                        break;
 
-                                    //Числа
-                                    else if (cell.CellValue != null)
-                                    {
-                                        app.AreaFk = null;
-                                    }
+                                    case 5: //Район **************************************
+                                        if ((cell.DataType != null) && (cell.DataType == CellValues.SharedString))
+                                        {
+                                            int s3 = int.Parse(cell.CellValue.Text);
+                                            string str3 = sst.ChildElements[s3].InnerText;
+                                            app.AreaFk = ReturnIdArea(str3);
+                                        }
 
-                                    //NULL
-                                    else if (cell.DataType == null)
-                                    {
-                                        app.AreaFk = null;
-                                    }
-                                    temp++;
-                                    break;
+                                        //Числа
+                                        else if (cell.CellValue != null)
+                                        {
+                                            app.AreaFk = null;
+                                        }
 
-                                case 6:  //Населенный пункт **************************************
-                                    if ((cell.DataType != null) && (cell.DataType == CellValues.SharedString))
-                                    {
-                                        int s3 = int.Parse(cell.CellValue.Text);
-                                        string str3 = sst.ChildElements[s3].InnerText;
-                                        app.LocalityFk = ReturnIdLocal(str3);
-                                    }
+                                        //NULL
+                                        else if (cell.DataType == null)
+                                        {
+                                            app.AreaFk = null;
+                                        }
+                                        temp++;
+                                        break;
 
-                                    //Числа
-                                    else if (cell.CellValue != null)
-                                    {
-                                        app.LocalityFk = null;
-                                    }
+                                    case 6:  //Населенный пункт **************************************
+                                        if ((cell.DataType != null) && (cell.DataType == CellValues.SharedString))
+                                        {
+                                            int s3 = int.Parse(cell.CellValue.Text);
+                                            string str3 = sst.ChildElements[s3].InnerText;
+                                            app.LocalityFk = ReturnIdLocal(str3);
+                                        }
 
-                                    //NULL
-                                    else if (cell.DataType == null)
-                                    {
-                                        app.LocalityFk = null;
-                                    }
-                                    temp++;
-                                    break;
+                                        //Числа
+                                        else if (cell.CellValue != null)
+                                        {
+                                            app.LocalityFk = null;
+                                        }
 
-                                case 7: //Адрес **************************************
-                                    if ((cell.DataType != null) && (cell.DataType == CellValues.SharedString))
-                                    {
-                                        int s3 = int.Parse(cell.CellValue.Text);
-                                        string str3 = sst.ChildElements[s3].InnerText;
-                                        app.Adress = str3;
-                                    }
+                                        //NULL
+                                        else if (cell.DataType == null)
+                                        {
+                                            app.LocalityFk = null;
+                                        }
+                                        temp++;
+                                        break;
 
-                                    //Числа
-                                    else if (cell.CellValue != null)
-                                    {
-                                        app.Adress = cell.CellValue.Text;
-                                    }
+                                    case 7: //Адрес **************************************
+                                        if ((cell.DataType != null) && (cell.DataType == CellValues.SharedString))
+                                        {
+                                            int s3 = int.Parse(cell.CellValue.Text);
+                                            string str3 = sst.ChildElements[s3].InnerText;
+                                            app.Adress = str3;
+                                        }
 
-                                    //NULL
-                                    else if (cell.DataType == null)
-                                    {
-                                        app.Adress = null;
-                                    }
-                                    temp++;
-                                    break;
-                                case 8:  //Льгота **************************************
-                                    if ((cell.DataType != null) && (cell.DataType == CellValues.SharedString))
-                                    {
-                                        int s3 = int.Parse(cell.CellValue.Text);
-                                        string str3 = sst.ChildElements[s3].InnerText;
-                                        app.PrivilegesFk = ReturnIdPriv(str3);
-                                    }
+                                        //Числа
+                                        else if (cell.CellValue != null)
+                                        {
+                                            app.Adress = cell.CellValue.Text;
+                                        }
 
-                                    //Числа
-                                    else if (cell.CellValue != null)
-                                    {
-                                        app.PrivilegesFk = null;
-                                    }
+                                        //NULL
+                                        else if (cell.DataType == null)
+                                        {
+                                            app.Adress = null;
+                                        }
+                                        temp++;
+                                        break;
+                                    case 8:  //Льгота **************************************
+                                        if ((cell.DataType != null) && (cell.DataType == CellValues.SharedString))
+                                        {
+                                            int s3 = int.Parse(cell.CellValue.Text);
+                                            string str3 = sst.ChildElements[s3].InnerText;
+                                            app.PrivilegesFk = ReturnIdPriv(str3);
+                                        }
 
-                                    //NULL
-                                    else if (cell.DataType == null)
-                                    {
-                                        app.PrivilegesFk = null;
-                                    }
-                                    temp++;
-                                    break;
+                                        //Числа
+                                        else if (cell.CellValue != null)
+                                        {
+                                            app.PrivilegesFk = null;
+                                        }
 
-                                case 9:   //Серия и номер сертификата **************************************
-                                    if ((cell.DataType != null) && (cell.DataType == CellValues.SharedString))
-                                    {
-                                        int s3 = int.Parse(cell.CellValue.Text);
-                                        string str3 = sst.ChildElements[s3].InnerText;
-                                        reg.SerialAndNumberSert = str3;
-                                    }
+                                        //NULL
+                                        else if (cell.DataType == null)
+                                        {
+                                            app.PrivilegesFk = null;
+                                        }
+                                        temp++;
+                                        break;
 
-                                    //Числа
-                                    else if (cell.CellValue != null)
-                                    {
-                                        reg.SerialAndNumberSert = cell.CellValue.Text;
-                                    }
+                                    case 9:   //Серия и номер сертификата **************************************
+                                        if ((cell.DataType != null) && (cell.DataType == CellValues.SharedString))
+                                        {
+                                            int s3 = int.Parse(cell.CellValue.Text);
+                                            string str3 = sst.ChildElements[s3].InnerText;
+                                            reg.SerialAndNumberSert = str3;
+                                        }
 
-                                    //NULL
-                                    else if (cell.DataType == null)
-                                    {
-                                        reg.SerialAndNumberSert = null;
-                                    }
-                                    temp++;
-                                    break;
+                                        //Числа
+                                        else if (cell.CellValue != null)
+                                        {
+                                            reg.SerialAndNumberSert = cell.CellValue.Text;
+                                        }
 
-                                case 10: //Дата выдачи сертификата **************************************
-                                    //Числа
-                                    if (cell.CellValue != null)
-                                    {
-                                        double s3 = double.Parse(cell.CellValue.Text);
-                                        reg.DateGetSert = DateTime.FromOADate(s3);
-                                    }
+                                        //NULL
+                                        else if (cell.DataType == null)
+                                        {
+                                            reg.SerialAndNumberSert = null;
+                                        }
+                                        temp++;
+                                        break;
 
-                                    //NULL
-                                    else if (cell.DataType == null)
-                                    {
-                                        reg.DateGetSert = null;
-                                    }
-                                    temp++;
-                                    break;
+                                    case 10: //Дата выдачи сертификата **************************************
+                                             //Числа
+                                        if (cell.CellValue != null)
+                                        {
+                                            double s3 = double.Parse(cell.CellValue.Text);
+                                            reg.DateGetSert = DateTime.FromOADate(s3);
+                                        }
 
-                                case 11: //Решение **************************************
-                                    if ((cell.DataType != null) && (cell.DataType == CellValues.SharedString))
-                                    {
-                                        int s3 = int.Parse(cell.CellValue.Text);
-                                        string str3 = sst.ChildElements[s3].InnerText;
-                                        reg.SolutionFk = ReturnIdSol(str3);
-                                    }
+                                        //NULL
+                                        else if (cell.DataType == null)
+                                        {
+                                            reg.DateGetSert = null;
+                                        }
+                                        temp++;
+                                        break;
 
-                                    //Числа
-                                    else if (cell.CellValue != null)
-                                    {
-                                        reg.SolutionFk = null;
-                                    }
+                                    case 11: //Решение **************************************
+                                        if ((cell.DataType != null) && (cell.DataType == CellValues.SharedString))
+                                        {
+                                            int s3 = int.Parse(cell.CellValue.Text);
+                                            string str3 = sst.ChildElements[s3].InnerText;
+                                            reg.SolutionFk = ReturnIdSol(str3);
+                                        }
 
-                                    //NULL
-                                    else if (cell.DataType == null)
-                                    {
-                                        reg.SolutionFk = null;
-                                    }
-                                    temp++;
-                                    break;
+                                        //Числа
+                                        else if (cell.CellValue != null)
+                                        {
+                                            reg.SolutionFk = null;
+                                        }
 
-                                case 12: //Дата и номер решения по сертификату **************************************
-                                    if ((cell.DataType != null) && (cell.DataType == CellValues.SharedString))
-                                    {
-                                        int s3 = int.Parse(cell.CellValue.Text);
-                                        string str3 = sst.ChildElements[s3].InnerText;
-                                        reg.DateAndNumbSolutionSert = str3;
-                                    }
+                                        //NULL
+                                        else if (cell.DataType == null)
+                                        {
+                                            reg.SolutionFk = null;
+                                        }
+                                        temp++;
+                                        break;
 
-                                    //Числа
-                                    else if (cell.CellValue != null)
-                                    {
-                                        reg.DateAndNumbSolutionSert = cell.CellValue.Text;
-                                    }
+                                    case 12: //Дата и номер решения по сертификату **************************************
+                                        if ((cell.DataType != null) && (cell.DataType == CellValues.SharedString))
+                                        {
+                                            int s3 = int.Parse(cell.CellValue.Text);
+                                            string str3 = sst.ChildElements[s3].InnerText;
+                                            reg.DateAndNumbSolutionSert = str3;
+                                        }
 
-                                    //NULL
-                                    else if (cell.DataType == null)
-                                    {
-                                        reg.DateAndNumbSolutionSert = null;
-                                    }
-                                    temp++;
-                                    break;
+                                        //Числа
+                                        else if (cell.CellValue != null)
+                                        {
+                                            reg.DateAndNumbSolutionSert = cell.CellValue.Text;
+                                        }
 
-                                case 13: //Выплата **************************************
-                                    if ((cell.DataType != null) && (cell.DataType == CellValues.SharedString))
-                                    {
-                                        int s3 = int.Parse(cell.CellValue.Text);
-                                        string str3 = sst.ChildElements[s3].InnerText;
-                                        reg.PayAmountFk = ReturnIdPay(str3);
-                                    }
+                                        //NULL
+                                        else if (cell.DataType == null)
+                                        {
+                                            reg.DateAndNumbSolutionSert = null;
+                                        }
+                                        temp++;
+                                        break;
 
-                                    //Числа
-                                    else if (cell.CellValue != null)
-                                    {
-                                        reg.PayAmountFk = ReturnIdPay(cell.CellValue.Text);
-                                    }
+                                    case 13: //Выплата **************************************
+                                        if ((cell.DataType != null) && (cell.DataType == CellValues.SharedString))
+                                        {
+                                            int s3 = int.Parse(cell.CellValue.Text);
+                                            string str3 = sst.ChildElements[s3].InnerText;
+                                            reg.PayAmountFk = ReturnIdPay(str3);
+                                        }
 
-                                    //NULL
-                                    else if (cell.DataType == null)
-                                    {
-                                        reg.PayAmountFk = null;
-                                    }
-                                    temp++;
-                                    break;
+                                        //Числа
+                                        else if (cell.CellValue != null)
+                                        {
+                                            reg.PayAmountFk = ReturnIdPay(cell.CellValue.Text);
+                                        }
 
-                                case 14: //Трек **************************************
-                                    if ((cell.DataType != null) && (cell.DataType == CellValues.SharedString))
-                                    {
-                                        int s3 = int.Parse(cell.CellValue.Text);
-                                        string str3 = sst.ChildElements[s3].InnerText;
-                                        reg.Trek = str3;
-                                    }
+                                        //NULL
+                                        else if (cell.DataType == null)
+                                        {
+                                            reg.PayAmountFk = null;
+                                        }
+                                        temp++;
+                                        break;
 
-                                    //Числа
-                                    else if (cell.CellValue != null)
-                                    {
-                                        reg.Trek = cell.CellValue.Text;
-                                    }
+                                    case 14: //Трек **************************************
+                                        if ((cell.DataType != null) && (cell.DataType == CellValues.SharedString))
+                                        {
+                                            int s3 = int.Parse(cell.CellValue.Text);
+                                            string str3 = sst.ChildElements[s3].InnerText;
+                                            reg.Trek = str3;
+                                        }
 
-                                    //NULL
-                                    else if (cell.DataType == null)
-                                    {
-                                        reg.Trek = null;
-                                    }
-                                    temp++;
-                                    break;
+                                        //Числа
+                                        else if (cell.CellValue != null)
+                                        {
+                                            reg.Trek = cell.CellValue.Text;
+                                        }
 
-                                case 15: //Дата отправки почтой **************************************
-                                    //Числа
-                                    if (cell.CellValue != null)
-                                    {
-                                        double s3 = double.Parse(cell.CellValue.Text);
-                                        reg.DateGetSert = DateTime.FromOADate(s3);
-                                    }
+                                        //NULL
+                                        else if (cell.DataType == null)
+                                        {
+                                            reg.Trek = null;
+                                        }
+                                        temp++;
+                                        break;
 
-                                    //NULL
-                                    else if (cell.DataType == null)
-                                    {
-                                        reg.MailingDate = null;
-                                    }
+                                    case 15: //Дата отправки почтой **************************************
+                                             //Числа
+                                        if (cell.CellValue != null)
+                                        {
+                                            double s3 = double.Parse(cell.CellValue.Text);
+                                            reg.DateGetSert = DateTime.FromOADate(s3);
+                                        }
 
-                                    //Контрольное условие и вставка **************************************
-                                    temp = 0;
-                                    using (ExDbContext db = new())
-                                    {
+                                        //NULL
+                                        else if (cell.DataType == null)
+                                        {
+                                            reg.MailingDate = null;
+                                        }
 
-                                        db.Applicants.Add(app);
-                                        db.SaveChanges();
-                                        //Делай запрос чтоб получить данного заявителя и вставлю id в idApplicant
-                                        //и потом добавлю это в таблицу Регистр
-                                        var getLastApp = db.Applicants.AsNoTracking().OrderBy(u => u.Id).LastOrDefault();
-                                        if (getLastApp != null)
-                                            reg.ApplicantFk = getLastApp.Id;
-                                        else
-                                            reg.ApplicantFk = null;
-                                        db.Registries.Add(reg);
-                                        db.SaveChanges();
-                                        app = new Applicant();
-                                        reg = new Registry();
-                                    }
-                                    break;
+                                        //Контрольное условие и вставка **************************************
+                                        temp = 0;
+                                        using (ExDbContext db = new())
+                                        {
 
+                                            db.Applicants.Add(app);
+                                            db.SaveChanges();
+                                            //Делай запрос чтоб получить данного заявителя и вставлю id в idApplicant
+                                            //и потом добавлю это в таблицу Регистр
+                                            var getLastApp = db.Applicants.AsNoTracking().OrderBy(u => u.Id).LastOrDefault();
+                                            if (getLastApp != null)
+                                                reg.ApplicantFk = getLastApp.Id;
+                                            else
+                                                reg.ApplicantFk = null;
+                                            db.Registries.Add(reg);
+                                            db.SaveChanges();
+                                            app = new Applicant();
+                                            reg = new Registry();
+                                        }
+                                        break;
+
+                                }
                             }
                         }
                     }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show(ex.Message);
+                    }
                 }
-                catch (Exception ex)
-                {
-                    MessageBox.Show(ex.Message);
-                }
-
-            }
+            });
         }
 
+
         //Функция возврата Района
-        int ReturnIdArea(string str)
+        static int ReturnIdArea(string str)
         {
             int idArea = 0;
             using (ExDbContext db = new())
@@ -644,7 +653,7 @@ namespace exel_for_mfc
         }
 
         //Функция возврата Населенного пункта
-        int ReturnIdLocal(string str)
+        static int ReturnIdLocal(string str)
         {
             int idLocal = 0;
             using (ExDbContext db = new())
@@ -670,7 +679,7 @@ namespace exel_for_mfc
         }
 
         //Функция возврата Льгота
-        int ReturnIdPriv(string str)
+        static int ReturnIdPriv(string str)
         {
             int idPriv = 0;
             using (ExDbContext db = new())
@@ -697,7 +706,7 @@ namespace exel_for_mfc
         }
 
         //Функция возврата Решение
-        int ReturnIdSol(string str)
+        static int ReturnIdSol(string str)
         {
             int idSol = 0;
             using (ExDbContext db = new())
@@ -723,7 +732,7 @@ namespace exel_for_mfc
         }
 
         //Функция возврата Выплата
-        int ReturnIdPay(string str)
+        static int ReturnIdPay(string str)
         {
             int idPay = 0;
             using (ExDbContext db = new())
