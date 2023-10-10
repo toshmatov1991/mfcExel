@@ -269,8 +269,6 @@ namespace exel_for_mfc
                             switch (temp)
                             {
                                 case 0:
-                                     //Числа
-                                        var rew = cell.CellValue.Text;
                                     temp++; 
                                     break;   
                                 case 1: //Фамилия **************************************
@@ -606,8 +604,6 @@ namespace exel_for_mfc
                                     }
                                     break;
 
-                                   
-
                             }
                         }
                     }
@@ -621,7 +617,7 @@ namespace exel_for_mfc
         }
 
         //Функция возврата Района
-        static int ReturnIdArea(string str)
+        int ReturnIdArea(string str)
         {
             int idArea = 0;
             using (ExDbContext db = new())
@@ -637,18 +633,18 @@ namespace exel_for_mfc
                     db.Areas.Add(area);
                     db.SaveChanges();
                     // И ветнуть id нового
-                    var getIdLast = db.Areas.AsNoTracking().OrderBy(u => u.Id).LastOrDefaultAsync();
+                    var getIdLast = db.Areas.AsNoTracking().OrderBy(u => u.Id).LastOrDefault();
                     if (getIdLast != null)
                         idArea = getIdLast.Id;
-                    
-                       
+                    else return 0;
+
                 }
             }
             return idArea;
         }
 
         //Функция возврата Населенного пункта
-        static int ReturnIdLocal(string str)
+        int ReturnIdLocal(string str)
         {
             int idLocal = 0;
             using (ExDbContext db = new())
@@ -664,7 +660,7 @@ namespace exel_for_mfc
                     db.Localities.Add(loc);
                     db.SaveChanges();
                     // И ветнуть id нового
-                    var getIdLast = db.Localities.AsNoTracking().OrderBy(u => u.Id).LastOrDefaultAsync();
+                    var getIdLast = db.Localities.AsNoTracking().OrderBy(u => u.Id).LastOrDefault();
                     if (getIdLast != null)
                         idLocal = getIdLast.Id;
                     else return 0;
@@ -674,7 +670,7 @@ namespace exel_for_mfc
         }
 
         //Функция возврата Льгота
-        static int ReturnIdPriv(string str)
+        int ReturnIdPriv(string str)
         {
             int idPriv = 0;
             using (ExDbContext db = new())
@@ -690,7 +686,7 @@ namespace exel_for_mfc
                     db.Privileges.Add(privilege);
                     db.SaveChanges();
                     // И ветнуть id нового
-                    var getIdLast = db.Privileges.AsNoTracking().OrderBy(u => u.Id).LastOrDefaultAsync();
+                    var getIdLast = db.Privileges.AsNoTracking().OrderBy(u => u.Id).LastOrDefault();
                     if (getIdLast != null)
                         idPriv = getIdLast.Id;
                     else return 0;
@@ -701,7 +697,7 @@ namespace exel_for_mfc
         }
 
         //Функция возврата Решение
-        static int ReturnIdSol(string str)
+        int ReturnIdSol(string str)
         {
             int idSol = 0;
             using (ExDbContext db = new())
@@ -717,7 +713,7 @@ namespace exel_for_mfc
                     db.SolutionTypes.Add(solution);
                     db.SaveChanges();
                     // И ветнуть id нового
-                    var getIdLast = db.SolutionTypes.AsNoTracking().OrderBy(u => u.Id).LastOrDefaultAsync();
+                    var getIdLast = db.SolutionTypes.OrderBy(u => u.Id).LastOrDefault();
                     if (getIdLast != null)
                         idSol = getIdLast.Id;
                     else return 0;
@@ -727,7 +723,7 @@ namespace exel_for_mfc
         }
 
         //Функция возврата Выплата
-        static int ReturnIdPay(string str)
+        int ReturnIdPay(string str)
         {
             int idPay = 0;
             using (ExDbContext db = new())
@@ -743,7 +739,7 @@ namespace exel_for_mfc
                     db.PayAmounts.Add(pays);
                     db.SaveChanges();
                     // И ветнуть id нового
-                    var getIdLast = db.PayAmounts.AsNoTracking().OrderBy(u => u.Id).LastOrDefaultAsync();
+                    var getIdLast = db.PayAmounts.AsNoTracking().OrderBy(u => u.Id).LastOrDefault();
                     if (getIdLast != null)
                         idPay = getIdLast.Id;
                     else return 0;
