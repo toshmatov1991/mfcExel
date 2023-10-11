@@ -194,18 +194,17 @@ namespace exel_for_mfc
                                     {
                                         //Добавить новую запись в таблицу Регистр
                                         await db.Database.ExecuteSqlInterpolatedAsync($"INSERT INTO Registry(Applicant_FK, SerialAndNumberSert, DateGetSert, PayAmount_FK, Solution_FK, DateAndNumbSolutionSert, Comment, Trek, MailingDate) VALUES({getIdLastApp.Id}, {a.Sernumb}, {a.DateGetSert}, {null}, {null}, {a.DateAndNumbSolutionSert}, {a.Comment}, {a.Trek}, {a.MailingDate})");
-                                        await Task.Delay(50);
-                                        Start();
+                                        await Task.Delay(100);
                                     }
 
                                     else if (a.Pay != null && a.Solution != null)
                                     {
                                         //Добавить новую запись в таблицу Регистр
                                         await db.Database.ExecuteSqlInterpolatedAsync($"INSERT INTO Registry(Applicant_FK, SerialAndNumberSert, DateGetSert, PayAmount_FK, Solution_FK, DateAndNumbSolutionSert, Comment, Trek, MailingDate) VALUES({getIdLastApp.Id}, {a.Sernumb}, {a.DateGetSert}, {a.Pay + 1}, {a.Solution + 1}, {a.DateAndNumbSolutionSert}, {a.Comment}, {a.Trek}, {a.MailingDate})");
-                                        await Task.Delay(50);
-                                        Start();
+                                        await Task.Delay(100);
                                     }
-                                }
+                                    
+                            }
                                 else if (result == MessageBoxResult.No)
                                     return;
                             }
@@ -272,18 +271,18 @@ namespace exel_for_mfc
                                     {
                                         //Добавить новую запись в таблицу Регистр
                                         await db.Database.ExecuteSqlInterpolatedAsync($"INSERT INTO Registry(Applicant_FK, SerialAndNumberSert, DateGetSert, PayAmount_FK, Solution_FK, DateAndNumbSolutionSert, Comment, Trek, MailingDate) VALUES({getIdLastApp.Id}, {a.Sernumb}, {a.DateGetSert}, {null}, {null}, {a.DateAndNumbSolutionSert}, {a.Comment}, {a.Trek}, {a.MailingDate})");
-                                        await Task.Delay(50);
-                                        Start();
+                                        await Task.Delay(100);
                                     }
 
                                     else if (a.Pay != null && a.Solution != null)
                                     {
                                         //Добавить новую запись в таблицу Регистр
                                         await db.Database.ExecuteSqlInterpolatedAsync($"INSERT INTO Registry(Applicant_FK, SerialAndNumberSert, DateGetSert, PayAmount_FK, Solution_FK, DateAndNumbSolutionSert, Comment, Trek, MailingDate) VALUES({getIdLastApp.Id}, {a.Sernumb}, {a.DateGetSert}, {a.Pay + 1}, {a.Solution + 1}, {a.DateAndNumbSolutionSert}, {a.Comment}, {a.Trek}, {a.MailingDate})");
-                                        await Task.Delay(50);
-                                        Start();
+                                        await Task.Delay(100);
+                                        
                                     }
-                                }
+                                  
+                            }
                                 else if (result == MessageBoxResult.No)
                                     return;
                             }
@@ -314,7 +313,6 @@ namespace exel_for_mfc
                                 //Добавить новую запись в таблицу Регистр
                                 await db.Database.ExecuteSqlInterpolatedAsync($"INSERT INTO Registry(Applicant_FK, SerialAndNumberSert, DateGetSert, PayAmount_FK, Solution_FK, DateAndNumbSolutionSert, Comment, Trek, MailingDate) VALUES({getIdLastApp.Id}, {a.Sernumb}, {a.DateGetSert}, {null}, {null}, {a.DateAndNumbSolutionSert}, {a.Comment}, {a.Trek}, {a.MailingDate})");
                                 await Task.Delay(30);
-                                Start();
                             }
 
                             else if (a.Pay != null && a.Solution != null)
@@ -322,10 +320,9 @@ namespace exel_for_mfc
                                 //Добавить новую запись в таблицу Регистр
                                 await db.Database.ExecuteSqlInterpolatedAsync($"INSERT INTO Registry(Applicant_FK, SerialAndNumberSert, DateGetSert, PayAmount_FK, Solution_FK, DateAndNumbSolutionSert, Comment, Trek, MailingDate) VALUES({getIdLastApp.Id}, {a.Sernumb}, {a.DateGetSert}, {a.Pay + 1}, {a.Solution + 1}, {a.DateAndNumbSolutionSert}, {a.Comment}, {a.Trek}, {a.MailingDate})");
                                 await Task.Delay(30);
-                                Start();
                             }
-
                         }
+                        Start();
                 }
             }
 
@@ -427,9 +424,13 @@ namespace exel_for_mfc
         }
         private async void PrivilegesComboEvent(object sender, EventArgs e)
         {
-            await Task.Delay(50);
             using ExDbContext db = new();
-            await db.Database.ExecuteSqlRawAsync("UPDATE Applicant SET Privileges_FK = {0} WHERE Id = {1}", (sender as ComboBox)?.SelectedIndex + 1, (dataGrid.SelectedItem as SClass)?.IdApplicant);
+            var GetId = await db.Privileges.AsNoTracking().Where(u => u.PrivilegesName == (sender as ComboBox).Text).FirstOrDefaultAsync();
+            if(GetId != null)
+                await db.Database.ExecuteSqlRawAsync("UPDATE Applicant SET Privileges_FK = {0} WHERE Id = {1}", GetId.Id, (dataGrid.SelectedItem as SClass)?.IdApplicant);
+            else
+                MessageBox.Show("Произошла ошибка при обновлении данных");
+           
         }
         private async void PayComboEvent(object sender, EventArgs e)
         {
