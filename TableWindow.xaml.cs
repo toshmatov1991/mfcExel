@@ -312,16 +312,17 @@ namespace exel_for_mfc
                             {
                                 //Добавить новую запись в таблицу Регистр
                                 await db.Database.ExecuteSqlInterpolatedAsync($"INSERT INTO Registry(Applicant_FK, SerialAndNumberSert, DateGetSert, PayAmount_FK, Solution_FK, DateAndNumbSolutionSert, Comment, Trek, MailingDate) VALUES({getIdLastApp.Id}, {a.Sernumb}, {a.DateGetSert}, {null}, {null}, {a.DateAndNumbSolutionSert}, {a.Comment}, {a.Trek}, {a.MailingDate})");
-                                await Task.Delay(30);
+                                await Task.Delay(100);
                             }
 
                             else if (a.Pay != null && a.Solution != null)
                             {
                                 //Добавить новую запись в таблицу Регистр
                                 await db.Database.ExecuteSqlInterpolatedAsync($"INSERT INTO Registry(Applicant_FK, SerialAndNumberSert, DateGetSert, PayAmount_FK, Solution_FK, DateAndNumbSolutionSert, Comment, Trek, MailingDate) VALUES({getIdLastApp.Id}, {a.Sernumb}, {a.DateGetSert}, {a.Pay + 1}, {a.Solution + 1}, {a.DateAndNumbSolutionSert}, {a.Comment}, {a.Trek}, {a.MailingDate})");
-                                await Task.Delay(30);
+                                await Task.Delay(100);
                             }
                         }
+                    
                         Start();
                 }
             }
@@ -432,13 +433,20 @@ namespace exel_for_mfc
         }
         private async void PrivilegesComboEvent(object sender, EventArgs e)
         {
-            using ExDbContext db = new();
-            var GetId = await db.Privileges.AsNoTracking().Where(u => u.PrivilegesName == (sender as ComboBox).Text).FirstOrDefaultAsync();
-            if(GetId != null)
-                await db.Database.ExecuteSqlRawAsync("UPDATE Applicant SET Privileges_FK = {0} WHERE Id = {1}", GetId.Id, (dataGrid.SelectedItem as SClass)?.IdApplicant);
-            else
-                MessageBox.Show("Произошла ошибка при обновлении данных");
-           
+            try
+            {
+                await Task.Delay(1000);
+                using ExDbContext db = new();
+                var GetId = await db.Privileges.AsNoTracking().Where(u => u.PrivilegesName == (sender as ComboBox).Text).FirstOrDefaultAsync();
+                if (GetId != null)
+                    await db.Database.ExecuteSqlRawAsync("UPDATE Applicant SET Privileges_FK = {0} WHERE Id = {1}", GetId.Id, (dataGrid.SelectedItem as SClass)?.IdApplicant);
+                //else
+                //    MessageBox.Show("Произошла ошибка при обновлении данных\n Повторите попытку");
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
         }
         private async void PayComboEvent(object sender, EventArgs e)
         {
