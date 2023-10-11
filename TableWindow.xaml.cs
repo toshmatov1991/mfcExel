@@ -414,13 +414,21 @@ namespace exel_for_mfc
         {
             //Меняем район Заявителю
             using ExDbContext db = new();
-            await db.Database.ExecuteSqlRawAsync("UPDATE Applicant SET Area_FK = {0} WHERE Id = {1}", (sender as ComboBox)?.SelectedIndex + 1, (dataGrid.SelectedItem as SClass)?.IdApplicant);
+            var GetId = await db.Areas.AsNoTracking().Where(u => u.AreaName == (sender as ComboBox).Text).FirstOrDefaultAsync();
+            if (GetId != null)
+                await db.Database.ExecuteSqlRawAsync("UPDATE Applicant SET Area_FK = {0} WHERE Id = {1}", GetId.Id, (dataGrid.SelectedItem as SClass)?.IdApplicant);
+            else
+                MessageBox.Show("Произошла ошибка при обновлении данных");
         }
         private async void LocalComboEvent(object sender, EventArgs e)
         {
             //Меняем Населенный пункт Заявителю
             using ExDbContext db = new();
-            await db.Database.ExecuteSqlRawAsync("UPDATE Applicant SET Locality_FK = {0} WHERE Id = {1}", (sender as ComboBox)?.SelectedIndex + 1, (dataGrid.SelectedItem as SClass)?.IdApplicant);
+            var GetId = await db.Localities.AsNoTracking().Where(u => u.LocalName == (sender as ComboBox).Text).FirstOrDefaultAsync();
+            if (GetId != null)
+                await db.Database.ExecuteSqlRawAsync("UPDATE Applicant SET Locality_FK = {0} WHERE Id = {1}", GetId.Id, (dataGrid.SelectedItem as SClass)?.IdApplicant);
+            else
+                MessageBox.Show("Произошла ошибка при обновлении данных");
         }
         private async void PrivilegesComboEvent(object sender, EventArgs e)
         {
@@ -435,12 +443,20 @@ namespace exel_for_mfc
         private async void PayComboEvent(object sender, EventArgs e)
         {
             using ExDbContext db = new();
-            await db.Database.ExecuteSqlRawAsync("UPDATE Registry SET PayAmount_FK = {0} WHERE Id = {1}", (sender as ComboBox)?.SelectedIndex + 1, (dataGrid.SelectedItem as SClass)?.IdReg);
+            var GetId = await db.PayAmounts.AsNoTracking().Where(u => u.Pay == Convert.ToDecimal((sender as ComboBox).Text)).FirstOrDefaultAsync();
+            if (GetId != null)
+                await db.Database.ExecuteSqlRawAsync("UPDATE Registry SET PayAmount_FK = {0} WHERE Id = {1}", GetId.Id, (dataGrid.SelectedItem as SClass)?.IdReg);
+            else
+                MessageBox.Show("Произошла ошибка при обновлении данных");
         }
         private async void SolutionComboEvent(object sender, EventArgs e)
         {
             using ExDbContext db = new();
-            await db.Database.ExecuteSqlRawAsync("UPDATE Registry SET Solution_FK = {0} WHERE Id = {1}", (sender as ComboBox)?.SelectedIndex + 1, (dataGrid.SelectedItem as SClass)?.IdReg);
+            var GetId = await db.SolutionTypes.AsNoTracking().Where(u => u.SolutionName == (sender as ComboBox).Text).FirstOrDefaultAsync();
+            if (GetId != null)
+                await db.Database.ExecuteSqlRawAsync("UPDATE Registry SET Solution_FK = {0} WHERE Id = {1}", GetId.Id, (dataGrid.SelectedItem as SClass)?.IdReg);
+            else
+                MessageBox.Show("Произошла ошибка при обновлении данных");
         }
         #endregion
 
