@@ -155,7 +155,8 @@
                 <DataGridTextColumn Binding="{Binding Comment, UpdateSourceTrigger=PropertyChanged}" Header="" Visibility="Hidden"/>
             </DataGrid.Columns>
 
-            <!-- Отображение комментария при выделении строки --><!--
+            <!-- Отображение комментария при выделении строки -->
+            <!--
             <DataGrid.RowDetailsTemplate>
                 <DataTemplate>
                     <StackPanel Orientation="Horizontal" Height="33" VerticalAlignment="Center">
@@ -180,8 +181,8 @@
                 Height="42"
                 Width="107"
                 Click="Button_Click"/>
-        <Button Grid.Column="5" Background="Yellow" Content="Обновить таблицу" HorizontalAlignment="Left" Height="37" Margin="40,34,0,0" Grid.Row="11" VerticalAlignment="Top" RenderTransformOrigin="0.5,0.5" Grid.RowSpan="2" Click="Button_Click_1">
-        </Button>
+        <Button Grid.Column="5" Background="Yellow" Content="Обновить таблицу" HorizontalAlignment="Left" Height="37" Margin="68,10,0,0" Grid.Row="11" VerticalAlignment="Top" RenderTransformOrigin="0.5,0.5" Click="Button_Click_1" Grid.ColumnSpan="2"/>
+        <Button Grid.Column="5" Background="Yellow" Content="Обновить фильтры" HorizontalAlignment="Left" Height="37" Margin="68,6,0,0" Grid.Row="12" VerticalAlignment="Top" RenderTransformOrigin="0.5,0.5" Grid.ColumnSpan="2" Click="Button_Click_2"/>
 
         <!-- Фильтрация , это будет жестко)-->
         <!-- Главное чтоб листвиев 

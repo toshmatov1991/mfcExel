@@ -28,6 +28,7 @@ using Microsoft.Data.SqlClient;
 using System.Windows.Controls.Primitives;
 using System.ComponentModel;
 using System.Diagnostics;
+using DocumentFormat.OpenXml.InkML;
 
 namespace exel_for_mfc
 {
@@ -56,11 +57,10 @@ namespace exel_for_mfc
         {
             await Task.Run(() =>
             {
-                Dispatcher.Invoke(() =>
-                {
+                
                     using (ExDbContext db = new())
                     {
-                        MyList = (from reg in db.Registries
+                    MyList = (from reg in db.Registries
                                   join appl in db.Applicants on reg.ApplicantFk equals appl.Id
                                   select new SClass
                                   {
@@ -83,8 +83,10 @@ namespace exel_for_mfc
                                       MailingDate = reg.MailingDate,
                                       IdApplicant = appl.Id
                                   }).AsNoTracking().ToList();
-
+                    Dispatcher.Invoke(() =>
+                    {
                         dataGrid.ItemsSource = MyList;
+                    });   
 
                         AreaCombobox = db.Areas.FromSqlRaw("SELECT * FROM Area").AsNoTracking().ToList();
                         LocalCombobox = db.Localities.FromSqlRaw("SELECT * FROM Locality").AsNoTracking().ToList();
@@ -92,7 +94,7 @@ namespace exel_for_mfc
                         PrivelCombobox = db.Privileges.FromSqlRaw("SELECT * FROM Privileges").AsNoTracking().ToList();
                         SolCombobox = db.SolutionTypes.FromSqlRaw("SELECT * FROM SolutionType").AsNoTracking().ToList();
                     };
-                });
+               
             });
         }
 
@@ -327,7 +329,6 @@ namespace exel_for_mfc
                 }
             }
 
-
             //Возвращю тип решения (строку)
             static string ReturnStr(int? t)
             {
@@ -435,7 +436,7 @@ namespace exel_for_mfc
         {
             try
             {
-                await Task.Delay(1000);
+                await Task.Delay(500);
                 using ExDbContext db = new();
                 var GetId = await db.Privileges.AsNoTracking().Where(u => u.PrivilegesName == (sender as ComboBox).Text).FirstOrDefaultAsync();
                 if (GetId != null)
@@ -757,7 +758,7 @@ namespace exel_for_mfc
 
         #endregion
 
-        #region Обработка возможных исключений
+        #region Обработка возможных исключений и другие мелочи
         private void AreaExeption(object sender, MouseButtonEventArgs e)
         {
             return;
@@ -771,11 +772,20 @@ namespace exel_for_mfc
             return;
         }
 
-        #endregion
-
         private async void Button_Click_1(object sender, RoutedEventArgs e)
         {
-            await GoStart();  
+            await GoStart();
         }
+
+        //Обновить фильтры
+        private void Button_Click_2(object sender, RoutedEventArgs e)
+        {
+            MessageBox.Show("Обновить фильтры");
+        }
+        #endregion
+
+
+
+
     }
 }
