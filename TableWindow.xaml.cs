@@ -786,5 +786,10 @@ namespace exel_for_mfc
 
 
         #endregion
+
+        private void FilterClick(object sender, RoutedEventArgs e)
+        {
+            MessageBox.Show("Фильтр");
+        }
     }
 }

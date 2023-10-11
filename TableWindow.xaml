@@ -61,7 +61,7 @@
                             <DataTemplate>
                                 <StackPanel Orientation="Horizontal">
                                     <TextBlock Text="{Binding}" Margin="10 5"/>
-                                    <Button Background="AliceBlue" x:Name="btnFilter" Width="19">[X]</Button>
+                                    <Button Background="AliceBlue" x:Name="btnFilter" Width="19" Click="FilterClick">[X]</Button>
                                 </StackPanel>
                             </DataTemplate>
                         </Setter.Value>
