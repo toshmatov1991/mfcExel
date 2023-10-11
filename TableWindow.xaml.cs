@@ -780,12 +780,11 @@ namespace exel_for_mfc
         //Обновить фильтры
         private void Button_Click_2(object sender, RoutedEventArgs e)
         {
-            MessageBox.Show("Обновить фильтры");
+
         }
+
+
+
         #endregion
-
-
-
-
     }
 }

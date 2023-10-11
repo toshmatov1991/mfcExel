@@ -52,7 +52,8 @@
                   CanUserDeleteRows="False"
                   AutoGenerateColumns="False"
                   CanUserAddRows="True"
-                  CellEditEnding="dataGrid_CellEditEnding" Margin="0,44,0,52">
+                  CellEditEnding="dataGrid_CellEditEnding" 
+                  Margin="0,44,0,52">
             <DataGrid.Resources>
                 <Style TargetType="DataGridColumnHeader">
                     <Setter Property="ContentTemplate">
@@ -156,22 +157,20 @@
             </DataGrid.Columns>
 
             <!-- Отображение комментария при выделении строки -->
-            <!--
             <DataGrid.RowDetailsTemplate>
                 <DataTemplate>
-                    <StackPanel Orientation="Horizontal" Height="33" VerticalAlignment="Center">
-                        <TextBlock Text="      Комментарий:  "
-                                   VerticalAlignment="Center"/>
+                    <StackPanel Orientation="Horizontal" Height="20" VerticalAlignment="Center">
                         <TextBox Text="{Binding Path=Comment, UpdateSourceTrigger=PropertyChanged}"
                                  TextChanged="CommentUpdate" 
+                                 Background="LightGreen"
                                  VerticalContentAlignment="Center"
                                  FontWeight="DemiBold"
-                                 Width="250"
-                                 FontSize="14"
+                                 Width="300"
+                                 FontSize="12"
                                  Foreground="Black"/>
                     </StackPanel>
                 </DataTemplate>
-            </DataGrid.RowDetailsTemplate>-->
+            </DataGrid.RowDetailsTemplate>
         </DataGrid>
         <Button Content="Выгрузить в Excel"
                 Grid.Column="6"
@@ -183,7 +182,6 @@
                 Click="Button_Click"/>
         <Button Grid.Column="5" Background="Yellow" Content="Обновить таблицу" HorizontalAlignment="Left" Height="37" Margin="68,10,0,0" Grid.Row="11" VerticalAlignment="Top" RenderTransformOrigin="0.5,0.5" Click="Button_Click_1" Grid.ColumnSpan="2"/>
         <Button Grid.Column="5" Background="Yellow" Content="Обновить фильтры" HorizontalAlignment="Left" Height="37" Margin="68,6,0,0" Grid.Row="12" VerticalAlignment="Top" RenderTransformOrigin="0.5,0.5" Grid.ColumnSpan="2" Click="Button_Click_2"/>
-
         <!-- Фильтрация , это будет жестко)-->
         <!-- Главное чтоб листвиев 
         я мог создавать программно
@@ -194,7 +192,7 @@
         <!-- Фильтрация -->
 
 
-
+        
 
 
     </Grid>
