@@ -29,6 +29,8 @@ using System.Windows.Controls.Primitives;
 using System.ComponentModel;
 using System.Diagnostics;
 using DocumentFormat.OpenXml.InkML;
+using DocumentFormat.OpenXml.Office2016.Drawing.Charts;
+using DocumentFormat.OpenXml.Presentation;
 
 namespace exel_for_mfc
 {
@@ -789,7 +791,58 @@ namespace exel_for_mfc
 
         private void FilterClick(object sender, RoutedEventArgs e)
         {
-            MessageBox.Show("Фильтр");
+
+            MessageBox.Show(dataGrid.Columns.FirstOrDefault().Header.ToString());
+
+
+            ////Get Current Selected Column
+            //DataGridColumn column = dataGrid.CurrentColumn;
+
+            //DataGridColumnHeader columnHeader = GetColumnHeaderFromColumn(column);
+
+            //MessageBox.Show(columnHeader.Content.ToString());
         }
+
+        private DataGridColumnHeader GetColumnHeaderFromColumn(DataGridColumn column)
+        {
+            // dataGrid is the name of your DataGrid. In this case Name="dgBooks"
+            List<DataGridColumnHeader> columnHeaders = GetVisualChildCollection<DataGridColumnHeader>(dataGrid);
+            foreach (DataGridColumnHeader columnHeader in columnHeaders)
+            {
+                if (columnHeader.Column == column)
+                {
+                    return columnHeader;
+                }
+            }
+            return null;
+        }
+
+        public List<T> GetVisualChildCollection<T>(object parent) where T : Visual
+        {
+            List<T> visualCollection = new List<T>();
+            GetVisualChildCollection(parent as DependencyObject, visualCollection);
+            return visualCollection;
+        }
+
+        private void GetVisualChildCollection<T>(DependencyObject parent, List<T> visualCollection) where T : Visual
+        {
+            int count = VisualTreeHelper.GetChildrenCount(parent);
+            for (int i = 0; i < count; i++)
+            {
+                DependencyObject child = VisualTreeHelper.GetChild(parent, i);
+                if (child is T)
+                {
+                    visualCollection.Add(child as T);
+                }
+                else if (child != null)
+                {
+                    GetVisualChildCollection(child, visualCollection);
+                }
+            }
+        }
+
+
+
+
     }
 }

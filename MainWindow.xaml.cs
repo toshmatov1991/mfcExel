@@ -15,11 +15,11 @@ namespace exel_for_mfc
         {
             InitializeComponent();
             Start();
-            TableWindow taWindow = new();
-            taWindow.Show();
-          //AdminWindow tableWindow = new();
-          //tableWindow.Show();
-            Close();
+           // TableWindow taWindow = new();
+           // taWindow.Show();
+        // AdminWindow tableWindow = new();
+        // tableWindow.Show();
+          // Close();
         }
 
         private async void Button_Click(object sender, RoutedEventArgs e)
@@ -48,9 +48,9 @@ namespace exel_for_mfc
 
                 int temp = 0;
                 using ExDbContext db = new();
-                var GetUserLogPass = await db.SolutionTypes.Where(u => u.Id == 1).FirstOrDefaultAsync();
+                var GetUserLogPass = await db.SolutionTypes.Where(u => u.Id == 2).FirstOrDefaultAsync();
 
-                if (GetUserLogPass.Login == login_text.Text && GetUserLogPass.Passwords == MD5Hash(password_text.Password) && GetUserLogPass.Id == 1)
+                if (GetUserLogPass.Login == login_text.Text && GetUserLogPass.Passwords == MD5Hash(password_text.Password) && GetUserLogPass.Id == 2)
                 {
                     TableWindow table = new();
                     table.Show();
@@ -60,8 +60,8 @@ namespace exel_for_mfc
 
                 if (temp == 0)
                 {
-                    var GetAdminLogPass = await db.SolutionTypes.Where(u => u.Id == 2).FirstOrDefaultAsync();
-                    if (GetAdminLogPass.Login == login_text.Text && GetAdminLogPass.Passwords == MD5Hash(password_text.Password) && GetAdminLogPass.Id == 2)
+                    var GetAdminLogPass = await db.SolutionTypes.Where(u => u.Id == 1).FirstOrDefaultAsync();
+                    if (GetAdminLogPass.Login == login_text.Text && GetAdminLogPass.Passwords == MD5Hash(password_text.Password) && GetAdminLogPass.Id == 1)
                     {
                         AdminWindow admin = new();
                         admin.Show();
