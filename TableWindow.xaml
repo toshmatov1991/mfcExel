@@ -61,7 +61,7 @@
                             <DataTemplate>
                                 <StackPanel Orientation="Horizontal">
                                     <TextBlock Text="{Binding}" Margin="10 5"/>
-                                    <Button Background="AliceBlue" x:Name="btnFilter" Width="19" Click="FilterClick">[X]</Button>
+                                    <Button Background="AliceBlue" x:Name="btnFilter" Width="19">[X]</Button>
                                 </StackPanel>
                             </DataTemplate>
                         </Setter.Value>
@@ -180,8 +180,8 @@
                 Height="42"
                 Width="107"
                 Click="Button_Click"/>
-        <Button Grid.Column="5" Background="Yellow" Content="Обновить таблицу" HorizontalAlignment="Left" Height="37" Margin="68,10,0,0" Grid.Row="11" VerticalAlignment="Top" RenderTransformOrigin="0.5,0.5" Click="Button_Click_1" Grid.ColumnSpan="2"/>
-        <Button Grid.Column="5" Background="Yellow" Content="Обновить фильтры" HorizontalAlignment="Left" Height="37" Margin="68,6,0,0" Grid.Row="12" VerticalAlignment="Top" RenderTransformOrigin="0.5,0.5" Grid.ColumnSpan="2" Click="Button_Click_2"/>
+        <Button Grid.Column="5" Background="Yellow" Content="Обновить таблицу" HorizontalAlignment="Left" Height="37" Grid.Row="11" VerticalAlignment="Bottom" RenderTransformOrigin="0.5,0.5" Click="Button_Click_1" Grid.ColumnSpan="2"/>
+        <Button Grid.Column="5" Background="Yellow" Content="Обновить фильтры" HorizontalAlignment="Left" Height="37" Grid.Row="12" VerticalAlignment="Bottom" RenderTransformOrigin="0.5,0.5" Grid.ColumnSpan="2" Click="Button_Click_2"/>
         <!-- Фильтрация , это будет жестко)-->
         <!-- Главное чтоб листвиев 
         я мог создавать программно
