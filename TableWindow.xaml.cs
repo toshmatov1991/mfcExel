@@ -861,7 +861,7 @@ namespace exel_for_mfc
                     await Task.Run(() =>
                     {
                         //Надо еще убрать пробелы
-                        var filtered = MyList.Where(u => u.IdReg.ToString().Replace(" ", "").ToLower().Contains(SearchTable.Text.Replace(" ", "").ToLower()));
+                        var filtered = MyList.Where(u => u.IdReg.ToString().Replace(" ", "").ToLower() == SearchTable.Text.Replace(" ", "").ToLower());
 
                         Dispatcher.Invoke(() =>
                         {
