@@ -43,8 +43,16 @@
                  FontSize="14" 
                  Grid.Column="6"
                  x:Name="SearchTable"
-                 KeyUp="GoSearchToTable"
-                 Grid.ColumnSpan="2" Height="24"/>
+                 
+                 Grid.ColumnSpan="2" Height="24" Margin="0,0,103,0"/>
+        <Button Content="Искать" 
+                Grid.Column="7"
+                VerticalAlignment="Top"
+                HorizontalAlignment="Right"
+                Width="81" Margin="0,0,9,0"
+                Height="24"
+                Foreground="White"
+                Background="DarkSlateGray" Click="Button_Click_3"/>
         <DataGrid x:Name="dataGrid"
                   Grid.ColumnSpan="8"
                   Grid.RowSpan="12"
@@ -192,7 +200,7 @@
         <!-- Фильтрация -->
 
 
-        
+
 
 
     </Grid>

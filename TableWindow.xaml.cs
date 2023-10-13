@@ -359,73 +359,24 @@ namespace exel_for_mfc
             await db.Database.ExecuteSqlRawAsync("UPDATE Registry SET Comment = {0} WHERE Id = {1}", a, (dataGrid.SelectedItem as SClass)?.IdReg);
         }
 
-        //Поиск
-        private async void GoSearchToTable(object sender, KeyEventArgs e)
-        {
-            //SearchTable
-            await GoSerchNoPainHohuVTgu();
-        }
+        ////Поиск
+        //private async void GoSearchToTable(object sender, KeyEventArgs e)
+        //{
+        //    //SearchTable
+        //    await GoSerchNoPainHohuVTgu();
+        //}
         async Task GoSerchNoPainHohuVTgu()
         {
             await Task.Run(() =>
             {
-
-                var filtered = MyList.Where(u => $"{u.IdReg} {u.Family} {u.Name} {u.Lastname} {u.Snils}{u.Adress}{u.Sernumb}".ToLower().Contains(SearchTable.Text.ToLower()));
+                //Надо еще убрать пробелы
+                var filtered = MyList.Where(u => $"{u.IdReg}{u.Family}{u.Name}{u.Lastname}{u.Snils}{u.Adress}{u.Sernumb}".Replace(" ","").ToLower().Contains(SearchTable.Text.Replace(" ","").ToLower()));
 
                 Dispatcher.Invoke(() =>
                 {
-                   
-                                               //|| u.Snils.Contains(SearchTable.Text)
-                                               //|| u.Adress.Contains(SearchTable.Text)
-                                               //|| u.Sernumb.Contains(SearchTable.Text));
                     dataGrid.ItemsSource = filtered;
                 });
-
-
-
-
-
-                ////SearchTable
-                //using ExDbContext db = new();
-                //    MyList = (from reg in db.Registries
-                //              join appl in db.Applicants on reg.ApplicantFk equals appl.Id
-                //              select new SClass
-                //              {
-                //                  IdReg = reg.Id,
-                //                  Family = appl.Firstname,
-                //                  Name = appl.Middlename,
-                //                  Lastname = appl.Lastname,
-                //                  Snils = appl.Snils,
-                //                  Area = appl.AreaFk - 1,
-                //                  Local = appl.LocalityFk - 1,
-                //                  Adress = appl.Adress,
-                //                  Lgota = appl.PrivilegesFk - 1,
-                //                  Pay = reg.PayAmountFk - 1,
-                //                  Sernumb = reg.SerialAndNumberSert,
-                //                  DateGetSert = reg.DateGetSert,
-                //                  Solution = reg.SolutionFk - 1,
-                //                  DateAndNumbSolutionSert = reg.DateAndNumbSolutionSert,
-                //                  Comment = reg.Comment,
-                //                  Trek = reg.Trek,
-                //                  MailingDate = reg.MailingDate,
-                //                  IdApplicant = appl.Id
-                //              }).Where(u => u.Family.Contains(SearchTable.Text)
-                //                         || u.Name.Contains(SearchTable.Text)
-                //                         || u.Lastname.Contains(SearchTable.Text)
-                //                         || u.Snils.Contains(SearchTable.Text)
-                //                         || u.Adress.Contains(SearchTable.Text)
-                //                         || u.Sernumb.Contains(SearchTable.Text)).AsNoTracking().ToList();
-
-                //    if (MyList == null)
-                //        return;
-                //    else
-                //    {
-                //    Dispatcher.Invoke(() =>
-                //    {
-                //        dataGrid.ItemsSource = MyList;
-                //    });
             });
-
         }
         #endregion
 
@@ -804,5 +755,10 @@ namespace exel_for_mfc
 
 
         #endregion
+
+        private async void Button_Click_3(object sender, RoutedEventArgs e)
+        {
+            await GoSerchNoPainHohuVTgu();
+        }
     }
 }
