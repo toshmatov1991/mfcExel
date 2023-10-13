@@ -533,8 +533,8 @@ namespace exel_for_mfc
                 var GetId = await db.Privileges.AsNoTracking().Where(u => u.PrivilegesName == (sender as ComboBox).Text).FirstOrDefaultAsync();
                 if (GetId != null)
                     await db.Database.ExecuteSqlRawAsync("UPDATE Applicant SET Privileges_FK = {0} WHERE Id = {1}", GetId.Id, (dataGrid.SelectedItem as SClass)?.IdApplicant);
-                //else
-                //    MessageBox.Show("Произошла ошибка при обновлении данных\n Повторите попытку");
+                else
+                    MessageBox.Show("Произошла ошибка при обновлении данных\n Повторите попытку");
             }
             catch (Exception ex)
             {
@@ -552,7 +552,7 @@ namespace exel_for_mfc
             else
                 MessageBox.Show("Произошла ошибка при обновлении данных");
 
-            decimal ReturnChislo(string str)
+            static decimal ReturnChislo(string str)
             {
                 string temp = "";
                 for (int i = 0; i < str.Length; i++)
