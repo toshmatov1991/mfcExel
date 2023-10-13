@@ -31,6 +31,7 @@ using System.Diagnostics;
 using DocumentFormat.OpenXml.InkML;
 using DocumentFormat.OpenXml.Office2016.Drawing.Charts;
 using DocumentFormat.OpenXml.Presentation;
+using DocumentFormat.OpenXml.Office2010.Excel;
 
 namespace exel_for_mfc
 {
@@ -759,6 +760,14 @@ namespace exel_for_mfc
         private async void Button_Click_3(object sender, RoutedEventArgs e)
         {
             await GoSerchNoPainHohuVTgu();
+        }
+
+
+        //Событие срабатывает когда поле очищается, и возвращает весь список в таблицу
+        private void ClearSearc(object sender, KeyEventArgs e)
+        {
+            if(string.IsNullOrEmpty(SearchTable.Text) || string.IsNullOrWhiteSpace(SearchTable.Text)) 
+                        dataGrid.ItemsSource = MyList;
         }
     }
 }

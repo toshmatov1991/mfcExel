@@ -32,11 +32,32 @@
             <RowDefinition/>
             <RowDefinition/>
         </Grid.RowDefinitions>
-        <TextBlock Text=" Быстрый поиск"
+        <TextBlock Text="Фильтры поиска"
                    FontStyle="Italic"
-                   Grid.Column="5"
+                   Grid.Column="3"
+                   Grid.ColumnSpan="2"
+                   HorizontalAlignment="Left"
                    VerticalAlignment="Top"
-                   FontSize="18"/>
+                   FontSize="18" Margin="144,0,0,0"/>
+        <ComboBox  Background="AliceBlue"
+                   Grid.Column="4"
+                   VerticalAlignment="Top"
+                   FontSize="15" 
+                   Grid.ColumnSpan="2" 
+                   Height="24" 
+                   Margin="135,0,5,0"
+                   SelectedIndex="0"
+                   HorizontalContentAlignment="Left"
+                   VerticalContentAlignment="Center">
+            <TextBlock Text="По всем полям"/>
+            <TextBlock Text="Фамилия"/>
+            <TextBlock Text="Имя"/>
+            <TextBlock Text="Отчество"/>
+            <TextBlock Text="ФИО"/>
+            <TextBlock Text="Снилс"/>
+            <TextBlock Text="Адрес"/>
+            <TextBlock Text="Серия и номер сертификата"/>
+        </ComboBox>
         <TextBox FontStyle="Italic"
                  VerticalAlignment="Top"
                  VerticalContentAlignment="Center"
@@ -44,7 +65,7 @@
                  Grid.Column="6"
                  x:Name="SearchTable"
                  
-                 Grid.ColumnSpan="2" Height="24" Margin="0,0,103,0"/>
+                 Grid.ColumnSpan="2" Height="24" Margin="0,0,103,0" KeyUp="ClearSearc"/>
         <Button Content="Искать" 
                 Grid.Column="7"
                 VerticalAlignment="Top"
