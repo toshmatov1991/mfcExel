@@ -759,7 +759,121 @@ namespace exel_for_mfc
 
         private async void Button_Click_3(object sender, RoutedEventArgs e)
         {
-            await GoSerchNoPainHohuVTgu();
+            switch (filterSearch.Text)
+            {
+                case "По всем полям":
+                    //По всем полям
+                    await GoSerchNoPainHohuVTgu();
+                break;
+
+                case "Фамилия":
+                    await Task.Run(() =>
+                    {
+                        //Надо еще убрать пробелы
+                        var filtered = MyList.Where(u => u.Family.Replace(" ", "").ToLower().Contains(SearchTable.Text.Replace(" ", "").ToLower()));
+
+                        Dispatcher.Invoke(() =>
+                        {
+                            dataGrid.ItemsSource = filtered;
+                        });
+                    });
+                    break;
+
+                case "Имя":
+                    await Task.Run(() =>
+                    {
+                        //Надо еще убрать пробелы
+                        var filtered = MyList.Where(u => u.Name.Replace(" ", "").ToLower().Contains(SearchTable.Text.Replace(" ", "").ToLower()));
+
+                        Dispatcher.Invoke(() =>
+                        {
+                            dataGrid.ItemsSource = filtered;
+                        });
+                    });
+                    break;
+
+                case "Отчество":
+                    await Task.Run(() =>
+                    {
+                        //Надо еще убрать пробелы
+                        var filtered = MyList.Where(u => u.Lastname.Replace(" ", "").ToLower().Contains(SearchTable.Text.Replace(" ", "").ToLower()));
+
+                        Dispatcher.Invoke(() =>
+                        {
+                            dataGrid.ItemsSource = filtered;
+                        });
+                    });
+                    break;
+
+                case "ФИО":
+                    await Task.Run(() =>
+                    {
+                        //Надо еще убрать пробелы
+                        var filtered = MyList.Where(u => $"{u.Family}{u.Name}{u.Lastname}".Replace(" ", "").ToLower().Contains(SearchTable.Text.Replace(" ", "").ToLower()));
+
+                        Dispatcher.Invoke(() =>
+                        {
+                            dataGrid.ItemsSource = filtered;
+                        });
+                    });
+                    break;
+
+                case "Снилс":
+                    await Task.Run(() =>
+                    {
+                        //Надо еще убрать пробелы
+                        var filtered = MyList.Where(u => u.Snils.Replace(" ", "").ToLower().Contains(SearchTable.Text.Replace(" ", "").ToLower()));
+
+                        Dispatcher.Invoke(() =>
+                        {
+                            dataGrid.ItemsSource = filtered;
+                        });
+                    });
+                    break;
+
+                case "Адрес":
+                    await Task.Run(() =>
+                    {
+                        //Надо еще убрать пробелы
+                        var filtered = MyList.Where(u => u.Adress.Replace(" ", "").ToLower().Contains(SearchTable.Text.Replace(" ", "").ToLower()));
+
+                        Dispatcher.Invoke(() =>
+                        {
+                            dataGrid.ItemsSource = filtered;
+                        });
+                    });
+                    break;
+
+                case "Серия и номер сертификата":
+                    await Task.Run(() =>
+                    {
+                        //Надо еще убрать пробелы
+                        var filtered = MyList.Where(u => u.Sernumb.Replace(" ", "").ToLower().Contains(SearchTable.Text.Replace(" ", "").ToLower()));
+
+                        Dispatcher.Invoke(() =>
+                        {
+                            dataGrid.ItemsSource = filtered;
+                        });
+                    });
+                    break;
+
+                case "По ID":
+                    await Task.Run(() =>
+                    {
+                        //Надо еще убрать пробелы
+                        var filtered = MyList.Where(u => u.IdReg.ToString().Replace(" ", "").ToLower().Contains(SearchTable.Text.Replace(" ", "").ToLower()));
+
+                        Dispatcher.Invoke(() =>
+                        {
+                            dataGrid.ItemsSource = filtered;
+                        });
+                    });
+                    break;
+
+                default:
+                    await GoSerchNoPainHohuVTgu();
+                    break;
+            }
         }
 
 

@@ -40,6 +40,7 @@
                    VerticalAlignment="Top"
                    FontSize="18" Margin="144,0,0,0"/>
         <ComboBox  Background="AliceBlue"
+                   x:Name="filterSearch"
                    Grid.Column="4"
                    VerticalAlignment="Top"
                    FontSize="15" 
@@ -50,6 +51,7 @@
                    HorizontalContentAlignment="Left"
                    VerticalContentAlignment="Center">
             <TextBlock Text="По всем полям"/>
+            <TextBlock Text="По ID"/>
             <TextBlock Text="Фамилия"/>
             <TextBlock Text="Имя"/>
             <TextBlock Text="Отчество"/>
@@ -64,7 +66,6 @@
                  FontSize="14" 
                  Grid.Column="6"
                  x:Name="SearchTable"
-                 
                  Grid.ColumnSpan="2" Height="24" Margin="0,0,103,0" KeyUp="ClearSearc"/>
         <Button Content="Искать" 
                 Grid.Column="7"
