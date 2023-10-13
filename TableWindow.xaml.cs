@@ -32,6 +32,7 @@ using DocumentFormat.OpenXml.InkML;
 using DocumentFormat.OpenXml.Office2016.Drawing.Charts;
 using DocumentFormat.OpenXml.Presentation;
 using DocumentFormat.OpenXml.Office2010.Excel;
+using DocumentFormat.OpenXml.Office2016.Drawing.ChartDrawing;
 
 namespace exel_for_mfc
 {
@@ -542,12 +543,28 @@ namespace exel_for_mfc
         }
         private async void PayComboEvent(object sender, EventArgs e)
         {
+            //Надо еще проверить является ли это существующей строкой или это новое
+            decimal dec = ReturnChislo((sender as ComboBox).Text.Replace(" ", ""));
             using ExDbContext db = new();
-            var GetId = await db.PayAmounts.AsNoTracking().Where(u => u.Pay == Convert.ToDecimal((sender as ComboBox).Text)).FirstOrDefaultAsync();
+            var GetId = await db.PayAmounts.AsNoTracking().Where(u => u.Pay == dec).FirstOrDefaultAsync();
             if (GetId != null)
                 await db.Database.ExecuteSqlRawAsync("UPDATE Registry SET PayAmount_FK = {0} WHERE Id = {1}", GetId.Id, (dataGrid.SelectedItem as SClass)?.IdReg);
             else
                 MessageBox.Show("Произошла ошибка при обновлении данных");
+
+            decimal ReturnChislo(string str)
+            {
+                string temp = "";
+                for (int i = 0; i < str.Length; i++)
+                {
+                    if (char.IsDigit(str[i]))
+                        temp += str[i];
+                }
+                return Convert.ToDecimal(temp);
+            }
+
+
+
         }
         private async void SolutionComboEvent(object sender, EventArgs e)
         {

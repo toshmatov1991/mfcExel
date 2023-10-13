@@ -172,6 +172,7 @@
                 <DataGridTextColumn Binding="{Binding Comment, UpdateSourceTrigger=PropertyChanged}" Header="" Visibility="Hidden"/>
             </DataGrid.Columns>
 
+            
             <!-- Отображение комментария при выделении строки -->
             <DataGrid.RowDetailsTemplate>
                 <DataTemplate>
@@ -198,13 +199,9 @@
                 Click="Button_Click"/>
         <Button Grid.Column="5" Background="Yellow" Content="Обновить таблицу" HorizontalAlignment="Left" Height="37" Grid.Row="11" VerticalAlignment="Bottom" RenderTransformOrigin="0.5,0.5" Click="Button_Click_1" Grid.ColumnSpan="2"/>
         <Button Grid.Column="5" Background="Yellow" Content="Обновить фильтры" HorizontalAlignment="Left" Height="37" Grid.Row="12" VerticalAlignment="Bottom" RenderTransformOrigin="0.5,0.5" Grid.ColumnSpan="2" Click="Button_Click_2"/>
+      
         <!-- Фильтрация , это будет жестко)-->
-        <!-- Главное чтоб листвиев 
-        я мог создавать программно
-        Чтоб он создавался в результате запроса -->
-
-
-
+        
         <!-- Фильтрация -->
 
 
