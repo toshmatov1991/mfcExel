@@ -238,6 +238,20 @@
                     </DataGridTemplateColumn>
                 </DataGrid.Columns>
             </DataGrid>
+            
+            <!-- Кнопка применить фильтр к таблице -->
+            <Button Content="Применить фильтр"
+                Grid.Column="6"
+                Grid.Row="12"
+                HorizontalAlignment="Center"
+                Background="Bisque"
+                Height="42"
+                Width="125" Click="Button_Click_4"/>
+            
+            
+            
+            
+            
         </Grid>
     </Border>
 </Window>

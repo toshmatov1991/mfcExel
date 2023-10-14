@@ -924,11 +924,9 @@ namespace exel_for_mfc
         #endregion
 
         #region Фильтрация(в процессе)
-        List<AreaFilter>? ts = new();
+        List<AreaFilter>? AreaFilterList = new();
         public void FilterStart()
         {
-            //При старте приложения происходит обнуление всех полей Булева и заполнение DataGrid фильтров
-
             using (ExDbContext db = new())
             {
                
@@ -936,9 +934,9 @@ namespace exel_for_mfc
                 var s = db.Areas.FromSqlRaw("SELECT * FROM Area").ToList();
                 foreach (var item in s)
                 {
-                    ts.Add(new AreaFilter(item.Id, item.AreaName, 0));
+                    AreaFilterList.Add(new AreaFilter(item.Id, item.AreaName, 0));
                 }
-                areaFilter.ItemsSource = ts;
+                areaFilter.ItemsSource = AreaFilterList;
             };
 
             
@@ -949,18 +947,14 @@ namespace exel_for_mfc
         private void AreaCheck(object sender, RoutedEventArgs e)
         {
 
-            ts.FindAll(s => s.AreaName == (areaFilter.SelectedItem as Area)?.AreaName).ForEach(x => x.AreaBool = 1);
-            areaFilter.ItemsSource = ts;
-            foreach (var item in ts)
-            {
-                MessageBox.Show(item.Id + " " + item.AreaName + "  " + item.AreaBool);
-            }
+            AreaFilterList.FindAll(s => s.AreaName == (areaFilter.SelectedItem as Area)?.AreaName).ForEach(x => x.AreaBool = 1);
+           
         }
 
+        //Убрал галочку
         private void AreaUnchecked(object sender, RoutedEventArgs e)
         {
-            //var f = (areaFilter.SelectedItem as Area)?.AreaName;
-            //MessageBox.Show("Снял галочку  " + f);
+            AreaFilterList.FindAll(s => s.AreaName == (areaFilter.SelectedItem as Area)?.AreaName).ForEach(x => x.AreaBool = 0);
         }
 
 
@@ -971,12 +965,71 @@ namespace exel_for_mfc
 
         }
 
+        //Применить фильтр
+        private async void Button_Click_4(object sender, RoutedEventArgs e)
+        {
+            await GoStartFilter(AreaFilterList);
+        }
+
+        //Метод для выборки по фильтрам
+        async Task GoStartFilter(List<AreaFilter> AreaF)
+        {
+            var Filter = AreaF.Where(u => u.AreaBool != 0).ToList();
+            List<int> AreaInt = new();
+            foreach (var item in Filter)
+            {
+                AreaInt.Add(item.Id - 1);
+            }
+
+
+            await Task.Run(() =>
+            {
+
+                using (ExDbContext db = new())
+                {
+                    MyList = (from reg in db.Registries
+                              join appl in db.Applicants on reg.ApplicantFk equals appl.Id
+                              select new SClass
+                              {
+                                  IdReg = reg.Id,
+                                  Family = appl.Firstname,
+                                  Name = appl.Middlename,
+                                  Lastname = appl.Lastname,
+                                  Snils = appl.Snils,
+                                  Area = appl.AreaFk - 1,
+                                  Local = appl.LocalityFk - 1,
+                                  Adress = appl.Adress,
+                                  Lgota = appl.PrivilegesFk - 1,
+                                  Pay = reg.PayAmountFk - 1,
+                                  Sernumb = reg.SerialAndNumberSert,
+                                  DateGetSert = reg.DateGetSert,
+                                  Solution = reg.SolutionFk - 1,
+                                  DateAndNumbSolutionSert = reg.DateAndNumbSolutionSert,
+                                  Comment = reg.Comment,
+                                  Trek = reg.Trek,
+                                  MailingDate = reg.MailingDate,
+                                  IdApplicant = appl.Id
+                              }).Where(a => AreaInt.Contains((int)a.Area)).AsNoTracking().ToList();
+
+
+                    Dispatcher.Invoke(() =>
+                    {
+                        dataGrid.ItemsSource = MyList;
+                    });
+
+                };
+
+            });
+        }
+
+
+
 
         #endregion
 
 
 
-     
+
 
 
         #region Обработка возможных исключений и другие мелочи
@@ -997,6 +1050,7 @@ namespace exel_for_mfc
         {
             await GoStart();
         }
+
 
 
 
