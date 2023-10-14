@@ -347,18 +347,30 @@ namespace exel_for_mfc
             }
         }
 
-        //Обновить коммент
+        //Обновить коммент(Нормально)
         private async void CommentUpdate(object sender, TextChangedEventArgs e)
         {
-            string a = "";
-            if (e.Source.ToString().Length == 31)
-                a = null;
-
+            if ((dataGrid.SelectedItem as SClass)?.IdReg == 0 || (dataGrid.SelectedItem as SClass)?.IdReg == null)
+                return;
             else
-                a = e.OriginalSource.ToString().Substring(33);
+            {
+                try
+                {
+                    string a = "";
+                    if (e.Source.ToString().Length == 31)
+                        a = null;
 
-            using ExDbContext db = new();
-            await db.Database.ExecuteSqlRawAsync("UPDATE Registry SET Comment = {0} WHERE Id = {1}", a, (dataGrid.SelectedItem as SClass)?.IdReg);
+                    else
+                        a = e.OriginalSource.ToString().Substring(33);
+
+                    using ExDbContext db = new();
+                    await db.Database.ExecuteSqlRawAsync("UPDATE Registry SET Comment = {0} WHERE Id = {1}", a, (dataGrid.SelectedItem as SClass)?.IdReg);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message, "Произошла ошибка при обновлении комментария");
+                }
+            }  
         }
 
         //Поиск
@@ -375,7 +387,7 @@ namespace exel_for_mfc
                     await Task.Run(() =>
                     {
                         //Надо еще убрать пробелы
-                        var filtered = MyList.Where(u => u.Family.Replace(" ", "").ToLower().Contains(SearchTable.Text.Replace(" ", "").ToLower()));
+                        var filtered = MyList.Where(u => u.Family != null && u.Family.Replace(" ", "").ToLower().Contains(SearchTable.Text.Replace(" ", "").ToLower()));
 
                         Dispatcher.Invoke(() =>
                         {
@@ -388,7 +400,7 @@ namespace exel_for_mfc
                     await Task.Run(() =>
                     {
                         //Надо еще убрать пробелы
-                        var filtered = MyList.Where(u => u.Name.Replace(" ", "").ToLower().Contains(SearchTable.Text.Replace(" ", "").ToLower()));
+                        var filtered = MyList.Where(u => u.Name != null && u.Name.Replace(" ", "").ToLower().Contains(SearchTable.Text.Replace(" ", "").ToLower()));
 
                         Dispatcher.Invoke(() =>
                         {
@@ -401,7 +413,7 @@ namespace exel_for_mfc
                     await Task.Run(() =>
                     {
                         //Надо еще убрать пробелы
-                        var filtered = MyList.Where(u => u.Lastname.Replace(" ", "").ToLower().Contains(SearchTable.Text.Replace(" ", "").ToLower()));
+                        var filtered = MyList.Where(u => u.Lastname != null && u.Lastname.Replace(" ", "").ToLower().Contains(SearchTable.Text.Replace(" ", "").ToLower()));
 
                         Dispatcher.Invoke(() =>
                         {
@@ -416,6 +428,7 @@ namespace exel_for_mfc
                         //Надо еще убрать пробелы
                         var filtered = MyList.Where(u => $"{u.Family}{u.Name}{u.Lastname}".Replace(" ", "").ToLower().Contains(SearchTable.Text.Replace(" ", "").ToLower()));
 
+
                         Dispatcher.Invoke(() =>
                         {
                             dataGrid.ItemsSource = filtered;
@@ -427,12 +440,17 @@ namespace exel_for_mfc
                     await Task.Run(() =>
                     {
                         //Надо еще убрать пробелы
-                        var filtered = MyList.Where(u => u.Snils.Replace(" ", "").ToLower().Contains(SearchTable.Text.Replace(" ", "").ToLower()));
-
-                        Dispatcher.Invoke(() =>
+                        var filtered = MyList.Where(u => u.Snils != null  
+                                                        && u.Snils.Replace(" ", "").Replace("-", "").Contains(SearchTable.Text.Replace(" ", "").Replace("-", "")));
+                        if (filtered == null)
+                            return;
+                        else
                         {
-                            dataGrid.ItemsSource = filtered;
-                        });
+                            Dispatcher.Invoke(() =>
+                            {
+                                dataGrid.ItemsSource = filtered;
+                            });
+                        }
                     });
                     break;
 
@@ -440,10 +458,10 @@ namespace exel_for_mfc
                     await Task.Run(() =>
                     {
                         //Надо еще убрать пробелы
-                        var filtered = MyList.Where(u => u.Adress.Replace(" ", "").ToLower().Contains(SearchTable.Text.Replace(" ", "").ToLower()));
-
                         Dispatcher.Invoke(() =>
                         {
+                            var filtered = MyList.Where(u => u.Adress != null 
+                                                          && u.Adress.Replace(" ", "").ToLower().Contains(SearchTable.Text.Replace(" ", "").ToLower()));
                             dataGrid.ItemsSource = filtered;
                         });
                     });
@@ -453,7 +471,7 @@ namespace exel_for_mfc
                     await Task.Run(() =>
                     {
                         //Надо еще убрать пробелы
-                        var filtered = MyList.Where(u => u.Sernumb.Replace(" ", "").ToLower().Contains(SearchTable.Text.Replace(" ", "").ToLower()));
+                        var filtered = MyList.Where(u => u.Sernumb != null && u.Sernumb.Replace(" ", "").ToLower().Contains(SearchTable.Text.Replace(" ", "").ToLower()));
 
                         Dispatcher.Invoke(() =>
                         {
@@ -466,7 +484,7 @@ namespace exel_for_mfc
                     await Task.Run(() =>
                     {
                         //Надо еще убрать пробелы
-                        var filtered = MyList.Where(u => u.IdReg.ToString().Replace(" ", "") == SearchTable.Text.Replace(" ", ""));
+                        var filtered = MyList.Where(u => u.IdReg.ToString() != null && u.IdReg.ToString().Replace(" ", "") == SearchTable.Text.Replace(" ", ""));
 
                         Dispatcher.Invoke(() =>
                         {
@@ -481,13 +499,14 @@ namespace exel_for_mfc
             }
         }
 
-        //Событие срабатывает когда поле очищается, и возвращает весь список в таблицу
+        //Событие срабатывает когда поле очищается, и возвращает весь список в таблицу(нормально)
         private void ClearSearc(object sender, KeyEventArgs e)
         {
             if (string.IsNullOrEmpty(SearchTable.Text) || string.IsNullOrWhiteSpace(SearchTable.Text))
                 dataGrid.ItemsSource = MyList;
         }
 
+        //Задача поиска(нормально)
         async Task GoSerchNoPainHohuVTgu()
         {
             await Task.Run(() =>
@@ -503,113 +522,140 @@ namespace exel_for_mfc
         }
         #endregion
 
-        #region События изменения значений ComboBox
+        #region События изменения значений ComboBox(Решено)
         private async void AreaComboEvent(object sender, EventArgs e)
         {
-            try
+
+            if ((dataGrid.SelectedItem as SClass)?.IdReg == 0 || (dataGrid.SelectedItem as SClass)?.IdReg == null)
+                return;
+            else
             {
-                //Меняем район Заявителю
-                using ExDbContext db = new();
-                var GetId = await db.Areas.AsNoTracking().Where(u => u.AreaName == (sender as ComboBox).Text).FirstOrDefaultAsync();
-                if (GetId != null)
-                    await db.Database.ExecuteSqlRawAsync("UPDATE Applicant SET Area_FK = {0} WHERE Id = {1}", GetId.Id, (dataGrid.SelectedItem as SClass)?.IdApplicant);
-                else
-                    MessageBox.Show("Произошла ошибка при обновлении данных");
+                try
+                {
+                    //Меняем район Заявителю
+                    using ExDbContext db = new();
+                    var GetId = await db.Areas.AsNoTracking().Where(u => u.AreaName == (sender as ComboBox).Text).FirstOrDefaultAsync();
+                    if (GetId != null)
+                        await db.Database.ExecuteSqlRawAsync("UPDATE Applicant SET Area_FK = {0} WHERE Id = {1}", GetId.Id, (dataGrid.SelectedItem as SClass)?.IdApplicant);
+                    else
+                        MessageBox.Show("Произошла ошибка при обновлении данных");
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Произошла ошибка, повторите попытку", ex.Message);
+                }
             }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Произошла ошибка, повторите попытку", ex.Message);
-            }
-          
         }
+
         private async void LocalComboEvent(object sender, EventArgs e)
         {
-            try
+
+            if ((dataGrid.SelectedItem as SClass)?.IdReg == 0 || (dataGrid.SelectedItem as SClass)?.IdReg == null)
+                return;
+            else
             {
-                //Меняем Населенный пункт Заявителю
-                using ExDbContext db = new();
-                var GetId = await db.Localities.AsNoTracking().Where(u => u.LocalName == (sender as ComboBox).Text).FirstOrDefaultAsync();
-                if (GetId != null)
-                    await db.Database.ExecuteSqlRawAsync("UPDATE Applicant SET Locality_FK = {0} WHERE Id = {1}", GetId.Id, (dataGrid.SelectedItem as SClass)?.IdApplicant);
-                else
-                    MessageBox.Show("Произошла ошибка при обновлении данных");
+                try
+                {
+                    //Меняем Населенный пункт Заявителю
+                    using ExDbContext db = new();
+                    var GetId = await db.Localities.AsNoTracking().Where(u => u.LocalName == (sender as ComboBox).Text).FirstOrDefaultAsync();
+                    if (GetId != null)
+                        await db.Database.ExecuteSqlRawAsync("UPDATE Applicant SET Locality_FK = {0} WHERE Id = {1}", GetId.Id, (dataGrid.SelectedItem as SClass)?.IdApplicant);
+                    else
+                        MessageBox.Show("Произошла ошибка при обновлении данных");
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Произошла ошибка, повторите попытку", ex.Message);
+                }
             }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Произошла ошибка, повторите попытку" ,ex.Message);
-            }
-           
         }
         private async void PrivilegesComboEvent(object sender, EventArgs e)
         {
-            try
+
+            if ((dataGrid.SelectedItem as SClass)?.IdReg == 0 || (dataGrid.SelectedItem as SClass)?.IdReg == null)
+                return;
+            else
             {
-                await Task.Delay(500);
-                using ExDbContext db = new();
-                var GetId = await db.Privileges.AsNoTracking().Where(u => u.PrivilegesName == (sender as ComboBox).Text).FirstOrDefaultAsync();
-                if (GetId != null)
-                    await db.Database.ExecuteSqlRawAsync("UPDATE Applicant SET Privileges_FK = {0} WHERE Id = {1}", GetId.Id, (dataGrid.SelectedItem as SClass)?.IdApplicant);
-                else
-                    MessageBox.Show("Произошла ошибка при обновлении данных\n Повторите попытку");
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Произошла ошибка, повторите попытку", ex.Message);
+                try
+                {
+                    await Task.Delay(350);
+                    using ExDbContext db = new();
+                    var GetId = await db.Privileges.AsNoTracking().Where(u => u.PrivilegesName == (sender as ComboBox).Text).FirstOrDefaultAsync();
+                    if (GetId != null)
+                        await db.Database.ExecuteSqlRawAsync("UPDATE Applicant SET Privileges_FK = {0} WHERE Id = {1}", GetId.Id, (dataGrid.SelectedItem as SClass)?.IdApplicant);
+                    else
+                        MessageBox.Show("Произошла ошибка при обновлении данных\n Повторите попытку");
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Произошла ошибка, повторите попытку", ex.Message);
+                }
             }
         }
         private async void PayComboEvent(object sender, EventArgs e)
         {
-            try
-            {
-                //Надо еще проверить является ли это существующей строкой или это новое
-                decimal dec = ReturnChislo((sender as ComboBox).Text.Replace(" ", ""));
-                using ExDbContext db = new();
-                var GetId = await db.PayAmounts.AsNoTracking().Where(u => u.Pay == dec).FirstOrDefaultAsync();
-                if (GetId != null)
-                    await db.Database.ExecuteSqlRawAsync("UPDATE Registry SET PayAmount_FK = {0} WHERE Id = {1}", GetId.Id, (dataGrid.SelectedItem as SClass)?.IdReg);
-                else
-                    MessageBox.Show("Произошла ошибка при обновлении данных");
 
-                static decimal ReturnChislo(string str)
+            if ((dataGrid.SelectedItem as SClass)?.IdReg == 0 || (dataGrid.SelectedItem as SClass)?.IdReg == null)
+                return;
+            else
+            {
+                try
                 {
-                    string temp = "";
-                    for (int i = 0; i < str.Length; i++)
+                    //Надо еще проверить является ли это существующей строкой или это новое
+                    decimal dec = ReturnChislo((sender as ComboBox).Text.Replace(" ", ""));
+                    using ExDbContext db = new();
+                    var GetId = await db.PayAmounts.AsNoTracking().Where(u => u.Pay == dec).FirstOrDefaultAsync();
+                    if (GetId != null)
+                        await db.Database.ExecuteSqlRawAsync("UPDATE Registry SET PayAmount_FK = {0} WHERE Id = {1}", GetId.Id, (dataGrid.SelectedItem as SClass)?.IdReg);
+                    else
+                        MessageBox.Show("Произошла ошибка при обновлении данных");
+
+                    static decimal ReturnChislo(string str)
                     {
-                        if (char.IsDigit(str[i]))
-                            temp += str[i];
+                        string temp = "";
+                        for (int i = 0; i < str.Length; i++)
+                        {
+                            if (char.IsDigit(str[i]))
+                                temp += str[i];
+                        }
+                        return Convert.ToDecimal(temp);
                     }
-                    return Convert.ToDecimal(temp);
+
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Произошла ошибка, повторите попытку", ex.Message);
                 }
 
             }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Произошла ошибка, повторите попытку", ex.Message);
-            }
-           
-
 
         }
         private async void SolutionComboEvent(object sender, EventArgs e)
         {
-            try
+
+            if ((dataGrid.SelectedItem as SClass)?.IdReg == 0 || (dataGrid.SelectedItem as SClass)?.IdReg == null)
+                return;
+            else
             {
-                using ExDbContext db = new();
-                var GetId = await db.SolutionTypes.AsNoTracking().Where(u => u.SolutionName == (sender as ComboBox).Text).FirstOrDefaultAsync();
-                if (GetId != null)
-                    await db.Database.ExecuteSqlRawAsync("UPDATE Registry SET Solution_FK = {0} WHERE Id = {1}", GetId.Id, (dataGrid.SelectedItem as SClass)?.IdReg);
-                else
-                    MessageBox.Show("Произошла ошибка при обновлении данных");
+                try
+                {
+                    using ExDbContext db = new();
+                    var GetId = await db.SolutionTypes.AsNoTracking().Where(u => u.SolutionName == (sender as ComboBox).Text).FirstOrDefaultAsync();
+                    if (GetId != null)
+                        await db.Database.ExecuteSqlRawAsync("UPDATE Registry SET Solution_FK = {0} WHERE Id = {1}", GetId.Id, (dataGrid.SelectedItem as SClass)?.IdReg);
+                    else
+                        MessageBox.Show("Произошла ошибка при обновлении данных");
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Произошла ошибка, повторите попытку", ex.Message);
+                }
             }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Произошла ошибка, повторите попытку", ex.Message);
-            }
-           
         }
         #endregion
 
-        #region Выгрузка в Excel
+        #region Выгрузка в Excel(Решено)
         //Сохранить таблицу в Excel
         static async Task SaveDataInExel()
         {
@@ -617,7 +663,7 @@ namespace exel_for_mfc
             {
                 await Task.Run(async () =>
                 {
-                    SaveFileDialog dialog = new SaveFileDialog();
+                    SaveFileDialog dialog = new();
                     dialog.Filter = "Execl files (*.xlsx)|*.xlsx";
 
                     if (dialog.ShowDialog() == true)
@@ -626,219 +672,217 @@ namespace exel_for_mfc
                         // Datatable is most easy way to deal with complex datatypes for easy reading and formatting. 
                         DataTable table = (DataTable)JsonConvert.DeserializeObject(JsonConvert.SerializeObject(MyList), typeof(DataTable));
 
-                        using (SpreadsheetDocument document = SpreadsheetDocument.Create(dialog.FileName, SpreadsheetDocumentType.Workbook))
+                        using SpreadsheetDocument document = SpreadsheetDocument.Create(dialog.FileName, SpreadsheetDocumentType.Workbook);
+                        WorkbookPart workbookPart = document.AddWorkbookPart();
+                        workbookPart.Workbook = new Workbook();
+
+                        WorksheetPart worksheetPart = workbookPart.AddNewPart<WorksheetPart>();
+
+                        var sheetData = new SheetData();
+
+                        worksheetPart.Worksheet = new Worksheet(sheetData);
+
+                        // Create custom widths for columns - Здесь задаем ширину колонок
+                        Columns lstColumns = worksheetPart.Worksheet.GetFirstChild<Columns>();
+                        bool needToInsertColumns = false;
+                        if (lstColumns == null)
                         {
-                            WorkbookPart workbookPart = document.AddWorkbookPart();
-                            workbookPart.Workbook = new Workbook();
+                            lstColumns = new Columns();
+                            needToInsertColumns = true;
+                        }
+                        // Min = 1, Max = 1 ==> Apply this to column 1 (A)
+                        // Min = 2, Max = 2 ==> Apply this to column 2 (B)
+                        // Width = 25 ==> Set the width to 25
+                        // CustomWidth = true ==> Tell Excel to use the custom width
+                        lstColumns.Append(new Column() { Min = 1, Max = 1, Width = 7, CustomWidth = true });  // id
+                        lstColumns.Append(new Column() { Min = 2, Max = 2, Width = 20, CustomWidth = true }); // f
+                        lstColumns.Append(new Column() { Min = 3, Max = 3, Width = 20, CustomWidth = true }); // n
+                        lstColumns.Append(new Column() { Min = 4, Max = 4, Width = 20, CustomWidth = true }); // l
+                        lstColumns.Append(new Column() { Min = 5, Max = 5, Width = 15, CustomWidth = true }); // snils
+                        lstColumns.Append(new Column() { Min = 6, Max = 6, Width = 25, CustomWidth = true }); // район
+                        lstColumns.Append(new Column() { Min = 7, Max = 7, Width = 25, CustomWidth = true }); // населенный
+                        lstColumns.Append(new Column() { Min = 8, Max = 8, Width = 30, CustomWidth = true }); // адрес
+                        lstColumns.Append(new Column() { Min = 9, Max = 9, Width = 35, CustomWidth = true }); // льгота
+                        lstColumns.Append(new Column() { Min = 10, Max = 10, Width = 18, CustomWidth = true }); // размер выплаты
+                        lstColumns.Append(new Column() { Min = 11, Max = 11, Width = 30, CustomWidth = true }); // серия и номер серта
+                        lstColumns.Append(new Column() { Min = 12, Max = 12, Width = 20, CustomWidth = true }); // дата выдачи серта
+                        lstColumns.Append(new Column() { Min = 13, Max = 13, Width = 15, CustomWidth = true }); // решение
+                        lstColumns.Append(new Column() { Min = 14, Max = 14, Width = 25, CustomWidth = true }); // дата и номер решения
+                        lstColumns.Append(new Column() { Min = 15, Max = 15, Width = 25, CustomWidth = true }); // трек
+                        lstColumns.Append(new Column() { Min = 16, Max = 16, Width = 25, CustomWidth = true }); // дата отправки почтой
+                        lstColumns.Append(new Column() { Min = 17, Max = 17, Width = 15, CustomWidth = true }); // дата отправки почтой
+                                                                                                                // Only insert the columns if we had to create a new columns element
+                        if (needToInsertColumns)
+                            worksheetPart.Worksheet.InsertAt(lstColumns, 0);
 
-                            WorksheetPart worksheetPart = workbookPart.AddNewPart<WorksheetPart>();
 
-                            var sheetData = new SheetData();
 
-                            worksheetPart.Worksheet = new Worksheet(sheetData);
 
-                            // Create custom widths for columns - Здесь задаем ширину колонок
-                            Columns lstColumns = worksheetPart.Worksheet.GetFirstChild<Columns>();
-                            bool needToInsertColumns = false;
-                            if (lstColumns == null)
+                        Sheets sheets = workbookPart.Workbook.AppendChild(new Sheets());
+                        Sheet sheet = new() { Id = workbookPart.GetIdOfPart(worksheetPart), SheetId = 1, Name = "Sheet1" };
+
+                        sheets.Append(sheet);
+
+                        Row headerRow = new();
+
+                        //Здесь постройка и название колонок
+                        List<string> columns = new();
+                        foreach (DataColumn column in table.Columns)
+                        {
+                            columns.Add(column.ColumnName);
+                            Cell cell = new()
                             {
-                                lstColumns = new Columns();
-                                needToInsertColumns = true;
-                            }
-                            // Min = 1, Max = 1 ==> Apply this to column 1 (A)
-                            // Min = 2, Max = 2 ==> Apply this to column 2 (B)
-                            // Width = 25 ==> Set the width to 25
-                            // CustomWidth = true ==> Tell Excel to use the custom width
-                            lstColumns.Append(new Column() { Min = 1, Max = 1, Width = 7, CustomWidth = true });  // id
-                            lstColumns.Append(new Column() { Min = 2, Max = 2, Width = 20, CustomWidth = true }); // f
-                            lstColumns.Append(new Column() { Min = 3, Max = 3, Width = 20, CustomWidth = true }); // n
-                            lstColumns.Append(new Column() { Min = 4, Max = 4, Width = 20, CustomWidth = true }); // l
-                            lstColumns.Append(new Column() { Min = 5, Max = 5, Width = 15, CustomWidth = true }); // snils
-                            lstColumns.Append(new Column() { Min = 6, Max = 6, Width = 25, CustomWidth = true }); // район
-                            lstColumns.Append(new Column() { Min = 7, Max = 7, Width = 25, CustomWidth = true }); // населенный
-                            lstColumns.Append(new Column() { Min = 8, Max = 8, Width = 30, CustomWidth = true }); // адрес
-                            lstColumns.Append(new Column() { Min = 9, Max = 9, Width = 35, CustomWidth = true }); // льгота
-                            lstColumns.Append(new Column() { Min = 10, Max = 10, Width = 18, CustomWidth = true }); // размер выплаты
-                            lstColumns.Append(new Column() { Min = 11, Max = 11, Width = 30, CustomWidth = true }); // серия и номер серта
-                            lstColumns.Append(new Column() { Min = 12, Max = 12, Width = 20, CustomWidth = true }); // дата выдачи серта
-                            lstColumns.Append(new Column() { Min = 13, Max = 13, Width = 15, CustomWidth = true }); // решение
-                            lstColumns.Append(new Column() { Min = 14, Max = 14, Width = 25, CustomWidth = true }); // дата и номер решения
-                            lstColumns.Append(new Column() { Min = 15, Max = 15, Width = 25, CustomWidth = true }); // трек
-                            lstColumns.Append(new Column() { Min = 16, Max = 16, Width = 25, CustomWidth = true }); // дата отправки почтой
-                            lstColumns.Append(new Column() { Min = 17, Max = 17, Width = 15, CustomWidth = true }); // дата отправки почтой
-                                                                                                                    // Only insert the columns if we had to create a new columns element
-                            if (needToInsertColumns)
-                                worksheetPart.Worksheet.InsertAt(lstColumns, 0);
+                                DataType = CellValues.String,
+                                CellValue = new CellValue(DoOperation(column.ColumnName))
+                            };
+                            headerRow.AppendChild(cell);
 
+                        }
 
+                        sheetData.AppendChild(headerRow);
 
+                        //Данные заносятся здесь
+                        foreach (DataRow dsrow in table.Rows)
+                        {
+                            Row newRow = new Row();
 
-                            Sheets sheets = workbookPart.Workbook.AppendChild(new Sheets());
-                            Sheet sheet = new() { Id = workbookPart.GetIdOfPart(worksheetPart), SheetId = 1, Name = "Sheet1" };
-
-                            sheets.Append(sheet);
-
-                            Row headerRow = new();
-
-                            //Здесь постройка и название колонок
-                            List<string> columns = new();
-                            foreach (DataColumn column in table.Columns)
+                            foreach (string col in columns)
                             {
-                                columns.Add(column.ColumnName);
-                                Cell cell = new()
+                                if (col == "Area")
                                 {
-                                    DataType = CellValues.String,
-                                    CellValue = new CellValue(DoOperation(column.ColumnName))
-                                };
-                                headerRow.AppendChild(cell);
-
-                            }
-
-                            sheetData.AppendChild(headerRow);
-
-                            //Данные заносятся здесь
-                            foreach (DataRow dsrow in table.Rows)
-                            {
-                                Row newRow = new Row();
-
-                                foreach (string col in columns)
-                                {
-                                    if (col == "Area")
+                                    Cell cell = new()
                                     {
-                                        Cell cell = new()
-                                        {
-                                            DataType = CellValues.String,
-                                            CellValue = new CellValue(dsrow[col].ToString())//Тут значение Id 
-                                        };
-                                        
-                                        if (cell.InnerText == "")
-                                        {
-                                            newRow.AppendChild(cell);
-                                        }
-                                        else
-                                        {
-                                            using ExDbContext db = new();
-                                            var GetNameOfArea = await db.Areas.Where(u => u.Id == Convert.ToInt32(cell.CellValue.Text) + 1).FirstOrDefaultAsync();
-                                            cell.CellValue = new CellValue(GetNameOfArea.AreaName);
-                                            newRow.AppendChild(cell);
-                                        }
-                                       
-                                    }
+                                        DataType = CellValues.String,
+                                        CellValue = new CellValue(dsrow[col].ToString())//Тут значение Id 
+                                    };
 
-                                    else if (col == "Local")
+                                    if (cell.InnerText == "")
                                     {
-                                        Cell cell = new Cell
-                                        {
-                                            DataType = CellValues.String,
-                                            CellValue = new CellValue(dsrow[col].ToString())//Тут значение Id
-                                        };
-                                        if (cell.InnerText == "")
-                                        {
-                                            newRow.AppendChild(cell);
-                                        }
-                                        else
-                                        {
-                                            using ExDbContext db = new();
-                                            var GetNameOfLocal = await db.Localities.Where(u => u.Id == Convert.ToInt32(cell.CellValue.Text) + 1).FirstOrDefaultAsync();
-                                            cell.CellValue = new CellValue(GetNameOfLocal.LocalName);
-                                            newRow.AppendChild(cell);
-                                        }
+                                        newRow.AppendChild(cell);
                                     }
-
-                                    else if (col == "Lgota")
-                                    {
-                                        Cell cell = new()
-                                        {
-                                            DataType = CellValues.String,
-                                            CellValue = new CellValue(dsrow[col].ToString())//Тут значение Id
-                                        };
-                                        if (cell.InnerText == "")
-                                        {
-                                            newRow.AppendChild(cell);
-                                        }
-                                        else
-                                        {
-                                            using ExDbContext db = new();
-                                            var GetNameOfLocal = await db.Privileges.Where(u => u.Id == Convert.ToInt32(cell.CellValue.Text) + 1).FirstOrDefaultAsync();
-                                            cell.CellValue = new CellValue(GetNameOfLocal.PrivilegesName);
-                                            newRow.AppendChild(cell);
-                                        }
-                                    }
-
-                                    else if (col == "Pay")
-                                    {
-                                        Cell cell = new Cell();
-                                        cell.DataType = CellValues.String;
-                                        cell.CellValue = new CellValue(dsrow[col].ToString());//Тут значение Id
-                                        if (cell.InnerText == "")
-                                        {
-                                            newRow.AppendChild(cell);
-                                        }
-                                        else
-                                        {
-                                            using ExDbContext db = new();
-                                            var GetNameOfLocal = await db.PayAmounts.Where(u => u.Id == Convert.ToInt32(cell.CellValue.Text) + 1).FirstOrDefaultAsync();
-                                            cell.CellValue = new CellValue((decimal)GetNameOfLocal.Pay);
-                                            newRow.AppendChild(cell);
-                                        }
-                                    }
-
-                                    else if (col == "Solution")
-                                    {
-                                        Cell cell = new Cell();
-                                        cell.DataType = CellValues.String;
-                                        cell.CellValue = new CellValue(dsrow[col].ToString());//Тут значение Id
-                                        if (cell.InnerText == "")
-                                        {
-                                            newRow.AppendChild(cell);
-                                        }
-                                        else
-                                        {
-                                            using ExDbContext db = new();
-                                            var GetNameOfLocal = await db.SolutionTypes.Where(u => u.Id == Convert.ToInt32(cell.CellValue.Text) + 1).FirstOrDefaultAsync();
-                                            cell.CellValue = new CellValue(GetNameOfLocal.SolutionName);
-                                            newRow.AppendChild(cell);
-                                        }
-                                    }
-
-                                    else if (col == "DateGetSert" || col == "MailingDate")
-                                    {
-                                        Cell cell = new Cell();
-                                        cell.DataType = CellValues.String; 
-                                        cell.CellValue = new CellValue(dsrow[col].ToString());//Тут значение Id
-                                        if(cell.InnerText == "")
-                                        {
-                                            newRow.AppendChild(cell);
-                                        }
-
-                                        else
-                                        {
-                                            cell.DataType = CellValues.String;
-                                            cell.CellValue = new CellValue(Convert.ToDateTime(dsrow[col].ToString()).ToString("d"));//Тут значение Id
-                                            
-                                             newRow.AppendChild(cell);
-                                        }
-                                       
-                                    }
-
-                                    else if (col == "IdApplicant")
-                                        continue;
-
                                     else
                                     {
-                                        Cell cell = new()
-                                        {
-                                            DataType = CellValues.String,
-                                            CellValue = new CellValue(dsrow[col].ToString())//Тут значение Id
-                                        };
+                                        using ExDbContext db = new();
+                                        var GetNameOfArea = await db.Areas.Where(u => u.Id == Convert.ToInt32(cell.CellValue.Text) + 1).FirstOrDefaultAsync();
+                                        cell.CellValue = new CellValue(GetNameOfArea.AreaName);
+                                        newRow.AppendChild(cell);
+                                    }
+
+                                }
+
+                                else if (col == "Local")
+                                {
+                                    Cell cell = new Cell
+                                    {
+                                        DataType = CellValues.String,
+                                        CellValue = new CellValue(dsrow[col].ToString())//Тут значение Id
+                                    };
+                                    if (cell.InnerText == "")
+                                    {
+                                        newRow.AppendChild(cell);
+                                    }
+                                    else
+                                    {
+                                        using ExDbContext db = new();
+                                        var GetNameOfLocal = await db.Localities.Where(u => u.Id == Convert.ToInt32(cell.CellValue.Text) + 1).FirstOrDefaultAsync();
+                                        cell.CellValue = new CellValue(GetNameOfLocal.LocalName);
                                         newRow.AppendChild(cell);
                                     }
                                 }
-                                sheetData.AppendChild(newRow);
-                            }
 
-                            workbookPart.Workbook.Save();
+                                else if (col == "Lgota")
+                                {
+                                    Cell cell = new()
+                                    {
+                                        DataType = CellValues.String,
+                                        CellValue = new CellValue(dsrow[col].ToString())//Тут значение Id
+                                    };
+                                    if (cell.InnerText == "")
+                                    {
+                                        newRow.AppendChild(cell);
+                                    }
+                                    else
+                                    {
+                                        using ExDbContext db = new();
+                                        var GetNameOfLocal = await db.Privileges.Where(u => u.Id == Convert.ToInt32(cell.CellValue.Text) + 1).FirstOrDefaultAsync();
+                                        cell.CellValue = new CellValue(GetNameOfLocal.PrivilegesName);
+                                        newRow.AppendChild(cell);
+                                    }
+                                }
+
+                                else if (col == "Pay")
+                                {
+                                    Cell cell = new Cell();
+                                    cell.DataType = CellValues.String;
+                                    cell.CellValue = new CellValue(dsrow[col].ToString());//Тут значение Id
+                                    if (cell.InnerText == "")
+                                    {
+                                        newRow.AppendChild(cell);
+                                    }
+                                    else
+                                    {
+                                        using ExDbContext db = new();
+                                        var GetNameOfLocal = await db.PayAmounts.Where(u => u.Id == Convert.ToInt32(cell.CellValue.Text) + 1).FirstOrDefaultAsync();
+                                        cell.CellValue = new CellValue((decimal)GetNameOfLocal.Pay);
+                                        newRow.AppendChild(cell);
+                                    }
+                                }
+
+                                else if (col == "Solution")
+                                {
+                                    Cell cell = new Cell();
+                                    cell.DataType = CellValues.String;
+                                    cell.CellValue = new CellValue(dsrow[col].ToString());//Тут значение Id
+                                    if (cell.InnerText == "")
+                                    {
+                                        newRow.AppendChild(cell);
+                                    }
+                                    else
+                                    {
+                                        using ExDbContext db = new();
+                                        var GetNameOfLocal = await db.SolutionTypes.Where(u => u.Id == Convert.ToInt32(cell.CellValue.Text) + 1).FirstOrDefaultAsync();
+                                        cell.CellValue = new CellValue(GetNameOfLocal.SolutionName);
+                                        newRow.AppendChild(cell);
+                                    }
+                                }
+
+                                else if (col == "DateGetSert" || col == "MailingDate")
+                                {
+                                    Cell cell = new Cell();
+                                    cell.DataType = CellValues.String;
+                                    cell.CellValue = new CellValue(dsrow[col].ToString());//Тут значение Id
+                                    if (cell.InnerText == "")
+                                    {
+                                        newRow.AppendChild(cell);
+                                    }
+
+                                    else
+                                    {
+                                        cell.DataType = CellValues.String;
+                                        cell.CellValue = new CellValue(Convert.ToDateTime(dsrow[col].ToString()).ToString("d"));//Тут значение Id
+
+                                        newRow.AppendChild(cell);
+                                    }
+
+                                }
+
+                                else if (col == "IdApplicant")
+                                    continue;
+
+                                else
+                                {
+                                    Cell cell = new()
+                                    {
+                                        DataType = CellValues.String,
+                                        CellValue = new CellValue(dsrow[col].ToString())//Тут значение Id
+                                    };
+                                    newRow.AppendChild(cell);
+                                }
+                            }
+                            sheetData.AppendChild(newRow);
                         }
+
+                        workbookPart.Workbook.Save();
 
 
                     }
@@ -884,18 +928,15 @@ namespace exel_for_mfc
         }
         #endregion
 
-        #region Фильтрация
+        #region Фильтрация(в процессе)
         //Использовать для данных datagrid и включить autogeneratecolumns
 
 
+        //Обновить фильтры
+        private void Button_Click_2(object sender, RoutedEventArgs e)
+        {
 
-
-
-
-
-
-
-
+        }
         #endregion
 
         #region Обработка возможных исключений и другие мелочи
@@ -917,12 +958,7 @@ namespace exel_for_mfc
             await GoStart();
         }
 
-        //Обновить фильтры
-        private void Button_Click_2(object sender, RoutedEventArgs e)
-        {
-
-        }
-
+       
 
 
         #endregion
