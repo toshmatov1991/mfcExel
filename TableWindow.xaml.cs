@@ -24,7 +24,7 @@ using Newtonsoft.Json;
 using Microsoft.Win32;
 using System.IO.Packaging;
 using System.Globalization;
-
+using exel_for_mfc.FilterModels;
 
 namespace exel_for_mfc
 {
@@ -37,7 +37,7 @@ namespace exel_for_mfc
         public static List<Privilege>? PrivelCombobox { get; set; }
         public static List<SolutionType>? SolCombobox { get; set; }
         public static List<SClass>? MyList { get; set; }
-
+       
         public TableWindow()
         {
             InitializeComponent();
@@ -924,69 +924,43 @@ namespace exel_for_mfc
         #endregion
 
         #region Фильтрация(в процессе)
+        List<AreaFilter>? ts = new();
         public void FilterStart()
         {
             //При старте приложения происходит обнуление всех полей Булева и заполнение DataGrid фильтров
 
-
-
             using (ExDbContext db = new())
             {
-                areaFilter.ItemsSource = db.Areas.FromSqlRaw("SELECT * FROM Area").ToList();
+               
+
+                var s = db.Areas.FromSqlRaw("SELECT * FROM Area").ToList();
+                foreach (var item in s)
+                {
+                    ts.Add(new AreaFilter(item.Id, item.AreaName, 0));
+                }
+                areaFilter.ItemsSource = ts;
             };
+
+            
+
         }
 
         //Поставил галочку
-        private async void AreaCheck(object sender, RoutedEventArgs e)
+        private void AreaCheck(object sender, RoutedEventArgs e)
         {
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-            //using (ExDbContext db = new())
-            //{
-            //    try
-            //    {
-            //        var update = await db.Database.ExecuteSqlRawAsync("UPDATE Area SET AreaBool = {0} WHERE Id = {1}", 1, (areaFilter.SelectedItem as Area)?.Id);
-            //        if (update != 0)
-            //            MessageBox.Show("Обновление прошло успешно!");
-            //    }
-            //    catch (Exception ex)
-            //    {
-            //        MessageBox.Show("Произошла ошибка при обновлении\nПовторите попытку", ex.Message);
-            //    }
-            //};
-
-
-
-
-
+            ts.FindAll(s => s.AreaName == (areaFilter.SelectedItem as Area)?.AreaName).ForEach(x => x.AreaBool = 1);
+            areaFilter.ItemsSource = ts;
+            foreach (var item in ts)
+            {
+                MessageBox.Show(item.Id + " " + item.AreaName + "  " + item.AreaBool);
+            }
         }
 
         private void AreaUnchecked(object sender, RoutedEventArgs e)
         {
-            var f = (areaFilter.SelectedItem as Area)?.AreaName;
-            MessageBox.Show("Снял галочку  " + f);
+            //var f = (areaFilter.SelectedItem as Area)?.AreaName;
+            //MessageBox.Show("Снял галочку  " + f);
         }
 
 

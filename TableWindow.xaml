@@ -232,7 +232,7 @@
                     <DataGridTemplateColumn>
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
-                                <CheckBox IsChecked="{Binding AreaBool, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Checked="AreaCheck" Unchecked="AreaUnchecked"/>
+                                <CheckBox IsChecked="{Binding AreaBool, UpdateSourceTrigger=PropertyChanged}" Checked="AreaCheck" Unchecked="AreaUnchecked"/>
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
