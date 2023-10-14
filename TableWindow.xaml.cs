@@ -947,9 +947,13 @@ namespace exel_for_mfc
         private void AreaCheck(object sender, RoutedEventArgs e)
         {
             var f = (areaFilter.SelectedItem as Area)?.AreaName;
-            MessageBox.Show(f);
+            MessageBox.Show("Поставил галочку  " + f);
         }
-
+        private void AreaUnchecked(object sender, RoutedEventArgs e)
+        {
+            var f = (areaFilter.SelectedItem as Area)?.AreaName;
+            MessageBox.Show("Снял галочку  " + f);
+        }
 
 
 
@@ -987,8 +991,9 @@ namespace exel_for_mfc
 
 
 
+
         #endregion
 
-
+      
     }
 }
