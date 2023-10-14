@@ -50,6 +50,7 @@ namespace exel_for_mfc
         {
             InitializeComponent();
             Start();
+            FilterStart();
         }
 
         //Запрос для заполнения таблицы
@@ -931,9 +932,23 @@ namespace exel_for_mfc
         #endregion
 
         #region Фильтрация(в процессе)
+        public void FilterStart()
+        {
+            //При старте приложения происходит обнуление всех полей Булева
 
 
 
+            using (ExDbContext db = new())
+            {
+                areaFilter.ItemsSource = db.Areas.FromSqlRaw("SELECT * FROM Area").AsNoTracking().ToList();
+            };
+        }
+
+        private void AreaCheck(object sender, RoutedEventArgs e)
+        {
+            var f = (areaFilter.SelectedItem as Area)?.AreaName;
+            MessageBox.Show(f);
+        }
 
 
 
@@ -944,6 +959,11 @@ namespace exel_for_mfc
 
         }
         #endregion
+
+
+
+     
+
 
         #region Обработка возможных исключений и другие мелочи
         private void AreaExeption(object sender, MouseButtonEventArgs e)
@@ -964,9 +984,11 @@ namespace exel_for_mfc
             await GoStart();
         }
 
-       
+
 
 
         #endregion
+
+
     }
 }

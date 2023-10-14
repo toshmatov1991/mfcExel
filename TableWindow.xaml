@@ -6,40 +6,41 @@
         xmlns:local="clr-namespace:exel_for_mfc"
         mc:Ignorable="d" Icon="Resources\logomfc.png" WindowStartupLocation="CenterScreen"
         Title="Главное окно" Height="700" Width="1300">
-    <Grid Background="LightSkyBlue">
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition/>
-            <ColumnDefinition/>
-            <ColumnDefinition/>
-            <ColumnDefinition/>
-            <ColumnDefinition/>
-            <ColumnDefinition/>
-            <ColumnDefinition/>
-            <ColumnDefinition/>
-        </Grid.ColumnDefinitions>
-        <Grid.RowDefinitions>
-            <RowDefinition/>
-            <RowDefinition/>
-            <RowDefinition/>
-            <RowDefinition/>
-            <RowDefinition/>
-            <RowDefinition/>
-            <RowDefinition/>
-            <RowDefinition/>
-            <RowDefinition/>
-            <RowDefinition/>
-            <RowDefinition/>
-            <RowDefinition/>
-            <RowDefinition/>
-        </Grid.RowDefinitions>
-        <TextBlock Text="Фильтры поиска"
+    <Border Padding="3">
+        <Grid Background="LightSkyBlue">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+            <TextBlock Text="Фильтры поиска"
                    FontStyle="Italic"
                    Grid.Column="3"
                    Grid.ColumnSpan="2"
                    HorizontalAlignment="Left"
                    VerticalAlignment="Top"
                    FontSize="18" Margin="144,0,0,0"/>
-        <ComboBox  Background="AliceBlue"
+            <ComboBox  Background="AliceBlue"
                    x:Name="filterSearch"
                    Grid.Column="4"
                    VerticalAlignment="Top"
@@ -50,24 +51,24 @@
                    SelectedIndex="0"
                    HorizontalContentAlignment="Left"
                    VerticalContentAlignment="Center">
-            <TextBlock Text="По всем полям"/>
-            <TextBlock Text="По ID"/>
-            <TextBlock Text="Фамилия"/>
-            <TextBlock Text="Имя"/>
-            <TextBlock Text="Отчество"/>
-            <TextBlock Text="ФИО"/>
-            <TextBlock Text="Снилс"/>
-            <TextBlock Text="Адрес"/>
-            <TextBlock Text="Серия и номер сертификата"/>
-        </ComboBox>
-        <TextBox FontStyle="Italic"
+                <TextBlock Text="По всем полям"/>
+                <TextBlock Text="По ID"/>
+                <TextBlock Text="Фамилия"/>
+                <TextBlock Text="Имя"/>
+                <TextBlock Text="Отчество"/>
+                <TextBlock Text="ФИО"/>
+                <TextBlock Text="Снилс"/>
+                <TextBlock Text="Адрес"/>
+                <TextBlock Text="Серия и номер сертификата"/>
+            </ComboBox>
+            <TextBox FontStyle="Italic"
                  VerticalAlignment="Top"
                  VerticalContentAlignment="Center"
                  FontSize="14" 
                  Grid.Column="6"
                  x:Name="SearchTable"
                  Grid.ColumnSpan="2" Height="24" Margin="0,0,103,0" KeyUp="ClearSearc"/>
-        <Button Content="Искать" 
+            <Button Content="Искать" 
                 Grid.Column="7"
                 VerticalAlignment="Top"
                 HorizontalAlignment="Right"
@@ -75,7 +76,7 @@
                 Height="24"
                 Foreground="White"
                 Background="DarkSlateGray" Click="Button_Click_3"/>
-        <DataGrid x:Name="dataGrid"
+            <DataGrid x:Name="dataGrid"
                   Grid.ColumnSpan="8"
                   Grid.RowSpan="11"
                   CanUserSortColumns="False"
@@ -84,100 +85,100 @@
                   CanUserAddRows="True"
                   CellEditEnding="dataGrid_CellEditEnding" 
                   Margin="0,44,0,52">
-            <DataGrid.Columns>
-                <DataGridTextColumn Binding="{Binding IdReg, UpdateSourceTrigger=PropertyChanged}" IsReadOnly="True" Header="№п/п"/>
-                <DataGridTextColumn Binding="{Binding Family, UpdateSourceTrigger=PropertyChanged}" Header="Фамилия"/>
-                <DataGridTextColumn Binding="{Binding Name, UpdateSourceTrigger=PropertyChanged}" Header="Имя"/>
-                <DataGridTextColumn Binding="{Binding Lastname, UpdateSourceTrigger=PropertyChanged}" Header="Отчество"/>
-                <DataGridTextColumn Binding="{Binding Snils, UpdateSourceTrigger=PropertyChanged}" Header="Снилс"/>
-                <DataGridTemplateColumn CanUserSort="True" Header="Район" SortMemberPath="Area">
-                    <DataGridTemplateColumn.CellTemplate>
-                        <DataTemplate>
-                            <ComboBox ItemsSource="{Binding Path=AreaCombobox, RelativeSource={RelativeSource AncestorType={x:Type Window}}}"
+                <DataGrid.Columns>
+                    <DataGridTextColumn Binding="{Binding IdReg, UpdateSourceTrigger=PropertyChanged}" IsReadOnly="True" Header="№п/п"/>
+                    <DataGridTextColumn Binding="{Binding Family, UpdateSourceTrigger=PropertyChanged}" Header="Фамилия"/>
+                    <DataGridTextColumn Binding="{Binding Name, UpdateSourceTrigger=PropertyChanged}" Header="Имя"/>
+                    <DataGridTextColumn Binding="{Binding Lastname, UpdateSourceTrigger=PropertyChanged}" Header="Отчество"/>
+                    <DataGridTextColumn Binding="{Binding Snils, UpdateSourceTrigger=PropertyChanged}" Header="Снилс"/>
+                    <DataGridTemplateColumn CanUserSort="True" Header="Район" SortMemberPath="Area">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <ComboBox ItemsSource="{Binding Path=AreaCombobox, RelativeSource={RelativeSource AncestorType={x:Type Window}}}"
                                       DisplayMemberPath="AreaName"
                                       SelectedIndex="{Binding Area, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" DropDownClosed="AreaComboEvent" MouseDoubleClick="AreaExeption" KeyDown="AreaKeyDown" KeyUp="AreaKeyUp"/>
-                        </DataTemplate>
-                    </DataGridTemplateColumn.CellTemplate>
-                </DataGridTemplateColumn>
-                <DataGridTemplateColumn Header="Населенный пункт" CanUserSort="True" SortMemberPath="Local">
-                    <DataGridTemplateColumn.CellTemplate>
-                        <DataTemplate>
-                            <ComboBox ItemsSource="{Binding Path=LocalCombobox, RelativeSource={RelativeSource AncestorType={x:Type Window}}}"
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                    <DataGridTemplateColumn Header="Населенный пункт" CanUserSort="True" SortMemberPath="Local">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <ComboBox ItemsSource="{Binding Path=LocalCombobox, RelativeSource={RelativeSource AncestorType={x:Type Window}}}"
                                       DisplayMemberPath="LocalName"
                                       SelectedIndex="{Binding Local, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" DropDownClosed="LocalComboEvent">
-                            </ComboBox>
-                        </DataTemplate>
-                    </DataGridTemplateColumn.CellTemplate>
-                </DataGridTemplateColumn>
-                <DataGridTextColumn Binding="{Binding Adress, UpdateSourceTrigger=PropertyChanged}" Header="Адрес"/>
-                <DataGridTemplateColumn Header="Льгота" CanUserSort="True" SortMemberPath="Lgota">
-                    <DataGridTemplateColumn.CellTemplate>
-                        <DataTemplate>
-                            <ComboBox ItemsSource="{Binding Path=PrivelCombobox, RelativeSource={RelativeSource AncestorType={x:Type Window}}}"
+                                </ComboBox>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                    <DataGridTextColumn Binding="{Binding Adress, UpdateSourceTrigger=PropertyChanged}" Header="Адрес"/>
+                    <DataGridTemplateColumn Header="Льгота" CanUserSort="True" SortMemberPath="Lgota">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <ComboBox ItemsSource="{Binding Path=PrivelCombobox, RelativeSource={RelativeSource AncestorType={x:Type Window}}}"
                                       DisplayMemberPath="PrivilegesName"
                                       SelectedIndex="{Binding Lgota, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" DropDownClosed="PrivilegesComboEvent">
-                            </ComboBox>
-                        </DataTemplate>
-                    </DataGridTemplateColumn.CellTemplate>
-                </DataGridTemplateColumn>
-                <DataGridTextColumn Binding="{Binding Sernumb, UpdateSourceTrigger=PropertyChanged}" Header="Серия и № сертификата"/>
-                <DataGridTemplateColumn Header="Дата выдачи" Width="120" CanUserSort="True" >
-                    <DataGridTemplateColumn.CellTemplate>
-                        <DataTemplate>
-                            <TextBlock Text="{Binding DateGetSert,
+                                </ComboBox>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                    <DataGridTextColumn Binding="{Binding Sernumb, UpdateSourceTrigger=PropertyChanged}" Header="Серия и № сертификата"/>
+                    <DataGridTemplateColumn Header="Дата выдачи" Width="120" CanUserSort="True" >
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding DateGetSert,
                                                  StringFormat=dd.MM.yyyy}" />
-                        </DataTemplate>
-                    </DataGridTemplateColumn.CellTemplate>
-                    <DataGridTemplateColumn.CellEditingTemplate>
-                        <DataTemplate>
-                            <DatePicker SelectedDate="{Binding DateGetSert, StringFormat=dd.MM.yyyy, UpdateSourceTrigger=PropertyChanged}" />
-                        </DataTemplate>
-                    </DataGridTemplateColumn.CellEditingTemplate>
-                </DataGridTemplateColumn>
-                <DataGridTemplateColumn Header="Тип решения" CanUserSort="True" SortMemberPath="Solution">
-                    <DataGridTemplateColumn.CellTemplate>
-                        <DataTemplate>
-                            <ComboBox ItemsSource="{Binding Path=SolCombobox, RelativeSource={RelativeSource AncestorType={x:Type Window}}}"
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                        <DataGridTemplateColumn.CellEditingTemplate>
+                            <DataTemplate>
+                                <DatePicker SelectedDate="{Binding DateGetSert, StringFormat=dd.MM.yyyy, UpdateSourceTrigger=PropertyChanged}" />
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellEditingTemplate>
+                    </DataGridTemplateColumn>
+                    <DataGridTemplateColumn Header="Тип решения" CanUserSort="True" SortMemberPath="Solution">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <ComboBox ItemsSource="{Binding Path=SolCombobox, RelativeSource={RelativeSource AncestorType={x:Type Window}}}"
                                       DisplayMemberPath="SolutionName"
                                       SelectedIndex="{Binding Solution, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" DropDownClosed="SolutionComboEvent">
-                            </ComboBox>
-                        </DataTemplate>
-                    </DataGridTemplateColumn.CellTemplate>
-                </DataGridTemplateColumn>
-                <DataGridTextColumn Binding="{Binding DateAndNumbSolutionSert, UpdateSourceTrigger=PropertyChanged}" Header="Дата и номер решения"/>
-                <DataGridTemplateColumn Header="Размер выплаты" CanUserSort="True" SortMemberPath="Pay">
-                    <DataGridTemplateColumn.CellTemplate>
-                        <DataTemplate>
-                            <ComboBox ItemsSource="{Binding Path=PayCombobox, RelativeSource={RelativeSource AncestorType={x:Type Window}}}"
+                                </ComboBox>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                    <DataGridTextColumn Binding="{Binding DateAndNumbSolutionSert, UpdateSourceTrigger=PropertyChanged}" Header="Дата и номер решения"/>
+                    <DataGridTemplateColumn Header="Размер выплаты" CanUserSort="True" SortMemberPath="Pay">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <ComboBox ItemsSource="{Binding Path=PayCombobox, RelativeSource={RelativeSource AncestorType={x:Type Window}}}"
                                       DisplayMemberPath="Pay"
                                       SelectedIndex="{Binding Pay, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" DropDownClosed="PayComboEvent">
-                            </ComboBox>
-                        </DataTemplate>
-                    </DataGridTemplateColumn.CellTemplate>
-                </DataGridTemplateColumn>
-                <DataGridTextColumn Binding="{Binding Trek, UpdateSourceTrigger=PropertyChanged}" Header="Трек"/>
-                <DataGridTemplateColumn Header="Дата отправки почтой" CanUserSort="True">
-                    <DataGridTemplateColumn.CellTemplate>
-                        <DataTemplate>
-                            <TextBlock Text="{Binding MailingDate,
+                                </ComboBox>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                    <DataGridTextColumn Binding="{Binding Trek, UpdateSourceTrigger=PropertyChanged}" Header="Трек"/>
+                    <DataGridTemplateColumn Header="Дата отправки почтой" CanUserSort="True">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding MailingDate,
                                                  StringFormat=dd.MM.yyyy}" />
-                        </DataTemplate>
-                    </DataGridTemplateColumn.CellTemplate>
-                    <DataGridTemplateColumn.CellEditingTemplate>
-                        <DataTemplate>
-                            <DatePicker SelectedDate="{Binding MailingDate, UpdateSourceTrigger=PropertyChanged}" />
-                        </DataTemplate>
-                    </DataGridTemplateColumn.CellEditingTemplate>
-                </DataGridTemplateColumn>
-                <DataGridTextColumn Binding="{Binding Comment, UpdateSourceTrigger=PropertyChanged}" Header="" Visibility="Hidden"/>
-            </DataGrid.Columns>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                        <DataGridTemplateColumn.CellEditingTemplate>
+                            <DataTemplate>
+                                <DatePicker SelectedDate="{Binding MailingDate, UpdateSourceTrigger=PropertyChanged}" />
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellEditingTemplate>
+                    </DataGridTemplateColumn>
+                    <DataGridTextColumn Binding="{Binding Comment, UpdateSourceTrigger=PropertyChanged}" Header="" Visibility="Hidden"/>
+                </DataGrid.Columns>
 
 
-            <!-- Отображение комментария при выделении строки -->
-            <DataGrid.RowDetailsTemplate>
-                <DataTemplate>
-                    <StackPanel Orientation="Horizontal" Height="20" VerticalAlignment="Center">
-                        <TextBox Text="{Binding Path=Comment, UpdateSourceTrigger=PropertyChanged}"
+                <!-- Отображение комментария при выделении строки -->
+                <DataGrid.RowDetailsTemplate>
+                    <DataTemplate>
+                        <StackPanel Orientation="Horizontal" Height="20" VerticalAlignment="Center">
+                            <TextBox Text="{Binding Path=Comment, UpdateSourceTrigger=PropertyChanged}"
                                  TextChanged="CommentUpdate" 
                                  Background="LightGreen"
                                  VerticalContentAlignment="Center"
@@ -185,12 +186,12 @@
                                  Width="300"
                                  FontSize="12"
                                  Foreground="Black"/>
-                    </StackPanel>
-                </DataTemplate>
-            </DataGrid.RowDetailsTemplate>
-        </DataGrid>
+                        </StackPanel>
+                    </DataTemplate>
+                </DataGrid.RowDetailsTemplate>
+            </DataGrid>
 
-        <Button Background="Yellow" 
+            <Button Background="Yellow" 
                 Grid.Column="8"
                 Grid.Row="10"
                 Content="Обновить таблицу"
@@ -199,7 +200,7 @@
                 VerticalAlignment="Center" 
                 Click="Button_Click_1" />
 
-        <Button Background="Yellow" 
+            <Button Background="Yellow" 
                 Grid.Column="8"
                 Grid.Row="11"
                 Content="Обновить фильтры"
@@ -207,8 +208,8 @@
                 Height="37" 
                 VerticalAlignment="Center"
                 Click="Button_Click_2"/>
-        
-        <Button Content="Выгрузить в Excel"
+
+            <Button Content="Выгрузить в Excel"
                 Grid.Column="8"
                 Grid.Row="12"
                 HorizontalAlignment="Center"
@@ -216,5 +217,27 @@
                 Height="42"
                 Width="106"
                 Click="Button_Click"/>
-    </Grid>
+
+            <!--  Фильтрация  -->
+            <!-- Район -->
+            <DataGrid x:Name="areaFilter"
+                  AutoGenerateColumns="False"
+                  Grid.Row="10" 
+                  Grid.RowSpan="3"
+                  CanUserAddRows="False"
+                  CanUserDeleteRows="False"
+                  CanUserSortColumns="False">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Binding="{Binding AreaName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Header="Район"/>
+                    <DataGridTemplateColumn>
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <CheckBox IsChecked="{Binding AreaBool, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Checked="AreaCheck"/>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                </DataGrid.Columns>
+            </DataGrid>
+        </Grid>
+    </Border>
 </Window>
