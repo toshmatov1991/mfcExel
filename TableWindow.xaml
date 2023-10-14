@@ -77,7 +77,7 @@
                 Background="DarkSlateGray" Click="Button_Click_3"/>
         <DataGrid x:Name="dataGrid"
                   Grid.ColumnSpan="8"
-                  Grid.RowSpan="12"
+                  Grid.RowSpan="11"
                   CanUserSortColumns="False"
                   CanUserDeleteRows="False"
                   AutoGenerateColumns="False"
@@ -172,7 +172,7 @@
                 <DataGridTextColumn Binding="{Binding Comment, UpdateSourceTrigger=PropertyChanged}" Header="" Visibility="Hidden"/>
             </DataGrid.Columns>
 
-            
+
             <!-- Отображение комментария при выделении строки -->
             <DataGrid.RowDetailsTemplate>
                 <DataTemplate>
@@ -189,24 +189,32 @@
                 </DataTemplate>
             </DataGrid.RowDetailsTemplate>
         </DataGrid>
-        <Button Content="Выгрузить в Excel"
-                Grid.Column="6"
-                Grid.RowSpan="2"
-                Background="LightGreen"
+
+        <Button Background="Yellow" 
+                Grid.Column="8"
+                Grid.Row="10"
+                Content="Обновить таблицу"
+                HorizontalAlignment="Center" 
+                Height="37" 
+                VerticalAlignment="Center" 
+                Click="Button_Click_1" />
+
+        <Button Background="Yellow" 
+                Grid.Column="8"
                 Grid.Row="11"
-                Height="42"
-                Width="107"
-                Click="Button_Click"/>
-        <Button Grid.Column="5" Background="Yellow" Content="Обновить таблицу" HorizontalAlignment="Left" Height="37" Grid.Row="11" VerticalAlignment="Bottom" RenderTransformOrigin="0.5,0.5" Click="Button_Click_1" Grid.ColumnSpan="2"/>
-        <Button Grid.Column="5" Background="Yellow" Content="Обновить фильтры" HorizontalAlignment="Left" Height="37" Grid.Row="12" VerticalAlignment="Bottom" RenderTransformOrigin="0.5,0.5" Grid.ColumnSpan="2" Click="Button_Click_2"/>
-      
-        <!-- Фильтрация , это будет жестко)-->
+                Content="Обновить фильтры"
+                HorizontalAlignment="Center" 
+                Height="37" 
+                VerticalAlignment="Center"
+                Click="Button_Click_2"/>
         
-        <!-- Фильтрация -->
-
-
-
-
-
+        <Button Content="Выгрузить в Excel"
+                Grid.Column="8"
+                Grid.Row="12"
+                HorizontalAlignment="Center"
+                Background="LightGreen"
+                Height="42"
+                Width="106"
+                Click="Button_Click"/>
     </Grid>
 </Window>

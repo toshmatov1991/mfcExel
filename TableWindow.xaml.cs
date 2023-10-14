@@ -342,6 +342,8 @@ namespace exel_for_mfc
                     return "Отказ";
                 else if (t == 3)
                     return "Аннулир.";
+                else if (t == 4)
+                    return "Без рассмотрения";
                 else return "";
 
             }
@@ -368,12 +370,12 @@ namespace exel_for_mfc
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show(ex.Message, "Произошла ошибка при обновлении комментария");
+                    MessageBox.Show(ex.Message, "Произошла ошибка при обновлении комментария\nПовторите попытку");
                 }
             }  
         }
 
-        //Поиск
+        //Поиск(Нормально)
         private async void Button_Click_3(object sender, RoutedEventArgs e)
         {
             switch (filterSearch.Text)
@@ -929,7 +931,11 @@ namespace exel_for_mfc
         #endregion
 
         #region Фильтрация(в процессе)
-        //Использовать для данных datagrid и включить autogeneratecolumns
+
+
+
+
+
 
 
         //Обновить фильтры
