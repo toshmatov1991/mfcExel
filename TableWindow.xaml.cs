@@ -974,12 +974,24 @@ namespace exel_for_mfc
         //Метод для выборки по фильтрам
         async Task GoStartFilter(List<AreaFilter> AreaF)
         {
-            var Filter = AreaF.Where(u => u.AreaBool != 0).ToList();
+            var FilterAreaId = AreaF.Where(u => u.AreaBool != 0).ToList();
             List<int> AreaInt = new();
-            foreach (var item in Filter)
+            if (FilterAreaId.Count == 0)
             {
-                AreaInt.Add(item.Id - 1);
+                foreach (var item in AreaF)
+                {
+                    AreaInt.Add(item.Id - 1);
+                }
             }
+
+            else if(FilterAreaId.Count != 0)
+            {
+                foreach (var item in FilterAreaId)
+                {
+                    AreaInt.Add(item.Id - 1);
+                }
+            }
+            
 
 
             await Task.Run(() =>
