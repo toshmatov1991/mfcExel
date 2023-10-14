@@ -925,6 +925,13 @@ namespace exel_for_mfc
 
         #region Фильтрация(в процессе)
         List<AreaFilter>? AreaFilterList = new();
+        List<LocalFilter>? LocalFilterList = new();
+        List<AreaFilter>? AreaFilterList = new();
+        List<AreaFilter>? AreaFilterList = new();
+        List<AreaFilter>? AreaFilterList = new();
+
+
+
         public void FilterStart()
         {
             using (ExDbContext db = new())
@@ -975,7 +982,20 @@ namespace exel_for_mfc
         async Task GoStartFilter(List<AreaFilter> AreaF)
         {
             var FilterAreaId = AreaF.Where(u => u.AreaBool != 0).ToList();
+            var FilterLocalId = AreaF.Where(u => u.AreaBool != 0).ToList();
+            var FilterPayId = AreaF.Where(u => u.AreaBool != 0).ToList();
+            var FilterSolId = AreaF.Where(u => u.AreaBool != 0).ToList();
+            var FilterPrivId = AreaF.Where(u => u.AreaBool != 0).ToList();
+
+
             List<int> AreaInt = new();
+            List<int> LocalInt = new();
+            List<int> PayInt = new();
+            List<int> SolInt = new();
+            List<int> PrivInt = new();
+
+
+
             if (FilterAreaId.Count == 0)
             {
                 foreach (var item in AreaF)
@@ -992,6 +1012,11 @@ namespace exel_for_mfc
                 }
             }
             
+
+
+
+
+
 
 
             await Task.Run(() =>

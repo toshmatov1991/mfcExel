@@ -6,7 +6,17 @@ using System.Threading.Tasks;
 
 namespace exel_for_mfc.FilterModels
 {
-    internal class PayFilter
+    public class PayFilter
     {
+        public int Id { get; set; }
+        public decimal? Pay { get; set; }
+        public int? PayBool { get; set; }
+
+        public PayFilter(int id, decimal? pay, int? payBool)
+        {
+            Id = id;
+            Pay = pay;
+            PayBool = payBool;
+        }
     }
 }
