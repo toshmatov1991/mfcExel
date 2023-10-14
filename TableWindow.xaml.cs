@@ -926,9 +926,9 @@ namespace exel_for_mfc
         #region Фильтрация(в процессе)
         List<AreaFilter>? AreaFilterList = new();
         List<LocalFilter>? LocalFilterList = new();
-        List<AreaFilter>? AreaFilterList = new();
-        List<AreaFilter>? AreaFilterList = new();
-        List<AreaFilter>? AreaFilterList = new();
+        List<PayFilter>? PayFilterList = new();
+        List<PrivFilter>? PrivFilterList = new();
+        List<SolFilter>? SolFilterList = new();
 
 
 
@@ -936,8 +936,6 @@ namespace exel_for_mfc
         {
             using (ExDbContext db = new())
             {
-               
-
                 var s = db.Areas.FromSqlRaw("SELECT * FROM Area").ToList();
                 foreach (var item in s)
                 {

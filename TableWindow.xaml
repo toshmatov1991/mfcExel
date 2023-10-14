@@ -238,7 +238,28 @@
                     </DataGridTemplateColumn>
                 </DataGrid.Columns>
             </DataGrid>
-            
+
+            <!-- Населенный пункт -->
+            <DataGrid x:Name="locFilter"
+                  AutoGenerateColumns="False"
+                  Grid.Column="1"
+                  Grid.Row="10" 
+                  Grid.RowSpan="3"
+                  CanUserAddRows="False"
+                  CanUserDeleteRows="False"
+                  CanUserSortColumns="False">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Binding="{Binding LocalName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Header="Населенный пункт"/>
+                    <DataGridTemplateColumn>
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <CheckBox IsChecked="{Binding LocalBool, UpdateSourceTrigger=PropertyChanged}"/>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                </DataGrid.Columns>
+            </DataGrid>
+
             <!-- Кнопка применить фильтр к таблице -->
             <Button Content="Применить фильтр"
                 Grid.Column="6"
