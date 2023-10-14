@@ -73,7 +73,6 @@ public partial class ExDbContext : DbContext
 
             entity.Property(e => e.AreaName).HasMaxLength(120);
 
-            entity.Property(e => e.AreaBool);
         });
 
         modelBuilder.Entity<Locality>(entity =>
@@ -84,7 +83,6 @@ public partial class ExDbContext : DbContext
 
             entity.Property(e => e.LocalName).HasMaxLength(100);
 
-            entity.Property(e => e.LocalBool);
         });
 
         modelBuilder.Entity<PayAmount>(entity =>
@@ -95,7 +93,6 @@ public partial class ExDbContext : DbContext
 
             entity.Property(e => e.Pay).HasColumnType("decimal(18, 0)");
 
-            entity.Property(e => e.PayBool);
         });
 
         modelBuilder.Entity<Privilege>(entity =>
@@ -104,7 +101,6 @@ public partial class ExDbContext : DbContext
 
             entity.Property(e => e.PrivilegesName).HasMaxLength(100);
 
-            entity.Property(e => e.PrivBool);
         });
 
         modelBuilder.Entity<Registry>(entity =>
@@ -153,7 +149,6 @@ public partial class ExDbContext : DbContext
 
             entity.Property(e => e.Rolle).HasMaxLength(30);
 
-            entity.Property(e => e.SolBool);
         });
 
         OnModelCreatingPartial(modelBuilder); 

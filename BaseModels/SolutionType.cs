@@ -12,6 +12,5 @@ public partial class SolutionType
     public string? Passwords { get; set; }
     public string? Rolle { get; set; }
 
-    public bool? SolBool { get; set; }
     public virtual ICollection<Registry> Registries { get; set; } = new List<Registry>();
 }

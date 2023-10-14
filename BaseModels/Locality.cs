@@ -9,7 +9,5 @@ public partial class Locality
 
     public string? LocalName { get; set; }
 
-    public bool? LocalBool { get; set; }
-
     public virtual ICollection<Applicant> Applicants { get; set; } = new List<Applicant>();
 }

@@ -24,15 +24,7 @@ using Newtonsoft.Json;
 using Microsoft.Win32;
 using System.IO.Packaging;
 using System.Globalization;
-using Microsoft.Data.SqlClient;
-using System.Windows.Controls.Primitives;
-using System.ComponentModel;
-using System.Diagnostics;
-using DocumentFormat.OpenXml.InkML;
-using DocumentFormat.OpenXml.Office2016.Drawing.Charts;
-using DocumentFormat.OpenXml.Presentation;
-using DocumentFormat.OpenXml.Office2010.Excel;
-using DocumentFormat.OpenXml.Office2016.Drawing.ChartDrawing;
+
 
 namespace exel_for_mfc
 {
@@ -934,21 +926,63 @@ namespace exel_for_mfc
         #region Фильтрация(в процессе)
         public void FilterStart()
         {
-            //При старте приложения происходит обнуление всех полей Булева
+            //При старте приложения происходит обнуление всех полей Булева и заполнение DataGrid фильтров
 
 
 
             using (ExDbContext db = new())
             {
-                areaFilter.ItemsSource = db.Areas.FromSqlRaw("SELECT * FROM Area").AsNoTracking().ToList();
+                areaFilter.ItemsSource = db.Areas.FromSqlRaw("SELECT * FROM Area").ToList();
             };
         }
 
-        private void AreaCheck(object sender, RoutedEventArgs e)
+        //Поставил галочку
+        private async void AreaCheck(object sender, RoutedEventArgs e)
         {
-            var f = (areaFilter.SelectedItem as Area)?.Id;
-            MessageBox.Show("Поставил галочку  " + f);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+            //using (ExDbContext db = new())
+            //{
+            //    try
+            //    {
+            //        var update = await db.Database.ExecuteSqlRawAsync("UPDATE Area SET AreaBool = {0} WHERE Id = {1}", 1, (areaFilter.SelectedItem as Area)?.Id);
+            //        if (update != 0)
+            //            MessageBox.Show("Обновление прошло успешно!");
+            //    }
+            //    catch (Exception ex)
+            //    {
+            //        MessageBox.Show("Произошла ошибка при обновлении\nПовторите попытку", ex.Message);
+            //    }
+            //};
+
+
+
+
+
         }
+
         private void AreaUnchecked(object sender, RoutedEventArgs e)
         {
             var f = (areaFilter.SelectedItem as Area)?.AreaName;

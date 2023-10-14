@@ -9,7 +9,5 @@ public partial class Privilege
 
     public string? PrivilegesName { get; set; }
 
-    public bool? PrivBool { get; set; }
-
     public virtual ICollection<Applicant> Applicants { get; set; } = new List<Applicant>();
 }
