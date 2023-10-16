@@ -934,6 +934,7 @@ namespace exel_for_mfc
 
         public void FilterStart()
         {
+            #region Район
             using (ExDbContext db = new())
             {
                 var s = db.Areas.FromSqlRaw("SELECT * FROM Area").ToList();
@@ -943,24 +944,93 @@ namespace exel_for_mfc
                 }
                 areaFilter.ItemsSource = AreaFilterList;
             };
+            #endregion
 
-            
+            #region Населенный пункт
+            using (ExDbContext db = new())
+            {
+                var s = db.Localities.FromSqlRaw("SELECT * FROM Locality").ToList();
+                foreach (var item in s)
+                {
+                    LocalFilterList.Add(new LocalFilter(item.Id, item.LocalName, 0));
+                }
+                locFilter.ItemsSource = LocalFilterList;
+            };
+            #endregion
+
+            #region Выплаты
+            using (ExDbContext db = new())
+            {
+                var s = db.PayAmounts.FromSqlRaw("SELECT * FROM PayAmount").ToList();
+                foreach (var item in s)
+                {
+                    PayFilterList.Add(new PayFilter(item.Id, item.Pay, 0));
+                }
+              //  areaFilter.ItemsSource = PayFilterList;
+            };
+            #endregion
+
+            #region Льготы
+            using (ExDbContext db = new())
+            {
+                var s = db.Privileges.FromSqlRaw("SELECT * FROM Privileges").ToList();
+                foreach (var item in s)
+                {
+                    PrivFilterList.Add(new PrivFilter(item.Id, item.PrivilegesName, 0));
+                }
+             //   areaFilter.ItemsSource = PrivFilterList;
+            };
+            #endregion
+
+            #region Решение
+            using (ExDbContext db = new())
+            {
+                var s = db.SolutionTypes.FromSqlRaw("SELECT * FROM SolutionType").ToList();
+                foreach (var item in s)
+                {
+                    SolFilterList.Add(new SolFilter(item.Id, item.SolutionName, 0));
+                }
+               // areaFilter.ItemsSource = SolFilterList;
+            };
+            #endregion
+
+
 
         }
 
-        //Поставил галочку
+        //Поставил галочку Район
         private void AreaCheck(object sender, RoutedEventArgs e)
         {
-
             AreaFilterList.FindAll(s => s.AreaName == (areaFilter.SelectedItem as Area)?.AreaName).ForEach(x => x.AreaBool = 1);
-           
         }
 
-        //Убрал галочку
+        //Убрал галочку Район
         private void AreaUnchecked(object sender, RoutedEventArgs e)
         {
             AreaFilterList.FindAll(s => s.AreaName == (areaFilter.SelectedItem as Area)?.AreaName).ForEach(x => x.AreaBool = 0);
         }
+
+        //Поставил галочку Населенный пункт
+        private void LocalUnchecked(object sender, RoutedEventArgs e)
+        {
+            LocalFilterList.FindAll(s => s.LocalName == (locFilter.SelectedItem as Locality)?.LocalName).ForEach(x => x.LocalBool = 1);
+        }
+
+        //Убрал галочку Населенный пункт
+        private void LocalChecked(object sender, RoutedEventArgs e)
+        {
+            LocalFilterList.FindAll(s => s.LocalName == (locFilter.SelectedItem as Locality)?.LocalName).ForEach(x => x.LocalBool = 0);
+        }
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -973,18 +1043,17 @@ namespace exel_for_mfc
         //Применить фильтр
         private async void Button_Click_4(object sender, RoutedEventArgs e)
         {
-            await GoStartFilter(AreaFilterList);
+            await GoStartFilter(AreaFilterList, LocalFilterList);
         }
 
         //Метод для выборки по фильтрам
-        async Task GoStartFilter(List<AreaFilter> AreaF)
+        async Task GoStartFilter(List<AreaFilter> AreaF, List<LocalFilter> LocalF)
         {
             var FilterAreaId = AreaF.Where(u => u.AreaBool != 0).ToList();
-            var FilterLocalId = AreaF.Where(u => u.AreaBool != 0).ToList();
+            var FilterLocalId = LocalF.Where(u => u.LocalBool != 0).ToList();
             var FilterPayId = AreaF.Where(u => u.AreaBool != 0).ToList();
             var FilterSolId = AreaF.Where(u => u.AreaBool != 0).ToList();
             var FilterPrivId = AreaF.Where(u => u.AreaBool != 0).ToList();
-
 
             List<int> AreaInt = new();
             List<int> LocalInt = new();
@@ -992,13 +1061,12 @@ namespace exel_for_mfc
             List<int> SolInt = new();
             List<int> PrivInt = new();
 
-
-
+            //Area
             if (FilterAreaId.Count == 0)
             {
                 foreach (var item in AreaF)
                 {
-                    AreaInt.Add(item.Id - 1);
+                    AreaInt.Add(item.Id);
                 }
             }
 
@@ -1006,12 +1074,26 @@ namespace exel_for_mfc
             {
                 foreach (var item in FilterAreaId)
                 {
-                    AreaInt.Add(item.Id - 1);
+                    AreaInt.Add(item.Id);
                 }
             }
-            
 
+            //Local
+            if (FilterLocalId.Count == 0)
+            {
+                foreach (var item in LocalF)
+                {
+                    LocalInt.Add(item.Id);
+                }
+            }
 
+            else if (FilterLocalId.Count != 0)
+            {
+                foreach (var item in FilterLocalId)
+                {
+                    LocalInt.Add(item.Id);
+                }
+            }
 
 
 
@@ -1024,6 +1106,8 @@ namespace exel_for_mfc
                 {
                     MyList = (from reg in db.Registries
                               join appl in db.Applicants on reg.ApplicantFk equals appl.Id
+                              where AreaInt.Contains((int)appl.AreaFk)
+                                  && LocalInt.Contains((int)appl.LocalityFk)
                               select new SClass
                               {
                                   IdReg = reg.Id,
@@ -1044,14 +1128,17 @@ namespace exel_for_mfc
                                   Trek = reg.Trek,
                                   MailingDate = reg.MailingDate,
                                   IdApplicant = appl.Id
-                              }).Where(a => AreaInt.Contains((int)a.Area)).AsNoTracking().ToList();
+                              }).AsNoTracking().ToList();
 
-
-                    Dispatcher.Invoke(() =>
+                    if (MyList == null)
+                        MessageBox.Show("По вашему запросу ничего не найдено :(");
+                    else
                     {
-                        dataGrid.ItemsSource = MyList;
-                    });
-
+                        Dispatcher.Invoke(() =>
+                        {
+                            dataGrid.ItemsSource = MyList;
+                        });
+                    }
                 };
 
             });
@@ -1091,8 +1178,9 @@ namespace exel_for_mfc
 
 
 
+
         #endregion
 
-      
+    
     }
 }

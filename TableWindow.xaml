@@ -242,18 +242,17 @@
             <!-- Населенный пункт -->
             <DataGrid x:Name="locFilter"
                   AutoGenerateColumns="False"
-                  Grid.Column="1"
                   Grid.Row="10" 
                   Grid.RowSpan="3"
                   CanUserAddRows="False"
                   CanUserDeleteRows="False"
-                  CanUserSortColumns="False">
+                  CanUserSortColumns="False" Grid.ColumnSpan="3" Margin="157,0,153,0">
                 <DataGrid.Columns>
                     <DataGridTextColumn Binding="{Binding LocalName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Header="Населенный пункт"/>
                     <DataGridTemplateColumn>
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
-                                <CheckBox IsChecked="{Binding LocalBool, UpdateSourceTrigger=PropertyChanged}"/>
+                                <CheckBox IsChecked="{Binding LocalBool, UpdateSourceTrigger=PropertyChanged}" Unchecked="LocalUnchecked" Checked="LocalChecked"/>
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
@@ -268,11 +267,11 @@
                 Background="Bisque"
                 Height="42"
                 Width="125" Click="Button_Click_4"/>
-            
-            
-            
-            
-            
+
+
+
+
+
         </Grid>
     </Border>
 </Window>
