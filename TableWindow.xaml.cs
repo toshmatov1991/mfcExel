@@ -1003,7 +1003,6 @@ namespace exel_for_mfc
         {
             AreaFilterList.FindAll(s => s.AreaName == (areaFilter.SelectedItem as Area)?.AreaName).ForEach(x => x.AreaBool = 1);
         }
-
         //Убрал галочку Район
         private void AreaUnchecked(object sender, RoutedEventArgs e)
         {
@@ -1015,7 +1014,6 @@ namespace exel_for_mfc
         {
             LocalFilterList.FindAll(s => s.LocalName == (locFilter.SelectedItem as Locality)?.LocalName).ForEach(x => x.LocalBool = 1);
         }
-
         //Убрал галочку Населенный пункт
         private void LocalChecked(object sender, RoutedEventArgs e)
         {
@@ -1027,7 +1025,6 @@ namespace exel_for_mfc
         {
             PayFilterList.FindAll(s => s.Pay == (payFilter.SelectedItem as PayAmount)?.Pay).ForEach(x => x.PayBool = 1);
         }
-
         //Убрал галочку Выплата
         private void PayUnChecked(object sender, RoutedEventArgs e)
         {
@@ -1039,7 +1036,6 @@ namespace exel_for_mfc
         {
             PrivFilterList.FindAll(s => s.PrivilegesName == (privFilter.SelectedItem as Privilege)?.PrivilegesName).ForEach(x => x.PrivBool = 0);
         }
-
         //Поставил галочку Льгота
         private void PrivChecked(object sender, RoutedEventArgs e)
         {
@@ -1129,6 +1125,22 @@ namespace exel_for_mfc
                 }
             }
 
+            //Priv
+            if (FilterPrivId.Count == 0)
+            {
+                foreach (var item in PrivF)
+                {
+                    PrivInt.Add(item.Id);
+                }
+            }
+            else if (FilterPrivId.Count != 0)
+            {
+                foreach (var item in FilterPrivId)
+                {
+                    PrivInt.Add(item.Id);
+                }
+            }
+
 
 
 
@@ -1148,6 +1160,7 @@ namespace exel_for_mfc
                               where AreaInt.Contains((int)appl.AreaFk)
                                   && LocalInt.Contains((int)appl.LocalityFk)
                                   && PayInt.Contains((int)reg.PayAmountFk)
+                                  && PrivInt.Contains((int)appl.PrivilegesFk)
                               select new SClass
                               {
                                   IdReg = reg.Id,

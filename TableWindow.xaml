@@ -269,10 +269,11 @@
                   Grid.Row="10" 
                   Grid.Column="3"
                   Grid.RowSpan="3"
+                     
                   CanUserAddRows="False"
                   CanUserDeleteRows="False"
                   CanUserSortColumns="False"
-                  Margin="4,5,69,5">
+                  Margin="60,5,13,5">
                 <DataGrid.Columns>
                     <DataGridTextColumn Binding="{Binding Pay, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Header="Выплаты"/>
                     <DataGridTemplateColumn>
@@ -294,13 +295,13 @@
                   CanUserAddRows="False"
                   CanUserDeleteRows="False"
                   CanUserSortColumns="False"
-                  Margin="5">
+                  Margin="4,5,107,5" Grid.ColumnSpan="2">
                 <DataGrid.Columns>
                     <DataGridTextColumn Binding="{Binding PrivilegesName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Header="Льготы"/>
                     <DataGridTemplateColumn>
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
-                                <CheckBox IsChecked="{Binding PrivBool, UpdateSourceTrigger=PropertyChanged}"/>
+                                <CheckBox IsChecked="{Binding PrivBool, UpdateSourceTrigger=PropertyChanged}" Unchecked="PrivUnchecked" Checked="PrivChecked"/>
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
