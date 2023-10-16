@@ -267,7 +267,7 @@
             <DataGrid x:Name="payFilter"
                   AutoGenerateColumns="False"
                   Grid.Row="10" 
-                  Grid.Column="2"
+                  Grid.Column="3"
                   Grid.RowSpan="3"
                   CanUserAddRows="False"
                   CanUserDeleteRows="False"
@@ -278,7 +278,29 @@
                     <DataGridTemplateColumn>
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
-                                <CheckBox IsChecked="{Binding PayBool, UpdateSourceTrigger=PropertyChanged}"/>
+                                <CheckBox IsChecked="{Binding PayBool, UpdateSourceTrigger=PropertyChanged}" Checked="PayChecked" Unchecked="PayUnChecked"/>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                </DataGrid.Columns>
+            </DataGrid>
+
+            <!-- Льгота -->
+            <DataGrid x:Name="privFilter"
+                  AutoGenerateColumns="False"
+                  Grid.Row="10" 
+                  Grid.Column="2"
+                  Grid.RowSpan="3"
+                  CanUserAddRows="False"
+                  CanUserDeleteRows="False"
+                  CanUserSortColumns="False"
+                  Margin="5">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Binding="{Binding PrivilegesName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Header="Льготы"/>
+                    <DataGridTemplateColumn>
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <CheckBox IsChecked="{Binding PrivBool, UpdateSourceTrigger=PropertyChanged}"/>
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>

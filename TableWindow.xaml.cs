@@ -978,7 +978,7 @@ namespace exel_for_mfc
                 {
                     PrivFilterList.Add(new PrivFilter(item.Id, item.PrivilegesName, 0));
                 }
-             //   areaFilter.ItemsSource = PrivFilterList;
+                   privFilter.ItemsSource = PrivFilterList;
             };
             #endregion
 
@@ -1022,9 +1022,29 @@ namespace exel_for_mfc
             LocalFilterList.FindAll(s => s.LocalName == (locFilter.SelectedItem as Locality)?.LocalName).ForEach(x => x.LocalBool = 0);
         }
 
+        //Поставил галочку Выплата
+        private void PayChecked(object sender, RoutedEventArgs e)
+        {
+            PayFilterList.FindAll(s => s.Pay == (payFilter.SelectedItem as PayAmount)?.Pay).ForEach(x => x.PayBool = 1);
+        }
 
+        //Убрал галочку Выплата
+        private void PayUnChecked(object sender, RoutedEventArgs e)
+        {
+            PayFilterList.FindAll(s => s.Pay == (payFilter.SelectedItem as PayAmount)?.Pay).ForEach(x => x.PayBool = 0);
+        }
 
+        //Убрал галочку Льгота
+        private void PrivUnchecked(object sender, RoutedEventArgs e)
+        {
+            PrivFilterList.FindAll(s => s.PrivilegesName == (privFilter.SelectedItem as Privilege)?.PrivilegesName).ForEach(x => x.PrivBool = 0);
+        }
 
+        //Поставил галочку Льгота
+        private void PrivChecked(object sender, RoutedEventArgs e)
+        {
+            PrivFilterList.FindAll(s => s.PrivilegesName == (privFilter.SelectedItem as Privilege)?.PrivilegesName).ForEach(x => x.PrivBool = 1);
+        }
 
 
 
@@ -1043,17 +1063,17 @@ namespace exel_for_mfc
         //Применить фильтр
         private async void Button_Click_4(object sender, RoutedEventArgs e)
         {
-            await GoStartFilter(AreaFilterList, LocalFilterList);
+            await GoStartFilter(AreaFilterList, LocalFilterList, PayFilterList, PrivFilterList, SolFilterList);
         }
 
         //Метод для выборки по фильтрам
-        async Task GoStartFilter(List<AreaFilter> AreaF, List<LocalFilter> LocalF)
+        async Task GoStartFilter(List<AreaFilter> AreaF, List<LocalFilter> LocalF, List<PayFilter> PayF, List<PrivFilter> PrivF, List<SolFilter> SolF)
         {
             var FilterAreaId = AreaF.Where(u => u.AreaBool != 0).ToList();
             var FilterLocalId = LocalF.Where(u => u.LocalBool != 0).ToList();
-            var FilterPayId = AreaF.Where(u => u.AreaBool != 0).ToList();
-            var FilterSolId = AreaF.Where(u => u.AreaBool != 0).ToList();
-            var FilterPrivId = AreaF.Where(u => u.AreaBool != 0).ToList();
+            var FilterPayId = PayF.Where(u => u.PayBool != 0).ToList();
+            var FilterSolId = SolF.Where(u => u.SolBool != 0).ToList();
+            var FilterPrivId = PrivF.Where(u => u.PrivBool != 0).ToList();
 
             List<int> AreaInt = new();
             List<int> LocalInt = new();
@@ -1069,7 +1089,6 @@ namespace exel_for_mfc
                     AreaInt.Add(item.Id);
                 }
             }
-
             else if(FilterAreaId.Count != 0)
             {
                 foreach (var item in FilterAreaId)
@@ -1086,7 +1105,6 @@ namespace exel_for_mfc
                     LocalInt.Add(item.Id);
                 }
             }
-
             else if (FilterLocalId.Count != 0)
             {
                 foreach (var item in FilterLocalId)
@@ -1094,6 +1112,27 @@ namespace exel_for_mfc
                     LocalInt.Add(item.Id);
                 }
             }
+
+            //Pay
+            if (FilterPayId.Count == 0)
+            {
+                foreach (var item in PayF)
+                {
+                    PayInt.Add(item.Id);
+                }
+            }
+            else if (FilterPayId.Count != 0)
+            {
+                foreach (var item in FilterPayId)
+                {
+                    PayInt.Add(item.Id);
+                }
+            }
+
+
+
+
+
 
 
 
@@ -1108,6 +1147,7 @@ namespace exel_for_mfc
                               join appl in db.Applicants on reg.ApplicantFk equals appl.Id
                               where AreaInt.Contains((int)appl.AreaFk)
                                   && LocalInt.Contains((int)appl.LocalityFk)
+                                  && PayInt.Contains((int)reg.PayAmountFk)
                               select new SClass
                               {
                                   IdReg = reg.Id,
@@ -1179,8 +1219,12 @@ namespace exel_for_mfc
 
 
 
+
+
         #endregion
 
-    
+
+
+     
     }
 }
