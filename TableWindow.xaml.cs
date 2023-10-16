@@ -990,7 +990,7 @@ namespace exel_for_mfc
                 {
                     SolFilterList.Add(new SolFilter(item.Id, item.SolutionName, 0));
                 }
-               // areaFilter.ItemsSource = SolFilterList;
+                solFilter.ItemsSource = SolFilterList;
             };
             #endregion
 
@@ -1042,7 +1042,17 @@ namespace exel_for_mfc
             PrivFilterList.FindAll(s => s.PrivilegesName == (privFilter.SelectedItem as Privilege)?.PrivilegesName).ForEach(x => x.PrivBool = 1);
         }
 
+        //Поставил галочку Решение
+        private void SolChecked(object sender, RoutedEventArgs e)
+        {
+            SolFilterList.FindAll(s => s.SolutionName == (solFilter.SelectedItem as SolutionType)?.SolutionName).ForEach(x => x.SolBool = 1);
+        }
 
+        //Убрал галочку Решение
+        private void SolUnChecked(object sender, RoutedEventArgs e)
+        {
+            SolFilterList.FindAll(s => s.SolutionName == (solFilter.SelectedItem as SolutionType)?.SolutionName).ForEach(x => x.SolBool = 0);
+        }
 
 
 
@@ -1141,6 +1151,21 @@ namespace exel_for_mfc
                 }
             }
 
+            //Sol
+            if (FilterSolId.Count == 0)
+            {
+                foreach (var item in SolF)
+                {
+                    SolInt.Add(item.Id);
+                }
+            }
+            else if (FilterSolId.Count != 0)
+            {
+                foreach (var item in FilterSolId)
+                {
+                    SolInt.Add(item.Id);
+                }
+            }
 
 
 
@@ -1161,6 +1186,7 @@ namespace exel_for_mfc
                                   && LocalInt.Contains((int)appl.LocalityFk)
                                   && PayInt.Contains((int)reg.PayAmountFk)
                                   && PrivInt.Contains((int)appl.PrivilegesFk)
+                                  && SolInt.Contains((int)reg.SolutionFk)
                               select new SClass
                               {
                                   IdReg = reg.Id,
@@ -1234,10 +1260,11 @@ namespace exel_for_mfc
 
 
 
+
+
+
         #endregion
 
-
-
-     
+      
     }
 }

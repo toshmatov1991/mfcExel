@@ -269,7 +269,6 @@
                   Grid.Row="10" 
                   Grid.Column="3"
                   Grid.RowSpan="3"
-                     
                   CanUserAddRows="False"
                   CanUserDeleteRows="False"
                   CanUserSortColumns="False"
@@ -308,7 +307,27 @@
                 </DataGrid.Columns>
             </DataGrid>
 
-
+            <!-- Решение -->
+            <DataGrid x:Name="solFilter"
+                  AutoGenerateColumns="False"
+                  Grid.Row="10" 
+                  Grid.Column="4"
+                  Grid.RowSpan="3"
+                  CanUserAddRows="False"
+                  CanUserDeleteRows="False"
+                  CanUserSortColumns="False"
+                  Margin="5">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Binding="{Binding SolutionName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Header="Решение"/>
+                    <DataGridTemplateColumn>
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <CheckBox IsChecked="{Binding SolBool, UpdateSourceTrigger=PropertyChanged}" Checked="SolChecked" Unchecked="SolUnChecked"/>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                </DataGrid.Columns>
+            </DataGrid>
 
 
             <!-- Кнопка применить фильтр к таблице -->
