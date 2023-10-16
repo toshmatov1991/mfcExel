@@ -223,10 +223,12 @@
             <DataGrid x:Name="areaFilter"
                   AutoGenerateColumns="False"
                   Grid.Row="10" 
+                  Grid.Column="0"
                   Grid.RowSpan="3"
                   CanUserAddRows="False"
                   CanUserDeleteRows="False"
-                  CanUserSortColumns="False" Margin="0,0,10,0">
+                  CanUserSortColumns="False"
+                      Margin="5">
                 <DataGrid.Columns>
                     <DataGridTextColumn Binding="{Binding AreaName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Header="Район"/>
                     <DataGridTemplateColumn>
@@ -243,10 +245,12 @@
             <DataGrid x:Name="locFilter"
                   AutoGenerateColumns="False"
                   Grid.Row="10" 
+                  Grid.Column="1"
                   Grid.RowSpan="3"
                   CanUserAddRows="False"
                   CanUserDeleteRows="False"
-                  CanUserSortColumns="False" Grid.ColumnSpan="3" Margin="157,0,153,0">
+                  CanUserSortColumns="False"
+                  Margin="-2 5 -2 5">
                 <DataGrid.Columns>
                     <DataGridTextColumn Binding="{Binding LocalName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Header="Населенный пункт"/>
                     <DataGridTemplateColumn>
@@ -258,6 +262,31 @@
                     </DataGridTemplateColumn>
                 </DataGrid.Columns>
             </DataGrid>
+
+            <!-- Выплата -->
+            <DataGrid x:Name="payFilter"
+                  AutoGenerateColumns="False"
+                  Grid.Row="10" 
+                  Grid.Column="2"
+                  Grid.RowSpan="3"
+                  CanUserAddRows="False"
+                  CanUserDeleteRows="False"
+                  CanUserSortColumns="False"
+                  Margin="4,5,69,5">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Binding="{Binding Pay, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Header="Выплаты"/>
+                    <DataGridTemplateColumn>
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <CheckBox IsChecked="{Binding PayBool, UpdateSourceTrigger=PropertyChanged}"/>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                </DataGrid.Columns>
+            </DataGrid>
+
+
+
 
             <!-- Кнопка применить фильтр к таблице -->
             <Button Content="Применить фильтр"

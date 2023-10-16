@@ -966,7 +966,7 @@ namespace exel_for_mfc
                 {
                     PayFilterList.Add(new PayFilter(item.Id, item.Pay, 0));
                 }
-              //  areaFilter.ItemsSource = PayFilterList;
+                payFilter.ItemsSource = PayFilterList;
             };
             #endregion
 
