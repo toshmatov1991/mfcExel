@@ -371,43 +371,43 @@ namespace exel_for_mfc
                     break;
 
                 case "Фамилия":
-                            dataGrid.ItemsSource = MyList.Where(u => u.Family != null && u.Family.Replace(" ", "").ToLower().Contains(SearchTable.Text.Replace(" ", "").ToLower()));
+                            dataGrid.ItemsSource = MyList.Where(u => u.Family != null && u.Family.Replace(" ", "").ToLower().Contains(SearchTable.Text.Replace(" ", "").ToLower())).ToList();
                     break;
 
                 case "Имя":
-                            dataGrid.ItemsSource = MyList.Where(u => u.Name != null && u.Name.Replace(" ", "").ToLower().Contains(SearchTable.Text.Replace(" ", "").ToLower()));
+                            dataGrid.ItemsSource = MyList.Where(u => u.Name != null && u.Name.Replace(" ", "").ToLower().Contains(SearchTable.Text.Replace(" ", "").ToLower())).ToList();
                     break;
 
                 case "Отчество":
-                            dataGrid.ItemsSource = MyList.Where(u => u.Lastname != null && u.Lastname.Replace(" ", "").ToLower().Contains(SearchTable.Text.Replace(" ", "").ToLower()));
+                            dataGrid.ItemsSource = MyList.Where(u => u.Lastname != null && u.Lastname.Replace(" ", "").ToLower().Contains(SearchTable.Text.Replace(" ", "").ToLower())).ToList();
                     break;
 
                 case "ФИО":
-                            dataGrid.ItemsSource = MyList.Where(u => $"{u.Family}{u.Name}{u.Lastname}".Replace(" ", "").ToLower().Contains(SearchTable.Text.Replace(" ", "").ToLower()));
+                            dataGrid.ItemsSource = MyList.Where(u => $"{u.Family}{u.Name}{u.Lastname}".Replace(" ", "").ToLower().Contains(SearchTable.Text.Replace(" ", "").ToLower())).ToList();
                     break;
 
                 case "Снилс":
                     
                         //Надо еще убрать пробелы
                                 dataGrid.ItemsSource = MyList.Where(u => u.Snils != null
-                                                        && u.Snils.Replace(" ", "").Replace("-", "").Contains(SearchTable.Text.Replace(" ", "").Replace("-", "")));
+                                                        && u.Snils.Replace(" ", "").Replace("-", "").Contains(SearchTable.Text.Replace(" ", "").Replace("-", ""))).ToList();
                     break;
 
                 case "Адрес":
                             dataGrid.ItemsSource = MyList.Where(u => u.Adress != null
-                                                          && u.Adress.Replace(" ", "").ToLower().Contains(SearchTable.Text.Replace(" ", "").ToLower()));
+                                                          && u.Adress.Replace(" ", "").ToLower().Contains(SearchTable.Text.Replace(" ", "").ToLower())).ToList();
                     break;
 
                 case "Серия и номер сертификата":
-                            dataGrid.ItemsSource = MyList.Where(u => u.Sernumb != null && u.Sernumb.Replace(" ", "").ToLower().Contains(SearchTable.Text.Replace(" ", "").ToLower()));
+                            dataGrid.ItemsSource = MyList.Where(u => u.Sernumb != null && u.Sernumb.Replace(" ", "").ToLower().Contains(SearchTable.Text.Replace(" ", "").ToLower())).ToList();
                     break;
 
                 case "По ID":
-                            dataGrid.ItemsSource = MyList.Where(u => u.IdReg.ToString() != null && u.IdReg.ToString().Replace(" ", "") == SearchTable.Text.Replace(" ", ""));
+                            dataGrid.ItemsSource = MyList.Where(u => u.IdReg.ToString() != null && u.IdReg.ToString().Replace(" ", "") == SearchTable.Text.Replace(" ", "")).ToList();
                     break;
 
                 default:
-                    dataGrid.ItemsSource = MyList;
+                    dataGrid.ItemsSource = MyList.ToList();
                     break;
             }
         }
