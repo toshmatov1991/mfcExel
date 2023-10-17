@@ -84,7 +84,7 @@ namespace exel_for_mfc
                 SolCombobox = db.SolutionTypes.FromSqlRaw("SELECT * FROM SolutionType").ToList();
             };
         }
-
+      
         //Событие редактирования ячейки
         public async void dataGrid_CellEditEnding(object sender, DataGridCellEditEndingEventArgs e)
         {
@@ -357,127 +357,57 @@ namespace exel_for_mfc
         }
 
         //Поиск(Нормально)
-        private async void Button_Click_3(object sender, RoutedEventArgs e)
+        private void Button_Click_3(object sender, RoutedEventArgs e)
         {
+            GoSerchNoPainHohuVTgu();
             switch (filterSearch.Text)
             {
                 case "По всем полям":
-                    //По всем полям
-                    GoSerchNoPainHohuVTgu();
+                    Dispatcher.Invoke(() =>
+                    {
+                        dataGrid.ItemsSource = MyList.Where(u => $"{u.IdReg}{u.Family}{u.Name}{u.Lastname}{u.Snils}{u.Adress}{u.Sernumb}".Replace(" ", "").ToLower().Contains(SearchTable.Text.Replace(" ", "").ToLower())).ToList();
+                    });
+                 
                     break;
 
                 case "Фамилия":
-                    await Task.Run(() =>
-                    {
-                        //Надо еще убрать пробелы
-                        var filtered = MyList.Where(u => u.Family != null && u.Family.Replace(" ", "").ToLower().Contains(SearchTable.Text.Replace(" ", "").ToLower()));
-
-                        Dispatcher.Invoke(() =>
-                        {
-                            dataGrid.ItemsSource = filtered;
-                        });
-                    });
+                            dataGrid.ItemsSource = MyList.Where(u => u.Family != null && u.Family.Replace(" ", "").ToLower().Contains(SearchTable.Text.Replace(" ", "").ToLower()));
                     break;
 
                 case "Имя":
-                    await Task.Run(() =>
-                    {
-                        //Надо еще убрать пробелы
-                        var filtered = MyList.Where(u => u.Name != null && u.Name.Replace(" ", "").ToLower().Contains(SearchTable.Text.Replace(" ", "").ToLower()));
-
-                        Dispatcher.Invoke(() =>
-                        {
-                            dataGrid.ItemsSource = filtered;
-                        });
-                    });
+                            dataGrid.ItemsSource = MyList.Where(u => u.Name != null && u.Name.Replace(" ", "").ToLower().Contains(SearchTable.Text.Replace(" ", "").ToLower()));
                     break;
 
                 case "Отчество":
-                    await Task.Run(() =>
-                    {
-                        //Надо еще убрать пробелы
-                        var filtered = MyList.Where(u => u.Lastname != null && u.Lastname.Replace(" ", "").ToLower().Contains(SearchTable.Text.Replace(" ", "").ToLower()));
-
-                        Dispatcher.Invoke(() =>
-                        {
-                            dataGrid.ItemsSource = filtered;
-                        });
-                    });
+                            dataGrid.ItemsSource = MyList.Where(u => u.Lastname != null && u.Lastname.Replace(" ", "").ToLower().Contains(SearchTable.Text.Replace(" ", "").ToLower()));
                     break;
 
                 case "ФИО":
-                    await Task.Run(() =>
-                    {
-                        //Надо еще убрать пробелы
-                        var filtered = MyList.Where(u => $"{u.Family}{u.Name}{u.Lastname}".Replace(" ", "").ToLower().Contains(SearchTable.Text.Replace(" ", "").ToLower()));
-
-
-                        Dispatcher.Invoke(() =>
-                        {
-                            dataGrid.ItemsSource = filtered;
-                        });
-                    });
+                            dataGrid.ItemsSource = MyList.Where(u => $"{u.Family}{u.Name}{u.Lastname}".Replace(" ", "").ToLower().Contains(SearchTable.Text.Replace(" ", "").ToLower()));
                     break;
 
                 case "Снилс":
-                    await Task.Run(() =>
-                    {
+                    
                         //Надо еще убрать пробелы
-                        var filtered = MyList.Where(u => u.Snils != null
+                                dataGrid.ItemsSource = MyList.Where(u => u.Snils != null
                                                         && u.Snils.Replace(" ", "").Replace("-", "").Contains(SearchTable.Text.Replace(" ", "").Replace("-", "")));
-                        if (filtered == null)
-                            return;
-                        else
-                        {
-                            Dispatcher.Invoke(() =>
-                            {
-                                dataGrid.ItemsSource = filtered;
-                            });
-                        }
-                    });
                     break;
 
                 case "Адрес":
-                    await Task.Run(() =>
-                    {
-                        //Надо еще убрать пробелы
-                        Dispatcher.Invoke(() =>
-                        {
-                            var filtered = MyList.Where(u => u.Adress != null
+                            dataGrid.ItemsSource = MyList.Where(u => u.Adress != null
                                                           && u.Adress.Replace(" ", "").ToLower().Contains(SearchTable.Text.Replace(" ", "").ToLower()));
-                            dataGrid.ItemsSource = filtered;
-                        });
-                    });
                     break;
 
                 case "Серия и номер сертификата":
-                    await Task.Run(() =>
-                    {
-                        //Надо еще убрать пробелы
-                        var filtered = MyList.Where(u => u.Sernumb != null && u.Sernumb.Replace(" ", "").ToLower().Contains(SearchTable.Text.Replace(" ", "").ToLower()));
-
-                        Dispatcher.Invoke(() =>
-                        {
-                            dataGrid.ItemsSource = filtered;
-                        });
-                    });
+                            dataGrid.ItemsSource = MyList.Where(u => u.Sernumb != null && u.Sernumb.Replace(" ", "").ToLower().Contains(SearchTable.Text.Replace(" ", "").ToLower()));
                     break;
 
                 case "По ID":
-                    await Task.Run(() =>
-                    {
-                        //Надо еще убрать пробелы
-                        var filtered = MyList.Where(u => u.IdReg.ToString() != null && u.IdReg.ToString().Replace(" ", "") == SearchTable.Text.Replace(" ", ""));
-
-                        Dispatcher.Invoke(() =>
-                        {
-                            dataGrid.ItemsSource = filtered;
-                        });
-                    });
+                            dataGrid.ItemsSource = MyList.Where(u => u.IdReg.ToString() != null && u.IdReg.ToString().Replace(" ", "") == SearchTable.Text.Replace(" ", ""));
                     break;
 
                 default:
-                    GoSerchNoPainHohuVTgu();
+                    dataGrid.ItemsSource = MyList;
                     break;
             }
         }
@@ -490,9 +420,8 @@ namespace exel_for_mfc
         }
 
         //Задача поиска(нормально)
-        void GoSerchNoPainHohuVTgu()
+        static void GoSerchNoPainHohuVTgu()
         {
-
             using ExDbContext db = new();
             MyList = (from reg in db.Registries
                       join appl in db.Applicants on reg.ApplicantFk equals appl.Id
@@ -516,9 +445,7 @@ namespace exel_for_mfc
                           Trek = reg.Trek,
                           MailingDate = reg.MailingDate,
                           IdApplicant = appl.Id
-                      }).Where(u => $"{u.IdReg}{u.Family}{u.Name}{u.Lastname}{u.Snils}{u.Adress}{u.Sernumb}".Contains(SearchTable.Text.Replace(" ", "").ToLower())).ToList();
-
-           dataGrid.ItemsSource = MyList;
+                      }).ToList();
             #endregion
         }
             #region События изменения значений ComboBox(Решено)
