@@ -46,56 +46,46 @@ namespace exel_for_mfc
         }
 
         //Запрос для заполнения таблицы
-        async void Start()
+        void Start()
         {
-            await GoStart();
-        }
-        async Task GoStart()
-        {
-            await Task.Run(() =>
+            using (ExDbContext db = new())
             {
-                
-                    using (ExDbContext db = new())
-                    {
-                    MyList = (from reg in db.Registries
-                                  join appl in db.Applicants on reg.ApplicantFk equals appl.Id
-                                  select new SClass
-                                  {
-                                      IdReg = reg.Id,
-                                      Family = appl.Firstname,
-                                      Name = appl.Middlename,
-                                      Lastname = appl.Lastname,
-                                      Snils = appl.Snils,
-                                      Area = appl.AreaFk - 1,
-                                      Local = appl.LocalityFk - 1,
-                                      Adress = appl.Adress,
-                                      Lgota = appl.PrivilegesFk - 1,
-                                      Pay = reg.PayAmountFk - 1,
-                                      Sernumb = reg.SerialAndNumberSert,
-                                      DateGetSert = reg.DateGetSert,
-                                      Solution = reg.SolutionFk - 1,
-                                      DateAndNumbSolutionSert = reg.DateAndNumbSolutionSert,
-                                      Comment = reg.Comment,
-                                      Trek = reg.Trek,
-                                      MailingDate = reg.MailingDate,
-                                      IdApplicant = appl.Id
-                                  }).AsNoTracking().ToList();
-                    Dispatcher.Invoke(() =>
-                    {
-                        dataGrid.ItemsSource = MyList;
-                    });   
+                MyList = (from reg in db.Registries
+                          join appl in db.Applicants on reg.ApplicantFk equals appl.Id
+                          select new SClass
+                          {
+                              IdReg = reg.Id,
+                              Family = appl.Firstname,
+                              Name = appl.Middlename,
+                              Lastname = appl.Lastname,
+                              Snils = appl.Snils,
+                              Area = appl.AreaFk - 1,
+                              Local = appl.LocalityFk - 1,
+                              Adress = appl.Adress,
+                              Lgota = appl.PrivilegesFk - 1,
+                              Pay = reg.PayAmountFk - 1,
+                              Sernumb = reg.SerialAndNumberSert,
+                              DateGetSert = reg.DateGetSert,
+                              Solution = reg.SolutionFk - 1,
+                              DateAndNumbSolutionSert = reg.DateAndNumbSolutionSert,
+                              Comment = reg.Comment,
+                              Trek = reg.Trek,
+                              MailingDate = reg.MailingDate,
+                              IdApplicant = appl.Id
+                          }).ToList();
 
-                        AreaCombobox = db.Areas.FromSqlRaw("SELECT * FROM Area").AsNoTracking().ToList();
-                        LocalCombobox = db.Localities.FromSqlRaw("SELECT * FROM Locality").AsNoTracking().ToList();
-                        PayCombobox = db.PayAmounts.FromSqlRaw("SELECT * FROM PayAmount").AsNoTracking().ToList();
-                        PrivelCombobox = db.Privileges.FromSqlRaw("SELECT * FROM Privileges").AsNoTracking().ToList();
-                        SolCombobox = db.SolutionTypes.FromSqlRaw("SELECT * FROM SolutionType").AsNoTracking().ToList();
-                    };
-               
-            });
+                Dispatcher.Invoke(() =>
+                {
+                    dataGrid.ItemsSource = MyList;
+                });
+
+                AreaCombobox = db.Areas.FromSqlRaw("SELECT * FROM Area").ToList();
+                LocalCombobox = db.Localities.FromSqlRaw("SELECT * FROM Locality").ToList();
+                PayCombobox = db.PayAmounts.FromSqlRaw("SELECT * FROM PayAmount").ToList();
+                PrivelCombobox = db.Privileges.FromSqlRaw("SELECT * FROM Privileges").ToList();
+                SolCombobox = db.SolutionTypes.FromSqlRaw("SELECT * FROM SolutionType").ToList();
+            };
         }
-
-
 
         //Событие редактирования ячейки
         public async void dataGrid_CellEditEnding(object sender, DataGridCellEditEndingEventArgs e)
@@ -507,11 +497,11 @@ namespace exel_for_mfc
             await Task.Run(() =>
             {
                 //Надо еще убрать пробелы
-                var filtered = MyList.Where(u => $"{u.IdReg}{u.Family}{u.Name}{u.Lastname}{u.Snils}{u.Adress}{u.Sernumb}".Replace(" ","").ToLower().Contains(SearchTable.Text.Replace(" ","").ToLower()));
+               // var filtered = MyList.Where(u => $"{u.IdReg}{u.Family}{u.Name}{u.Lastname}{u.Snils}{u.Adress}{u.Sernumb}".Replace(" ","").ToLower().Contains(SearchTable.Text.Replace(" ","").ToLower()));
 
                 Dispatcher.Invoke(() =>
                 {
-                    dataGrid.ItemsSource = filtered;
+                    dataGrid.ItemsSource = MyList.Where(u => $"{u.IdReg}{u.Family}{u.Name}{u.Lastname}{u.Snils}{u.Adress}{u.Sernumb}".Replace(" ", "").ToLower().Contains(SearchTable.Text.Replace(" ", "").ToLower()));
                 });
             });
         }
@@ -923,315 +913,138 @@ namespace exel_for_mfc
         }
         #endregion
 
-        #region Фильтрация(в процессе)
+        #region Фильтрация(в процессе) //////////////////////////////////////////////////////////////////////////////
+
+
         List<AreaFilter>? AreaFilterList = new();
-        List<LocalFilter>? LocalFilterList = new();
-        List<PayFilter>? PayFilterList = new();
-        List<PrivFilter>? PrivFilterList = new();
-        List<SolFilter>? SolFilterList = new();
-
-
-
-        public void FilterStart()
+        
+        List<int> AreaInt = new();
+       
+        public async void FilterStart()
         {
-            #region Район
+            //Заполнение таблиц Фильтров
             using (ExDbContext db = new())
             {
-                var s = db.Areas.FromSqlRaw("SELECT * FROM Area").ToList();
+                var s = await db.Areas.FromSqlRaw("SELECT * FROM Area").ToListAsync();
                 foreach (var item in s)
                 {
                     AreaFilterList.Add(new AreaFilter(item.Id, item.AreaName, 0));
                 }
                 areaFilter.ItemsSource = AreaFilterList;
             };
-            #endregion
-
-            #region Населенный пункт
-            using (ExDbContext db = new())
-            {
-                var s = db.Localities.FromSqlRaw("SELECT * FROM Locality").ToList();
-                foreach (var item in s)
-                {
-                    LocalFilterList.Add(new LocalFilter(item.Id, item.LocalName, 0));
-                }
-                locFilter.ItemsSource = LocalFilterList;
-            };
-            #endregion
-
-            #region Выплаты
-            using (ExDbContext db = new())
-            {
-                var s = db.PayAmounts.FromSqlRaw("SELECT * FROM PayAmount").ToList();
-                foreach (var item in s)
-                {
-                    PayFilterList.Add(new PayFilter(item.Id, item.Pay, 0));
-                }
-                payFilter.ItemsSource = PayFilterList;
-            };
-            #endregion
-
-            #region Льготы
-            using (ExDbContext db = new())
-            {
-                var s = db.Privileges.FromSqlRaw("SELECT * FROM Privileges").ToList();
-                foreach (var item in s)
-                {
-                    PrivFilterList.Add(new PrivFilter(item.Id, item.PrivilegesName, 0));
-                }
-                   privFilter.ItemsSource = PrivFilterList;
-            };
-            #endregion
-
-            #region Решение
-            using (ExDbContext db = new())
-            {
-                var s = db.SolutionTypes.FromSqlRaw("SELECT * FROM SolutionType").ToList();
-                foreach (var item in s)
-                {
-                    SolFilterList.Add(new SolFilter(item.Id, item.SolutionName, 0));
-                }
-                solFilter.ItemsSource = SolFilterList;
-            };
-            #endregion
-
-
-
+          
         }
 
+        #region CheckBoxes
         //Поставил галочку Район
         private void AreaCheck(object sender, RoutedEventArgs e)
         {
-            AreaFilterList.FindAll(s => s.AreaName == (areaFilter.SelectedItem as Area)?.AreaName).ForEach(x => x.AreaBool = 1);
+            AreaFilterList.FindAll(s => s.AreaName == (areaFilter.SelectedItem as AreaFilter)?.AreaName).ForEach(x => x.AreaBool = 1);
         }
         //Убрал галочку Район
         private void AreaUnchecked(object sender, RoutedEventArgs e)
         {
-            AreaFilterList.FindAll(s => s.AreaName == (areaFilter.SelectedItem as Area)?.AreaName).ForEach(x => x.AreaBool = 0);
+            AreaFilterList.FindAll(s => s.AreaName == (areaFilter.SelectedItem as AreaFilter)?.AreaName).ForEach(x => x.AreaBool = 0);
         }
 
-        //Поставил галочку Населенный пункт
-        private void LocalUnchecked(object sender, RoutedEventArgs e)
-        {
-            LocalFilterList.FindAll(s => s.LocalName == (locFilter.SelectedItem as Locality)?.LocalName).ForEach(x => x.LocalBool = 1);
-        }
-        //Убрал галочку Населенный пункт
-        private void LocalChecked(object sender, RoutedEventArgs e)
-        {
-            LocalFilterList.FindAll(s => s.LocalName == (locFilter.SelectedItem as Locality)?.LocalName).ForEach(x => x.LocalBool = 0);
-        }
-
-        //Поставил галочку Выплата
-        private void PayChecked(object sender, RoutedEventArgs e)
-        {
-            PayFilterList.FindAll(s => s.Pay == (payFilter.SelectedItem as PayAmount)?.Pay).ForEach(x => x.PayBool = 1);
-        }
-        //Убрал галочку Выплата
-        private void PayUnChecked(object sender, RoutedEventArgs e)
-        {
-            PayFilterList.FindAll(s => s.Pay == (payFilter.SelectedItem as PayAmount)?.Pay).ForEach(x => x.PayBool = 0);
-        }
-
-        //Убрал галочку Льгота
-        private void PrivUnchecked(object sender, RoutedEventArgs e)
-        {
-            PrivFilterList.FindAll(s => s.PrivilegesName == (privFilter.SelectedItem as Privilege)?.PrivilegesName).ForEach(x => x.PrivBool = 0);
-        }
-        //Поставил галочку Льгота
-        private void PrivChecked(object sender, RoutedEventArgs e)
-        {
-            PrivFilterList.FindAll(s => s.PrivilegesName == (privFilter.SelectedItem as Privilege)?.PrivilegesName).ForEach(x => x.PrivBool = 1);
-        }
-
-        //Поставил галочку Решение
-        private void SolChecked(object sender, RoutedEventArgs e)
-        {
-            SolFilterList.FindAll(s => s.SolutionName == (solFilter.SelectedItem as SolutionType)?.SolutionName).ForEach(x => x.SolBool = 1);
-        }
-
-        //Убрал галочку Решение
-        private void SolUnChecked(object sender, RoutedEventArgs e)
-        {
-            SolFilterList.FindAll(s => s.SolutionName == (solFilter.SelectedItem as SolutionType)?.SolutionName).ForEach(x => x.SolBool = 0);
-        }
-
-
-
-
-
-
-
-        //Обновить фильтры
-        private void Button_Click_2(object sender, RoutedEventArgs e)
-        {
-
-        }
 
         //Применить фильтр
-        private async void Button_Click_4(object sender, RoutedEventArgs e)
+        private void Button_Click_4(object sender, RoutedEventArgs e)
         {
-            await GoStartFilter(AreaFilterList, LocalFilterList, PayFilterList, PrivFilterList, SolFilterList);
+             GoStartFilter(AreaFilterList);
         }
 
         //Метод для выборки по фильтрам
-        async Task GoStartFilter(List<AreaFilter> AreaF, List<LocalFilter> LocalF, List<PayFilter> PayF, List<PrivFilter> PrivF, List<SolFilter> SolF)
+        void GoStartFilter(List<AreaFilter> AreaF)
         {
-            var FilterAreaId = AreaF.Where(u => u.AreaBool != 0).ToList();
-            var FilterLocalId = LocalF.Where(u => u.LocalBool != 0).ToList();
-            var FilterPayId = PayF.Where(u => u.PayBool != 0).ToList();
-            var FilterSolId = SolF.Where(u => u.SolBool != 0).ToList();
-            var FilterPrivId = PrivF.Where(u => u.PrivBool != 0).ToList();
-
-            List<int> AreaInt = new();
-            List<int> LocalInt = new();
-            List<int> PayInt = new();
-            List<int> SolInt = new();
-            List<int> PrivInt = new();
+            List<AreaFilter> FilterAreaId = AreaF.Where(u => u.AreaBool != 0).ToList();
+           
+           
+         
 
             //Area
             if (FilterAreaId.Count == 0)
             {
+                AreaInt.Clear();
                 foreach (var item in AreaF)
                 {
-                    AreaInt.Add(item.Id);
+                    AreaInt.Add(item.Id - 1);
                 }
             }
             else if(FilterAreaId.Count != 0)
             {
+                AreaInt.Clear();
                 foreach (var item in FilterAreaId)
                 {
-                    AreaInt.Add(item.Id);
+                    AreaInt.Add(item.Id - 1);
                 }
             }
 
-            //Local
-            if (FilterLocalId.Count == 0)
+          
+
+            try
             {
-                foreach (var item in LocalF)
-                {
-                    LocalInt.Add(item.Id);
-                }
-            }
-            else if (FilterLocalId.Count != 0)
-            {
-                foreach (var item in FilterLocalId)
-                {
-                    LocalInt.Add(item.Id);
-                }
-            }
-
-            //Pay
-            if (FilterPayId.Count == 0)
-            {
-                foreach (var item in PayF)
-                {
-                    PayInt.Add(item.Id);
-                }
-            }
-            else if (FilterPayId.Count != 0)
-            {
-                foreach (var item in FilterPayId)
-                {
-                    PayInt.Add(item.Id);
-                }
-            }
-
-            //Priv
-            if (FilterPrivId.Count == 0)
-            {
-                foreach (var item in PrivF)
-                {
-                    PrivInt.Add(item.Id);
-                }
-            }
-            else if (FilterPrivId.Count != 0)
-            {
-                foreach (var item in FilterPrivId)
-                {
-                    PrivInt.Add(item.Id);
-                }
-            }
-
-            //Sol
-            if (FilterSolId.Count == 0)
-            {
-                foreach (var item in SolF)
-                {
-                    SolInt.Add(item.Id);
-                }
-            }
-            else if (FilterSolId.Count != 0)
-            {
-                foreach (var item in FilterSolId)
-                {
-                    SolInt.Add(item.Id);
-                }
-            }
-
-
-
-
-
-
-
-
-
-            await Task.Run(() =>
-            {
-
                 using (ExDbContext db = new())
                 {
-                    MyList = (from reg in db.Registries
-                              join appl in db.Applicants on reg.ApplicantFk equals appl.Id
-                              where AreaInt.Contains((int)appl.AreaFk)
-                                  && LocalInt.Contains((int)appl.LocalityFk)
-                                  && PayInt.Contains((int)reg.PayAmountFk)
-                                  && PrivInt.Contains((int)appl.PrivilegesFk)
-                                  && SolInt.Contains((int)reg.SolutionFk)
-                              select new SClass
-                              {
-                                  IdReg = reg.Id,
-                                  Family = appl.Firstname,
-                                  Name = appl.Middlename,
-                                  Lastname = appl.Lastname,
-                                  Snils = appl.Snils,
-                                  Area = appl.AreaFk - 1,
-                                  Local = appl.LocalityFk - 1,
-                                  Adress = appl.Adress,
-                                  Lgota = appl.PrivilegesFk - 1,
-                                  Pay = reg.PayAmountFk - 1,
-                                  Sernumb = reg.SerialAndNumberSert,
-                                  DateGetSert = reg.DateGetSert,
-                                  Solution = reg.SolutionFk - 1,
-                                  DateAndNumbSolutionSert = reg.DateAndNumbSolutionSert,
-                                  Comment = reg.Comment,
-                                  Trek = reg.Trek,
-                                  MailingDate = reg.MailingDate,
-                                  IdApplicant = appl.Id
-                              }).AsNoTracking().ToList();
+                    MyList = (from reg in  db.Registries
+                                              join appl in  db.Applicants on reg.ApplicantFk equals appl.Id
+                              //where LocalInt.Contains((int)appl.LocalityFk - 1)
 
+
+                              where AreaInt.Contains((int)appl.AreaFk - 1)
+                                              ////|| LocalInt.Contains((int)appl.LocalityFk - 1)
+                                              ////|| PayInt.Contains((int)reg.PayAmountFk - 1)
+                                              ////|| PrivInt.Contains((int)appl.PrivilegesFk - 1)
+                                              ////|| SolInt.Contains((int)reg.SolutionFk - 1)
+                                              select new SClass
+                                              {
+                                                  IdReg = reg.Id,
+                                                  Family = appl.Firstname,
+                                                  Name = appl.Middlename,
+                                                  Lastname = appl.Lastname,
+                                                  Snils = appl.Snils,
+                                                  Area = appl.AreaFk - 1,
+                                                  Local = appl.LocalityFk - 1,
+                                                  Adress = appl.Adress,
+                                                  Lgota = appl.PrivilegesFk - 1,
+                                                  Pay = reg.PayAmountFk - 1,
+                                                  Sernumb = reg.SerialAndNumberSert,
+                                                  DateGetSert = reg.DateGetSert,
+                                                  Solution = reg.SolutionFk - 1,
+                                                  DateAndNumbSolutionSert = reg.DateAndNumbSolutionSert,
+                                                  Comment = reg.Comment,
+                                                  Trek = reg.Trek,
+                                                  MailingDate = reg.MailingDate,
+                                                  IdApplicant = appl.Id
+                                              }).ToList();
                     if (MyList == null)
                         MessageBox.Show("По вашему запросу ничего не найдено :(");
                     else
                     {
-                        Dispatcher.Invoke(() =>
-                        {
-                            dataGrid.ItemsSource = MyList;
-                        });
+                        dataGrid.ItemsSource = MyList;
                     }
                 };
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
 
-            });
         }
 
 
+        //Обновить фильтры //Ломается при прокрутке после обновления ох
+        private void Button_Click_2(object sender, RoutedEventArgs e)
+        {
+            var result = MessageBox.Show("Обновление фильтров приведет к сбросу всех фильтров, продолжить?", "Предупреждение", MessageBoxButton.YesNo);
+            if (result == MessageBoxResult.Yes)
+            {
+                FilterStart();
+            }
+            else return;
+        }
 
-
-        #endregion
-
-
-
-
-
+        #endregion/////////////////////////////////////////////////////////////////////
 
         #region Обработка возможных исключений и другие мелочи
         private void AreaExeption(object sender, MouseButtonEventArgs e)
@@ -1247,9 +1060,9 @@ namespace exel_for_mfc
             return;
         }
 
-        private async void Button_Click_1(object sender, RoutedEventArgs e)
+        private void Button_Click_1(object sender, RoutedEventArgs e)
         {
-            await GoStart();
+            Start();
         }
 
 
@@ -1267,4 +1080,5 @@ namespace exel_for_mfc
 
       
     }
+    #endregion
 }
