@@ -355,7 +355,8 @@ namespace exel_for_mfc
                 }
             }
         }
-
+        #endregion
+        #region Поиск()
         //Поиск(Нормально)
         private void Button_Click_3(object sender, RoutedEventArgs e)
         {
@@ -363,47 +364,42 @@ namespace exel_for_mfc
             switch (filterSearch.Text)
             {
                 case "По всем полям":
-                    Dispatcher.Invoke(() =>
-                    {
-                        dataGrid.ItemsSource = MyList.Where(u => $"{u.IdReg}{u.Family}{u.Name}{u.Lastname}{u.Snils}{u.Adress}{u.Sernumb}".Replace(" ", "").ToLower().Contains(SearchTable.Text.Replace(" ", "").ToLower())).ToList();
-                    });
-                 
+                    dataGrid.ItemsSource = MyList.Where(u => $"{u.IdReg}{u.Family}{u.Name}{u.Lastname}{u.Snils}{u.Adress}{u.Sernumb}".Replace(" ", "").ToLower().Contains(SearchTable.Text.Replace(" ", "").ToLower())).ToList();
+
                     break;
 
                 case "Фамилия":
-                            dataGrid.ItemsSource = MyList.Where(u => u.Family != null && u.Family.Replace(" ", "").ToLower().Contains(SearchTable.Text.Replace(" ", "").ToLower())).ToList();
+                    dataGrid.ItemsSource = MyList.Where(u => u.Family != null && u.Family.Replace(" ", "").ToLower().Contains(SearchTable.Text.Replace(" ", "").ToLower())).ToList();
                     break;
 
                 case "Имя":
-                            dataGrid.ItemsSource = MyList.Where(u => u.Name != null && u.Name.Replace(" ", "").ToLower().Contains(SearchTable.Text.Replace(" ", "").ToLower())).ToList();
+                    dataGrid.ItemsSource = MyList.Where(u => u.Name != null && u.Name.Replace(" ", "").ToLower().Contains(SearchTable.Text.Replace(" ", "").ToLower())).ToList();
                     break;
 
                 case "Отчество":
-                            dataGrid.ItemsSource = MyList.Where(u => u.Lastname != null && u.Lastname.Replace(" ", "").ToLower().Contains(SearchTable.Text.Replace(" ", "").ToLower())).ToList();
+                    dataGrid.ItemsSource = MyList.Where(u => u.Lastname != null && u.Lastname.Replace(" ", "").ToLower().Contains(SearchTable.Text.Replace(" ", "").ToLower())).ToList();
                     break;
 
                 case "ФИО":
-                            dataGrid.ItemsSource = MyList.Where(u => $"{u.Family}{u.Name}{u.Lastname}".Replace(" ", "").ToLower().Contains(SearchTable.Text.Replace(" ", "").ToLower())).ToList();
+                    dataGrid.ItemsSource = MyList.Where(u => $"{u.Family}{u.Name}{u.Lastname}".Replace(" ", "").ToLower().Contains(SearchTable.Text.Replace(" ", "").ToLower())).ToList();
                     break;
 
                 case "Снилс":
-                    
-                        //Надо еще убрать пробелы
-                                dataGrid.ItemsSource = MyList.Where(u => u.Snils != null
-                                                        && u.Snils.Replace(" ", "").Replace("-", "").Contains(SearchTable.Text.Replace(" ", "").Replace("-", ""))).ToList();
+                    dataGrid.ItemsSource = MyList.Where(u => u.Snils != null
+                                            && u.Snils.Replace(" ", "").Replace("-", "").Contains(SearchTable.Text.Replace(" ", "").Replace("-", ""))).ToList();
                     break;
 
                 case "Адрес":
-                            dataGrid.ItemsSource = MyList.Where(u => u.Adress != null
-                                                          && u.Adress.Replace(" ", "").ToLower().Contains(SearchTable.Text.Replace(" ", "").ToLower())).ToList();
+                    dataGrid.ItemsSource = MyList.Where(u => u.Adress != null
+                                                  && u.Adress.Replace(" ", "").ToLower().Contains(SearchTable.Text.Replace(" ", "").ToLower())).ToList();
                     break;
 
                 case "Серия и номер сертификата":
-                            dataGrid.ItemsSource = MyList.Where(u => u.Sernumb != null && u.Sernumb.Replace(" ", "").ToLower().Contains(SearchTable.Text.Replace(" ", "").ToLower())).ToList();
+                    dataGrid.ItemsSource = MyList.Where(u => u.Sernumb != null && u.Sernumb.Replace(" ", "").ToLower().Contains(SearchTable.Text.Replace(" ", "").ToLower())).ToList();
                     break;
 
                 case "По ID":
-                            dataGrid.ItemsSource = MyList.Where(u => u.IdReg.ToString() != null && u.IdReg.ToString().Replace(" ", "") == SearchTable.Text.Replace(" ", "")).ToList();
+                    dataGrid.ItemsSource = MyList.Where(u => u.IdReg.ToString() != null && u.IdReg.ToString().Replace(" ", "") == SearchTable.Text.Replace(" ", "")).ToList();
                     break;
 
                 default:
@@ -446,10 +442,10 @@ namespace exel_for_mfc
                           MailingDate = reg.MailingDate,
                           IdApplicant = appl.Id
                       }).ToList();
-            #endregion
         }
-            #region События изменения значений ComboBox(Решено)
-            private async void AreaComboEvent(object sender, EventArgs e)
+        #endregion
+        #region События изменения значений ComboBox()
+        private async void AreaComboEvent(object sender, EventArgs e)
             {
             
                 if ((dataGrid.SelectedItem as SClass)?.IdReg == 0 || (dataGrid.SelectedItem as SClass)?.IdReg == null)
@@ -580,8 +576,7 @@ namespace exel_for_mfc
                 }
             }
             #endregion
-
-            #region Выгрузка в Excel(Решено)
+        #region Выгрузка в Excel()
             //Сохранить таблицу в Excel
             static async Task SaveDataInExel()
             {
@@ -853,8 +848,7 @@ namespace exel_for_mfc
                 await SaveDataInExel();
             }
             #endregion
-
-            #region Фильтрация(в процессе) //////////////////////////////////////////////////////////////////////////////
+        #region Фильтрация(в процессе) //////////////////////////////////////////////////////////////////////////////
 
 
             List<AreaFilter>? AreaFilterList = new();
@@ -871,7 +865,7 @@ namespace exel_for_mfc
                     {
                         AreaFilterList.Add(new AreaFilter(item.Id, item.AreaName, 0));
                     }
-                    areaFilter.ItemsSource = AreaFilterList;
+                    areaFilter.ItemsSource = AreaFilterList.ToList();
                 };
 
             }
