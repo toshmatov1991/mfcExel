@@ -870,6 +870,7 @@ namespace exel_for_mfc
                 //Заполнение таблиц Фильтров
                 using (ExDbContext db = new())
                 {
+                    AreaFilterList.Clear();
                     var s = await db.Areas.FromSqlRaw("SELECT * FROM Area").ToListAsync();
                     foreach (var item in s)
                     {
@@ -880,6 +881,7 @@ namespace exel_for_mfc
 
             using (ExDbContext db = new())
             {
+                LocalFilterList.Clear();
                 var s1 = await db.Localities.FromSqlRaw("SELECT * FROM Locality").ToListAsync();
                 foreach (var item in s1)
                 {
@@ -890,6 +892,7 @@ namespace exel_for_mfc
 
             using (ExDbContext db = new())
             {
+                PayFilterList.Clear();
                 var s2 = await db.PayAmounts.FromSqlRaw("SELECT * FROM PayAmount").ToListAsync();
                 foreach (var item in s2)
                 {
@@ -900,6 +903,7 @@ namespace exel_for_mfc
 
             using (ExDbContext db = new())
             {
+                PrivFilterList.Clear();
                 var s3 = await db.Privileges.FromSqlRaw("SELECT * FROM Privileges").ToListAsync();
                 foreach (var item in s3)
                 {
@@ -912,6 +916,7 @@ namespace exel_for_mfc
 
             using (ExDbContext db = new())
             {
+                SolFilterList.Clear();
                 var s4 = await db.SolutionTypes.FromSqlRaw("SELECT * FROM SolutionType").ToListAsync();
                 foreach (var item in s4)
                 {
@@ -1181,17 +1186,57 @@ namespace exel_for_mfc
 
 
 
-
-
-
-
-
-
-
-
-
         #endregion
 
+        //Очистить фильтр
+        private void Button_Click_5(object sender, RoutedEventArgs e)
+        {
+
+            FilterStart();
+            try
+            {
+                using (ExDbContext db = new())
+                {
+                    MyList = (from reg in db.Registries
+                              join appl in db.Applicants on reg.ApplicantFk equals appl.Id
+                              select new SClass
+                              {
+                                  IdReg = reg.Id,
+                                  Family = appl.Firstname,
+                                  Name = appl.Middlename,
+                                  Lastname = appl.Lastname,
+                                  Snils = appl.Snils,
+                                  Area = appl.AreaFk - 1,
+                                  Local = appl.LocalityFk - 1,
+                                  Adress = appl.Adress,
+                                  Lgota = appl.PrivilegesFk - 1,
+                                  Pay = reg.PayAmountFk - 1,
+                                  Sernumb = reg.SerialAndNumberSert,
+                                  DateGetSert = reg.DateGetSert,
+                                  Solution = reg.SolutionFk - 1,
+                                  DateAndNumbSolutionSert = reg.DateAndNumbSolutionSert,
+                                  Comment = reg.Comment,
+                                  Trek = reg.Trek,
+                                  MailingDate = reg.MailingDate,
+                                  IdApplicant = appl.Id
+                              }).ToList();
+
+
+                    if (MyList.Count == 0)
+                        MessageBox.Show("По вашему запросу ничего не найдено :(");
+                    else
+                    {
+                        dataGrid.ItemsSource = MyList.ToList();
+                    }
+                };
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+
+        }
     }
-        #endregion
-}           
+}
+#endregion
+           

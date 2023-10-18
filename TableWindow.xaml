@@ -200,15 +200,6 @@
                 VerticalAlignment="Center" 
                 Click="Button_Click_1" />
 
-            <Button Background="Yellow" 
-                Grid.Column="8"
-                Grid.Row="11"
-                Content="Обновить фильтры"
-                HorizontalAlignment="Center" 
-                Height="37" 
-                VerticalAlignment="Center"
-                Click="Button_Click_2"/>
-
             <Button Content="Выгрузить в Excel"
                 Grid.Column="8"
                 Grid.Row="12"
@@ -338,14 +329,55 @@
                 </DataGrid.Columns>
             </DataGrid>
 
+
+            <DatePicker Name="date1"
+                        IsDropDownOpen="False"
+                        SelectedDateFormat="Short"
+                        Grid.Column="4"
+                        Grid.ColumnSpan="2"
+                        Grid.Row="11"
+                        HorizontalAlignment="Left"
+                        VerticalAlignment="Center" Margin="131,0,0,0"/>
+
+            <DatePicker Name="date2"
+                        IsDropDownOpen="False"
+                        SelectedDateFormat="Short"
+                        Grid.Column="5"
+                        Grid.ColumnSpan="2"
+                        Grid.Row="11"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"/>
+
+            <TextBlock  FontStyle="Italic"
+                        Grid.Column="5"
+                        Grid.ColumnSpan="2"
+                        Grid.Row="10"
+                        FontSize="15"
+                        HorizontalAlignment="Left"
+                        VerticalAlignment="Top" Width="186" Margin="13,12,0,0" Grid.RowSpan="2">
+              Дата выдачи сертификата<LineBreak></LineBreak>___От  ----И----  До___</TextBlock>
+
+
             <!-- Кнопка применить фильтр к таблице -->
             <Button Content="Применить фильтр"
-                Grid.Column="6"
-                Grid.Row="12"
-                HorizontalAlignment="Center"
-                Background="Bisque"
-                Height="42"
-                Width="125" Click="Button_Click_4"/>
+                    Grid.Column="5"
+                    Grid.ColumnSpan="2"
+                    Grid.Row="12"
+                    HorizontalAlignment="Center"
+                    Background="Bisque"
+                    Height="42"
+                    Width="125" Click="Button_Click_4" Margin="0,5,0,5"/>
+
+            <!-- Очистить фильтры к таблице -->
+            <Button Content="Очистить фильтр"
+                    Grid.Column="4"
+                    Grid.ColumnSpan="2"
+                    Grid.Row="12"
+                    HorizontalAlignment="Left"
+                    Background="Aqua"
+                    Height="42"
+                    Width="125" Margin="110,5,0,5" Click="Button_Click_5"/>
+
 
 
 
