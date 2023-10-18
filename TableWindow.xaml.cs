@@ -1102,7 +1102,26 @@ namespace exel_for_mfc
 
             try
             {
-                    using (ExDbContext db = new())
+                //Проверка даты
+                // dateStart dateEnd
+                if(string.IsNullOrEmpty(dateStart.Text) && string.IsNullOrEmpty(dateEnd.Text)
+                    || string.IsNullOrWhiteSpace(dateStart.Text) && string.IsNullOrWhiteSpace(dateEnd.Text))
+                {
+                    dateStart.Text = "10.10.2003";
+                    dateEnd.Text = "10.10.2030";
+                }
+                else if(string.IsNullOrEmpty(dateStart.Text) || string.IsNullOrWhiteSpace(dateStart.Text) 
+                      && !string.IsNullOrEmpty(dateEnd.Text) || !string.IsNullOrWhiteSpace(dateEnd.Text))
+                {
+                    dateStart.Text = "10.10.2003";
+                }
+                else if (string.IsNullOrEmpty(dateEnd.Text) || string.IsNullOrWhiteSpace(dateEnd.Text)
+                    && !string.IsNullOrEmpty(dateStart.Text) || !string.IsNullOrWhiteSpace(dateStart.Text))
+                {
+                    dateEnd.Text = "10.10.2030";
+                }
+
+                using (ExDbContext db = new())
                     {
                         MyList = (from reg in db.Registries
                                   join appl in db.Applicants on reg.ApplicantFk equals appl.Id
@@ -1131,7 +1150,8 @@ namespace exel_for_mfc
                                    .Where(a => PayInt.Contains((int)a.Pay))
                                    .Where(a => SolInt.Contains((int)a.Solution))
                                    .Where(a => PrivInt.Contains((int)a.Lgota))
-                                  .ToList();
+                                   .Where(a => a.DateGetSert >= Convert.ToDateTime(dateStart.Text) 
+                                            && a.DateGetSert <= Convert.ToDateTime(dateEnd.Text)).ToList();
                     
                   
                     if (MyList.Count == 0)
