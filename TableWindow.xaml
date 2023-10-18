@@ -221,12 +221,15 @@
             <!--  Фильтрация  -->
             <!-- Район -->
             <DataGrid x:Name="areaFilter"
-                  AutoGenerateColumns="False"
-                  Grid.Row="10" 
-                  Grid.Column="0"
-                  Grid.RowSpan="3"
-                  CanUserAddRows="False"
-                  Margin="5">
+                      AutoGenerateColumns="False"
+                      HorizontalAlignment="Left"
+                      VerticalAlignment="Bottom"
+                      Grid.Row="10" 
+                      Grid.Column="0"
+                      Grid.RowSpan="3"
+                      CanUserAddRows="False"
+                      Height="149"
+                      Width="152">
                 <DataGrid.Columns>
                     <DataGridTextColumn Binding="{Binding AreaName}" IsReadOnly="True" Header="Район"/>
                     <DataGridTemplateColumn>
@@ -239,7 +242,94 @@
                 </DataGrid.Columns>
             </DataGrid>
 
+            <!-- Населенный пункт -->
+            <DataGrid x:Name="locFilter"
+                      AutoGenerateColumns="False"
+                      VerticalAlignment="Top"
+                      Grid.Column="1"
+                      Grid.Row="10"
+                      Grid.RowSpan="3"
+                      CanUserAddRows="False"
+                      CanUserDeleteRows="False"
+                      CanUserSortColumns="False"
+                      Height="149" Grid.ColumnSpan="2" Margin="0,7,161,0">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Binding="{Binding LocalName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" IsReadOnly="True" Header="Населенный пункт"/>
+                    <DataGridTemplateColumn>
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <CheckBox IsChecked="{Binding LocalBool, UpdateSourceTrigger=PropertyChanged}" Unchecked="LocalUnchecked" Checked="LocalChecked"/>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                </DataGrid.Columns>
+            </DataGrid>
 
+            <!-- Выплата -->
+            <DataGrid x:Name="payFilter"
+                  AutoGenerateColumns="False"
+                  Grid.Row="10" 
+                  Grid.Column="3"
+                  Grid.RowSpan="3"
+                  CanUserAddRows="False"
+                  CanUserDeleteRows="False"
+                  CanUserSortColumns="False"
+                  Margin="60,5,13,5">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Binding="{Binding Pay, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" IsReadOnly="True" Header="Выплаты"/>
+                    <DataGridTemplateColumn>
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <CheckBox IsChecked="{Binding PayBool, UpdateSourceTrigger=PropertyChanged}" Checked="PayChecked" Unchecked="PayUnChecked"/>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                </DataGrid.Columns>
+            </DataGrid>
+
+            <!-- Льгота -->
+            <DataGrid x:Name="privFilter"
+                  AutoGenerateColumns="False"
+                  Grid.Row="10" 
+                  Grid.Column="2"
+                  Grid.RowSpan="3"
+                  CanUserAddRows="False"
+                  CanUserDeleteRows="False"
+                  CanUserSortColumns="False"
+                  Margin="4,5,107,5" Grid.ColumnSpan="2">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Binding="{Binding PrivilegesName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" IsReadOnly="True" Header="Льготы"/>
+                    <DataGridTemplateColumn>
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <CheckBox IsChecked="{Binding PrivBool, UpdateSourceTrigger=PropertyChanged}" Unchecked="PrivUnchecked" Checked="PrivChecked"/>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                </DataGrid.Columns>
+            </DataGrid>
+
+            <!-- Решение -->
+            <DataGrid x:Name="solFilter"
+                  AutoGenerateColumns="False"
+                  Grid.Row="10" 
+                  Grid.Column="4"
+                  Grid.RowSpan="3"
+                  CanUserAddRows="False"
+                  CanUserDeleteRows="False"
+                  CanUserSortColumns="False"
+                  Margin="5">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Binding="{Binding SolutionName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" IsReadOnly="True" Header="Решение"/>
+                    <DataGridTemplateColumn>
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <CheckBox IsChecked="{Binding SolBool, UpdateSourceTrigger=PropertyChanged}" Checked="SolChecked" Unchecked="SolUnChecked"/>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                </DataGrid.Columns>
+            </DataGrid>
 
             <!-- Кнопка применить фильтр к таблице -->
             <Button Content="Применить фильтр"

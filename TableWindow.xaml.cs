@@ -848,15 +848,25 @@ namespace exel_for_mfc
                 await SaveDataInExel();
             }
             #endregion
+
+
+
+
         #region Фильтрация(в процессе) //////////////////////////////////////////////////////////////////////////////
+        List<AreaFilter>? AreaFilterList = new();
+        List<LocalFilter>? LocalFilterList = new();
+        List<PayFilter>? PayFilterList = new();
+        List<PrivFilter>? PrivFilterList = new();
+        List<SolFilter>? SolFilterList = new();
 
 
-            List<AreaFilter>? AreaFilterList = new();
+       
 
-            List<int> AreaInt = new();
-
-            public async void FilterStart()
+        //Заполнение таблиц Фильтров
+        public async void FilterStart()
             {
+
+
                 //Заполнение таблиц Фильтров
                 using (ExDbContext db = new())
                 {
@@ -868,69 +878,229 @@ namespace exel_for_mfc
                     areaFilter.ItemsSource = AreaFilterList.ToList();
                 };
 
-            }
-
-            #region CheckBoxes
-            //Поставил галочку Район
-            private void AreaCheck(object sender, RoutedEventArgs e)
+            using (ExDbContext db = new())
             {
-                AreaFilterList.FindAll(s => s.AreaName == (areaFilter.SelectedItem as AreaFilter)?.AreaName).ForEach(x => x.AreaBool = 1);
-            }
+                var s1 = await db.Localities.FromSqlRaw("SELECT * FROM Locality").ToListAsync();
+                foreach (var item in s1)
+                {
+                    LocalFilterList.Add(new LocalFilter(item.Id, item.LocalName, 0));
+                }
+                locFilter.ItemsSource = LocalFilterList.ToList();
+            };
+
+            using (ExDbContext db = new())
+            {
+                var s2 = await db.PayAmounts.FromSqlRaw("SELECT * FROM PayAmount").ToListAsync();
+                foreach (var item in s2)
+                {
+                    PayFilterList.Add(new PayFilter(item.Id, item.Pay, 0));
+                }
+                payFilter.ItemsSource = PayFilterList.ToList();
+            };
+
+            using (ExDbContext db = new())
+            {
+                var s3 = await db.Privileges.FromSqlRaw("SELECT * FROM Privileges").ToListAsync();
+                foreach (var item in s3)
+                {
+                    if (item.PrivilegesName.Length >= 17)
+                        item.PrivilegesName = item.PrivilegesName[..17];
+                    PrivFilterList.Add(new PrivFilter(item.Id, item.PrivilegesName, 0));
+                }
+                privFilter.ItemsSource = PrivFilterList.ToList();
+            };
+
+            using (ExDbContext db = new())
+            {
+                var s4 = await db.SolutionTypes.FromSqlRaw("SELECT * FROM SolutionType").ToListAsync();
+                foreach (var item in s4)
+                {
+                    SolFilterList.Add(new SolFilter(item.Id, item.SolutionName, 0));
+                }
+                solFilter.ItemsSource = SolFilterList.ToList();
+            };
+        }
+
+        #region CheckBoxes
+        //Поставил галочку Район
+        private void AreaCheck(object sender, RoutedEventArgs e)
+        {
+            AreaFilterList.FindAll(s => s.AreaName == (areaFilter.SelectedItem as AreaFilter)?.AreaName).ForEach(x => x.AreaBool = 1);
+        }
             //Убрал галочку Район
-            private void AreaUnchecked(object sender, RoutedEventArgs e)
-            {
-                AreaFilterList.FindAll(s => s.AreaName == (areaFilter.SelectedItem as AreaFilter)?.AreaName).ForEach(x => x.AreaBool = 0);
-            }
+        private void AreaUnchecked(object sender, RoutedEventArgs e)
+        {
+            AreaFilterList.FindAll(s => s.AreaName == (areaFilter.SelectedItem as AreaFilter)?.AreaName).ForEach(x => x.AreaBool = 0);
+        }
 
+        //Поставил галочку Населенный пункт
+        private void LocalUnchecked(object sender, RoutedEventArgs e)
+        {
+            LocalFilterList.FindAll(s => s.LocalName == (locFilter.SelectedItem as LocalFilter)?.LocalName).ForEach(x => x.LocalBool = 0);
+        }
+        //Убрал галочку Населенный пункт
+        private void LocalChecked(object sender, RoutedEventArgs e)
+        {
+            LocalFilterList.FindAll(s => s.LocalName == (locFilter.SelectedItem as LocalFilter)?.LocalName).ForEach(x => x.LocalBool = 1);
+        }
 
-            //Применить фильтр
-            private void Button_Click_4(object sender, RoutedEventArgs e)
-            {
-                GoStartFilter(AreaFilterList);
-            }
+        //Поставил галочку Выплата
+        private void PayChecked(object sender, RoutedEventArgs e)
+        {
+            PayFilterList.FindAll(s => s.Pay == (payFilter.SelectedItem as PayFilter)?.Pay).ForEach(x => x.PayBool = 1);
+        }
+
+        //Убрал галочку Выплата
+        private void PayUnChecked(object sender, RoutedEventArgs e)
+        {
+            PayFilterList.FindAll(s => s.Pay == (payFilter.SelectedItem as PayFilter)?.Pay).ForEach(x => x.PayBool = 0);
+        }
+
+        //Убрал галочку Льгота
+        private void PrivUnchecked(object sender, RoutedEventArgs e)
+        {
+            PrivFilterList.FindAll(s => s.PrivilegesName == (privFilter.SelectedItem as PrivFilter)?.PrivilegesName).ForEach(x => x.PrivBool = 0);
+        }
+
+        //Поставил галочку Льгота
+        private void PrivChecked(object sender, RoutedEventArgs e)
+        {
+            PrivFilterList.FindAll(s => s.PrivilegesName == (privFilter.SelectedItem as PrivFilter)?.PrivilegesName).ForEach(x => x.PrivBool = 1);
+        }
+
+        //Поставил галочку Решение
+        private void SolChecked(object sender, RoutedEventArgs e)
+        {
+            SolFilterList.FindAll(s => s.SolutionName == (solFilter.SelectedItem as SolFilter)?.SolutionName).ForEach(x => x.SolBool = 1);
+        }
+
+        //Убрал галочку Решение
+        private void SolUnChecked(object sender, RoutedEventArgs e)
+        {
+            SolFilterList.FindAll(s => s.SolutionName == (solFilter.SelectedItem as SolFilter)?.SolutionName).ForEach(x => x.SolBool = 0);
+        }
+        #endregion
+
+        //Применить фильтр
+        private void Button_Click_4(object sender, RoutedEventArgs e)
+        {
+            GoStartFilter(AreaFilterList, LocalFilterList, PayFilterList, PrivFilterList, SolFilterList);
+        }
 
             //Метод для выборки по фильтрам
-            void GoStartFilter(List<AreaFilter> AreaF)
+            void GoStartFilter(List<AreaFilter> AreaF, List<LocalFilter> LocalF, List<PayFilter> PayF, List<PrivFilter> PrivF, List<SolFilter> SolF)
             {
-                List<AreaFilter> FilterAreaId = AreaF.Where(u => u.AreaBool != 0).ToList();
+                var FilterAreaId = AreaF.Where(u => u.AreaBool != 0).ToList();
+                var FilterLocalId = LocalF.Where(u => u.LocalBool != 0).ToList();
+                var FilterPayId = PayF.Where(u => u.PayBool != 0).ToList();
+                var FilterSolId = SolF.Where(u => u.SolBool != 0).ToList();
+                var FilterPrivId = PrivF.Where(u => u.PrivBool != 0).ToList();
 
+                List<int> AreaInt = new();
+                List<int> LocalInt = new();
+                List<int> PayInt = new();
+                List<int> SolInt = new();
+                List<int> PrivInt = new();
 
-
-
-                //Area
-                if (FilterAreaId.Count == 0)
+            #region Заполнение Listov INTegerami
+            //Area
+            if (FilterAreaId.Count == 0)
+            {
+                AreaInt.Clear();
+                foreach (var item in AreaF)
                 {
-                    AreaInt.Clear();
-                    foreach (var item in AreaF)
-                    {
-                        AreaInt.Add(item.Id - 1);
-                    }
+                    AreaInt.Add(item.Id - 1);
                 }
-                else if (FilterAreaId.Count != 0)
+            }
+            else if (FilterAreaId.Count != 0)
+            {
+                AreaInt.Clear();
+                foreach (var item in FilterAreaId)
                 {
-                    AreaInt.Clear();
-                    foreach (var item in FilterAreaId)
-                    {
-                        AreaInt.Add(item.Id - 1);
-                    }
+                    AreaInt.Add(item.Id - 1);
                 }
+            }
 
-
-
-                try
+            //Local
+            if (FilterLocalId.Count == 0)
+            {
+                LocalInt.Clear();
+                foreach (var item in LocalF)
                 {
+                    LocalInt.Add(item.Id - 1);
+                }
+            }
+            else if (FilterLocalId.Count != 0)
+            {
+                LocalInt.Clear();
+                foreach (var item in FilterLocalId)
+                {
+                    LocalInt.Add(item.Id - 1);
+                }
+            }
+
+            //Pay
+            if (FilterPayId.Count == 0)
+            {
+                PayInt.Clear();
+                foreach (var item in PayF)
+                {
+                    PayInt.Add(item.Id - 1);
+                }
+            }
+            else if (FilterPayId.Count != 0)
+            {
+                PayInt.Clear();
+                foreach (var item in FilterPayId)
+                {
+                    PayInt.Add(item.Id - 1);
+                }
+            }
+
+            //Priv
+            if (FilterPrivId.Count == 0)
+            {
+                PrivInt.Clear();
+                foreach (var item in PrivF)
+                {
+                    PrivInt.Add(item.Id - 1);
+                }
+            }
+            else if (FilterPrivId.Count != 0)
+            {
+                PrivInt.Clear();
+                foreach (var item in FilterPrivId)
+                {
+                    PrivInt.Add(item.Id - 1);
+                }
+            }
+
+            //Sol
+            if (FilterSolId.Count == 0)
+            {
+                SolInt.Clear();
+                foreach (var item in SolF)
+                {
+                    SolInt.Add(item.Id - 1);
+                }
+            }
+            else if (FilterSolId.Count != 0)
+            {
+                SolInt.Clear();
+                foreach (var item in FilterSolId)
+                {
+                    SolInt.Add(item.Id - 1);
+                }
+            }
+            #endregion
+
+
+            try
+            {
                     using (ExDbContext db = new())
                     {
                         MyList = (from reg in db.Registries
                                   join appl in db.Applicants on reg.ApplicantFk equals appl.Id
-                                  //where LocalInt.Contains((int)appl.LocalityFk - 1)
-
-
-                                  where AreaInt.Contains((int)appl.AreaFk - 1)
-                                  ////|| LocalInt.Contains((int)appl.LocalityFk - 1)
-                                  ////|| PayInt.Contains((int)reg.PayAmountFk - 1)
-                                  ////|| PrivInt.Contains((int)appl.PrivilegesFk - 1)
-                                  ////|| SolInt.Contains((int)reg.SolutionFk - 1)
                                   select new SClass
                                   {
                                       IdReg = reg.Id,
@@ -951,16 +1121,19 @@ namespace exel_for_mfc
                                       Trek = reg.Trek,
                                       MailingDate = reg.MailingDate,
                                       IdApplicant = appl.Id
-                                  }).ToList();
-
-                        //Сделать запрос позже - после? попробую тот же
-
-
-                        if (MyList == null)
+                                  }).Where( u => AreaInt.Contains((int)u.Area))
+                                   .Where(a => LocalInt.Contains((int)a.Local))
+                                   .Where(a => PayInt.Contains((int)a.Pay))
+                                   .Where(a => SolInt.Contains((int)a.Solution))
+                                   .Where(a => PrivInt.Contains((int)a.Lgota))
+                                  .ToList();
+                    
+                  
+                    if (MyList.Count == 0)
                             MessageBox.Show("По вашему запросу ничего не найдено :(");
                         else
                         {
-                            dataGrid.ItemsSource = MyList;
+                            dataGrid.ItemsSource = MyList.ToList();
                         }
                     };
                 }
@@ -983,7 +1156,7 @@ namespace exel_for_mfc
                 else return;
             }
 
-            #endregion/////////////////////////////////////////////////////////////////////
+            
 
             #region Обработка возможных исключений и другие мелочи
             private void AreaExeption(object sender, MouseButtonEventArgs e)

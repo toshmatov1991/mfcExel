@@ -17,7 +17,7 @@ namespace exel_for_mfc
         public int? Area { get; set; }
         public int? Local { get; set; }
         public string? Adress { get; set; }
-        public dynamic? Lgota { get; set; } // privel
+        public int? Lgota { get; set; } // privel
         public int? Pay { get; set; }
         public string? Sernumb { get; set; }
         public DateTime? DateGetSert { get; set; }
