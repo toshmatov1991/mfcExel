@@ -1188,9 +1188,10 @@ namespace exel_for_mfc
 
 
 
-            #endregion
 
 
-        }
         #endregion
-    }           
+
+    }
+        #endregion
+}           

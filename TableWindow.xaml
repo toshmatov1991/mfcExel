@@ -229,7 +229,8 @@
                       Grid.RowSpan="3"
                       CanUserAddRows="False"
                       Height="149"
-                      Width="152">
+                      Width="152"
+                      Margin="5 0 0 5">
                 <DataGrid.Columns>
                     <DataGridTextColumn Binding="{Binding AreaName}" IsReadOnly="True" Header="Район"/>
                     <DataGridTemplateColumn>
@@ -245,14 +246,14 @@
             <!-- Населенный пункт -->
             <DataGrid x:Name="locFilter"
                       AutoGenerateColumns="False"
-                      VerticalAlignment="Top"
+                      VerticalAlignment="Bottom"
                       Grid.Column="1"
                       Grid.Row="10"
                       Grid.RowSpan="3"
                       CanUserAddRows="False"
                       CanUserDeleteRows="False"
                       CanUserSortColumns="False"
-                      Height="149" Grid.ColumnSpan="2" Margin="0,7,161,0">
+                      Height="149" Margin="0,0,159,5" Grid.ColumnSpan="2">
                 <DataGrid.Columns>
                     <DataGridTextColumn Binding="{Binding LocalName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" IsReadOnly="True" Header="Населенный пункт"/>
                     <DataGridTemplateColumn>
@@ -267,14 +268,14 @@
 
             <!-- Выплата -->
             <DataGrid x:Name="payFilter"
-                  AutoGenerateColumns="False"
-                  Grid.Row="10" 
-                  Grid.Column="3"
-                  Grid.RowSpan="3"
-                  CanUserAddRows="False"
-                  CanUserDeleteRows="False"
-                  CanUserSortColumns="False"
-                  Margin="60,5,13,5">
+                      AutoGenerateColumns="False"
+                      Grid.Row="10" 
+                      Grid.Column="3"
+                      CanUserAddRows="False"
+                      CanUserDeleteRows="False"
+                      CanUserSortColumns="False"
+                      VerticalAlignment="Bottom"
+                      Height="149" Margin="27,0,35,5" Grid.RowSpan="3">
                 <DataGrid.Columns>
                     <DataGridTextColumn Binding="{Binding Pay, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" IsReadOnly="True" Header="Выплаты"/>
                     <DataGridTemplateColumn>
@@ -289,14 +290,16 @@
 
             <!-- Льгота -->
             <DataGrid x:Name="privFilter"
-                  AutoGenerateColumns="False"
-                  Grid.Row="10" 
-                  Grid.Column="2"
-                  Grid.RowSpan="3"
-                  CanUserAddRows="False"
-                  CanUserDeleteRows="False"
-                  CanUserSortColumns="False"
-                  Margin="4,5,107,5" Grid.ColumnSpan="2">
+                      AutoGenerateColumns="False"
+                      Grid.Row="10" 
+                      Grid.Column="2"
+                      CanUserAddRows="False"
+                      CanUserDeleteRows="False"
+                      CanUserSortColumns="False"
+                      VerticalAlignment="Bottom"
+                      Height="149" 
+                      Grid.ColumnSpan="2" 
+                      Margin="8,2,140,5" Grid.RowSpan="3">
                 <DataGrid.Columns>
                     <DataGridTextColumn Binding="{Binding PrivilegesName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" IsReadOnly="True" Header="Льготы"/>
                     <DataGridTemplateColumn>
@@ -311,14 +314,18 @@
 
             <!-- Решение -->
             <DataGrid x:Name="solFilter"
-                  AutoGenerateColumns="False"
-                  Grid.Row="10" 
-                  Grid.Column="4"
-                  Grid.RowSpan="3"
-                  CanUserAddRows="False"
-                  CanUserDeleteRows="False"
-                  CanUserSortColumns="False"
-                  Margin="5">
+                      AutoGenerateColumns="False"
+                      Grid.Row="10" 
+                      Grid.Column="3"
+                      Grid.ColumnSpan="2"
+                      CanUserAddRows="False"
+                      CanUserDeleteRows="False"
+                      CanUserSortColumns="False"
+                      Margin="134,0,0,5"
+                      HorizontalAlignment="Left"
+                      VerticalAlignment="Bottom"
+                      Height="149"
+                      Width="135" Grid.RowSpan="3">
                 <DataGrid.Columns>
                     <DataGridTextColumn Binding="{Binding SolutionName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" IsReadOnly="True" Header="Решение"/>
                     <DataGridTemplateColumn>
