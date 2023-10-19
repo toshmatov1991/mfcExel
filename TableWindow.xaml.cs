@@ -1363,12 +1363,12 @@ namespace exel_for_mfc
                                       Trek = reg.Trek,
                                       MailingDate = reg.MailingDate,
                                       IdApplicant = appl.Id
-                                  }).Where(a => AreaInt.Contains((int)a.Area))
-                                   .Where(a => LocalInt.Contains((int)a.Local))
-                                   .Where(a => PayInt.Contains((int)a.Pay))
-                                   .Where(a => SolInt.Contains((int)a.Solution))
-                                   .Where(a => PrivInt.Contains((int)a.Lgota))
-                                   .Where(a => a.DateGetSert >= Convert.ToDateTime(dateStart.Text) 
+                                  }).Where(a => AreaInt.Contains((int)a.Area) || a.Area == null
+                          /*.Where */           && LocalInt.Contains((int)a.Local) || a.Local == null
+                          /*.Where */           && PayInt.Contains((int)a.Pay) || a.Pay == null
+                          /*.Where */           && SolInt.Contains((int)a.Solution) || a.Pay == null
+                          /*.Where */           && PrivInt.Contains((int)a.Lgota) || a.Lgota == null 
+                          /*.Where */           && a.DateGetSert >= Convert.ToDateTime(dateStart.Text) 
                                             && a.DateGetSert <= Convert.ToDateTime(dateEnd.Text)).ToList();
                     
                   
