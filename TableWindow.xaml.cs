@@ -1460,6 +1460,42 @@ namespace exel_for_mfc
             }
 
         }
+
+
+
+
+        //Событие перед редактированием ячейки
+        private void TestBeginningEdit(object sender, DataGridBeginningEditEventArgs e)
+        {
+            //Получаю название колонки
+            if (e.Column.Header.ToString() == "Адрес")
+            {
+                string content = (e.EditingEventArgs.Source as TextBlock).Text;
+
+                if (string.IsNullOrEmpty(content))
+                {
+                    string temp = "";
+                    //Здесь заполняю Адрес, если пустая строка
+                    AdressWindow adres = new(ref temp);
+                    adres.ShowDialog();
+                }
+                else return;
+            }
+
+                
+           
+             
+            
+
+
+        }
+
+        //Статистические данные
+        private void Button_Click_2(object sender, RoutedEventArgs e)
+        {
+            StaticWindow staticWindow = new();
+            staticWindow.ShowDialog();
+        }
     }
 }
 #endregion
