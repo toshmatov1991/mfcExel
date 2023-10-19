@@ -15,10 +15,8 @@ namespace exel_for_mfc
         {
             InitializeComponent();
             //Start();
-         // TableWindow taWindow = new();
-         // taWindow.Show();
-            StaticWindow staticWindow = new();
-            staticWindow.Show();
+          TableWindow taWindow = new();
+          taWindow.Show();
             //AdminWindow tableWindow = new();
             //tableWindow.Show();
           Close();

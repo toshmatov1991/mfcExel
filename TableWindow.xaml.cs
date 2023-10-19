@@ -27,6 +27,7 @@ using System.Globalization;
 using exel_for_mfc.FilterModels;
 using DocumentFormat.OpenXml.InkML;
 using Microsoft.IdentityModel.Tokens;
+using System.Diagnostics.CodeAnalysis;
 
 namespace exel_for_mfc
 {
@@ -1083,8 +1084,6 @@ namespace exel_for_mfc
         //Заполнение таблиц Фильтров
         public async void FilterStart()
             {
-
-
                 //Заполнение таблиц Фильтров
                 using (ExDbContext db = new())
                 {
@@ -1314,6 +1313,7 @@ namespace exel_for_mfc
                 {
                     SolInt.Add(item.Id - 1);
                 }
+                SolInt.Add(0);
             }
             #endregion
 
@@ -1363,7 +1363,7 @@ namespace exel_for_mfc
                                       Trek = reg.Trek,
                                       MailingDate = reg.MailingDate,
                                       IdApplicant = appl.Id
-                                  }).Where( u => AreaInt.Contains((int)u.Area))
+                                  }).Where(a => AreaInt.Contains((int)a.Area))
                                    .Where(a => LocalInt.Contains((int)a.Local))
                                    .Where(a => PayInt.Contains((int)a.Pay))
                                    .Where(a => SolInt.Contains((int)a.Solution))
@@ -1371,6 +1371,10 @@ namespace exel_for_mfc
                                    .Where(a => a.DateGetSert >= Convert.ToDateTime(dateStart.Text) 
                                             && a.DateGetSert <= Convert.ToDateTime(dateEnd.Text)).ToList();
                     
+                  
+                  
+
+
                   
                     if (MyList.Count == 0)
                             MessageBox.Show("По вашему запросу ничего не найдено :(");
@@ -1387,8 +1391,8 @@ namespace exel_for_mfc
 
             }
 
-            #region Обработка возможных исключений и другие мелочи
-            private void AreaExeption(object sender, MouseButtonEventArgs e)
+        #region Обработка возможных исключений и другие мелочи
+        private void AreaExeption(object sender, MouseButtonEventArgs e)
             {
                 return;
             }
@@ -1461,7 +1465,7 @@ namespace exel_for_mfc
 
         }
 
-
+       
 
 
         //Событие перед редактированием ячейки

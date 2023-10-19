@@ -196,9 +196,9 @@
                 Grid.Row="10"
                 Content="Обновить таблицу"
                 Height="42" 
-                    HorizontalAlignment="Center"
+                    HorizontalAlignment="Left"
                 VerticalAlignment="Top" 
-                Click="Button_Click_1" Grid.ColumnSpan="2" Margin="80,32,121,0" RenderTransformOrigin="0.521,0.202" Grid.RowSpan="2" />
+                Click="Button_Click_1" Grid.ColumnSpan="2" Margin="88,32,0,0" RenderTransformOrigin="0.521,0.202" Grid.RowSpan="2" />
 
             <Button Content="Выгрузить в Excel"
                 Grid.Column="6"
@@ -383,7 +383,7 @@
                     Grid.Row="11"
                     HorizontalAlignment="Left"
                     VerticalAlignment="Top"
-                    Margin="38,14,0,0"
+                    Margin="50,14,0,0"
                     Height="42"
                     Width="101"
                     Grid.RowSpan="2"

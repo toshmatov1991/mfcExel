@@ -1,4 +1,5 @@
-﻿using exel_for_mfc.SupportClass;
+﻿using exel_for_mfc;
+using exel_for_mfc.SupportClass;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -31,10 +32,10 @@ namespace exel_for_mfc
             using ExDbContext db = new();
 
             //Общее количество сертификатов
-            var getCountSert = db.Registries
+
+            Sert.Text += db.Registries
                 .Where(u => u.SerialAndNumberSert != null || string.IsNullOrEmpty(u.SerialAndNumberSert))
-                .Count();
-            Sert.Text += getCountSert.ToString();
+                .Count().ToString();
 
             //Размер выплат
             var getNamePays = db.PayAmounts.ToList();
@@ -43,8 +44,24 @@ namespace exel_for_mfc
             {
                 names.Add(new PayClass(item.Id, item.Pay, db.Registries.Where(u => u.PayAmountFk == item.Id).Count()));
             }
-
             payFilter.ItemsSource = names.ToList();
+
+            //Общее количество выплат
+            payCount.Text += db.Registries.Where(u => u.PayAmountFk != null).Count().ToString();
+
+            //Решения
+            var getNameSoul = db.SolutionTypes.ToList();
+            List<SolutionClass> names1 = new();
+            foreach (var item in getNameSoul)
+            {
+                names1.Add(new SolutionClass(item.Id, item.SolutionName, db.Registries.Where(u => u.SolutionFk == item.Id).Count()));
+            }
+            solFilter.ItemsSource = names1.ToList();
+
+            //Общее количество Решений
+            solCount.Text += db.Registries.Where(u => u.SolutionFk != null).Count().ToString();
+
+
 
         }
 
