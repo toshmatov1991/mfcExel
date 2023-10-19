@@ -65,7 +65,7 @@
                   CanUserAddRows="True" Margin="46,119,46,10" CellEditEnding="PayCell">
             <DataGrid.Columns>
                 <DataGridTextColumn Binding="{Binding Id, UpdateSourceTrigger=PropertyChanged}" IsReadOnly="True" Header="id" Width="50"/>
-                <DataGridTextColumn Binding="{Binding Pay, UpdateSourceTrigger=PropertyChanged}" Header="Размер выплат" Width="300"/>
+                <DataGridTextColumn Binding="{Binding Pay, UpdateSourceTrigger=PropertyChanged}" IsReadOnly="True" Header="Размер выплат" Width="300"/>
             </DataGrid.Columns>
         </DataGrid>
 

@@ -32,28 +32,31 @@ namespace exel_for_mfc
             InitializeComponent();
             StartAdminWin();
         }
+        #region Удаление
+
+        #endregion
         #region Редактирование таблиц
         private void StartAdminWin()
         {
             using ExDbContext db = new();
 
             var AreaDataGrid = db.Areas.FromSqlRaw("SELECT * FROM Area").ToList();
-            AreaX.ItemsSource = AreaDataGrid;
+            AreaX.ItemsSource = AreaDataGrid.ToList();
 
             var LocalDataGrid = db.Localities.FromSqlRaw("SELECT * FROM Locality").ToList();
-            LocalX.ItemsSource = LocalDataGrid;
+            LocalX.ItemsSource = LocalDataGrid.ToList();
 
             var PayDataGrid = db.PayAmounts.FromSqlRaw("SELECT * FROM PayAmount").ToList();
-            PayX.ItemsSource = PayDataGrid;
+            PayX.ItemsSource = PayDataGrid.ToList();
 
             var PrivelDataGrid = db.Privileges.FromSqlRaw("SELECT * FROM Privileges").ToList();
-            PrivelX.ItemsSource = PrivelDataGrid;
+            PrivelX.ItemsSource = PrivelDataGrid.ToList();
 
             var SolDataGrid = db.SolutionTypes.FromSqlRaw("SELECT * FROM SolutionType").ToList();
-            SolutionX.ItemsSource = SolDataGrid;
+            SolutionX.ItemsSource = SolDataGrid.ToList();
 
             var SolDataGridForAdmin = db.SolutionTypes.FromSqlRaw("SELECT * FROM SolutionType").Take(2).ToList();
-            AdminsX.ItemsSource = SolDataGridForAdmin;
+            AdminsX.ItemsSource = SolDataGridForAdmin.ToList();
 
         }
 

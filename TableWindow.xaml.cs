@@ -1094,7 +1094,7 @@ namespace exel_for_mfc
                     {
                         AreaFilterList.Add(new AreaFilter(item.Id, item.AreaName, 0));
                     }
-                    areaFilter.ItemsSource = AreaFilterList.ToList();
+                    areaFilter.ItemsSource = AreaFilterList.OrderBy(u => u.AreaName).ToList();
                 };
 
             using (ExDbContext db = new())
@@ -1105,7 +1105,7 @@ namespace exel_for_mfc
                 {
                     LocalFilterList.Add(new LocalFilter(item.Id, item.LocalName, 0));
                 }
-                locFilter.ItemsSource = LocalFilterList.ToList();
+                locFilter.ItemsSource = LocalFilterList.OrderBy(u => u.LocalName).ToList();
             };
 
             using (ExDbContext db = new())
@@ -1129,7 +1129,7 @@ namespace exel_for_mfc
                         item.PrivilegesName = item.PrivilegesName[..17];
                     PrivFilterList.Add(new PrivFilter(item.Id, item.PrivilegesName, 0));
                 }
-                privFilter.ItemsSource = PrivFilterList.ToList();
+                privFilter.ItemsSource = PrivFilterList.OrderBy(u => u.PrivilegesName).ToList();
             };
 
             using (ExDbContext db = new())

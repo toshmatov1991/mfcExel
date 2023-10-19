@@ -244,7 +244,7 @@
                       CanUserAddRows="False"
                       CanUserDeleteRows="False"
                       CanUserSortColumns="False"
-                      Height="149" Margin="159,2,0,5" Grid.ColumnSpan="2">
+                      Height="149" Margin="161,2,149,5" Grid.ColumnSpan="3">
                 <DataGrid.Columns>
                     <DataGridTextColumn Binding="{Binding LocalName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" IsReadOnly="True" Header="Населенный пункт"/>
                     <DataGridTemplateColumn>
@@ -266,7 +266,7 @@
                       CanUserDeleteRows="False"
                       CanUserSortColumns="False"
                       VerticalAlignment="Bottom"
-                      Height="149" Margin="39,2,23,5" Grid.RowSpan="3">
+                      Height="149" Margin="47,0,15,5" Grid.RowSpan="3">
                 <DataGrid.Columns>
                     <DataGridTextColumn Binding="{Binding Pay, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" IsReadOnly="True" Header="Выплаты"/>
                     <DataGridTemplateColumn>
@@ -290,7 +290,7 @@
                       VerticalAlignment="Bottom"
                       Height="149" 
                       Grid.ColumnSpan="2" 
-                      Margin="0,0,131,5" Grid.RowSpan="3">
+                      Margin="12,0,119,5" Grid.RowSpan="3">
                 <DataGrid.Columns>
                     <DataGridTextColumn Binding="{Binding PrivilegesName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" IsReadOnly="True" Header="Льготы"/>
                     <DataGridTemplateColumn>

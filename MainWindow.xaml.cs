@@ -14,11 +14,11 @@ namespace exel_for_mfc
         public MainWindow()
         {
             InitializeComponent();
-            Start();
+            //Start();
           TableWindow taWindow = new();
           taWindow.Show();
-          //AdminWindow tableWindow = new();
-          //tableWindow.Show();
+            //AdminWindow tableWindow = new();
+            //tableWindow.Show();
           Close();
         }
 
