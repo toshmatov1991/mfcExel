@@ -14,12 +14,12 @@ namespace exel_for_mfc
         public MainWindow()
         {
             InitializeComponent();
-            //Start();
-          TableWindow taWindow = new();
-          taWindow.Show();
-            //AdminWindow tableWindow = new();
-            //tableWindow.Show();
-          Close();
+            Start();
+          //TableWindow taWindow = new();
+          //taWindow.Show();
+           AdminWindow tableWindow = new();
+           tableWindow.Show();
+           Close();
         }
 
         private async void Button_Click(object sender, RoutedEventArgs e)
@@ -78,7 +78,7 @@ namespace exel_for_mfc
         }
 
         //Метод хэширования вводимого пароля
-        private string MD5Hash(string input)
+        private static string MD5Hash(string input)
         {
             var md5 = MD5.Create();
             var hash = md5.ComputeHash(Encoding.UTF8.GetBytes(input));

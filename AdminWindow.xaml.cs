@@ -2,6 +2,8 @@
 using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Spreadsheet;
 using DocumentFormat.OpenXml.Wordprocessing;
+using exel_for_mfc;
+using exel_for_mfc.FilterModels;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Win32;
 using System;
@@ -32,9 +34,9 @@ namespace exel_for_mfc
             InitializeComponent();
             StartAdminWin();
         }
-        #region Удаление
 
-        #endregion
+
+
         #region Редактирование таблиц
         private void StartAdminWin()
         {
@@ -230,11 +232,11 @@ namespace exel_for_mfc
         {
             await Task.Run(() =>
             {
-            //Интеграция
-            OpenFileDialog of = new()
-            {
-                Filter = "Excel Files|*.xls;*.xlsx;*.xlsm"
-            };
+                //Интеграция
+                OpenFileDialog of = new()
+                {
+                    Filter = "Excel Files|*.xls;*.xlsx;*.xlsm"
+                };
                 /*
                  1 - фамилия
                  2 - имя
@@ -702,7 +704,7 @@ namespace exel_for_mfc
                     if (getIdLast != null)
                         idPriv = getIdLast.Id;
                     else return 0;
-                   
+
                 }
             }
             return idPriv;
@@ -762,3 +764,18 @@ namespace exel_for_mfc
         #endregion
     }
 }
+
+
+    
+
+
+
+
+
+
+
+
+
+
+            
+                

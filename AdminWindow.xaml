@@ -24,11 +24,6 @@
                   Margin="10,14,10,259"
                   Grid.RowSpan="2" 
                   CellEditEnding="AreaCell">
-            <!--<DataGrid.ContextMenu>
-                <ContextMenu>
-                    <MenuItem Header="Удалить"/>
-                </ContextMenu>
-            </DataGrid.ContextMenu>-->
             <DataGrid.Columns>
                 <DataGridTextColumn Binding="{Binding Id, UpdateSourceTrigger=PropertyChanged}" IsReadOnly="True" Header="id" Width="50"/>
                 <DataGridTextColumn Binding="{Binding AreaName, UpdateSourceTrigger=PropertyChanged}" Header="Район" Width="300"/>
@@ -53,7 +48,7 @@
                   CanUserAddRows="True" Grid.ColumnSpan="2" Margin="127,14,109,35" CellEditEnding="LgotaCell">
             <DataGrid.Columns>
                 <DataGridTextColumn Binding="{Binding Id, UpdateSourceTrigger=PropertyChanged}" IsReadOnly="True" Header="id" Width="50"/>
-                <DataGridTextColumn Binding="{Binding PrivilegesName, UpdateSourceTrigger=PropertyChanged}" IsReadOnly="True" Header="Льгота" Width="300"/>
+                <DataGridTextColumn Binding="{Binding PrivilegesName, UpdateSourceTrigger=PropertyChanged}" Header="Льгота" Width="300"/>
             </DataGrid.Columns>
         </DataGrid>
 
@@ -65,7 +60,7 @@
                   CanUserAddRows="True" Margin="46,119,46,10" CellEditEnding="PayCell">
             <DataGrid.Columns>
                 <DataGridTextColumn Binding="{Binding Id, UpdateSourceTrigger=PropertyChanged}" IsReadOnly="True" Header="id" Width="50"/>
-                <DataGridTextColumn Binding="{Binding Pay, UpdateSourceTrigger=PropertyChanged}" IsReadOnly="True" Header="Размер выплат" Width="300"/>
+                <DataGridTextColumn Binding="{Binding Pay, UpdateSourceTrigger=PropertyChanged}" Header="Размер выплат" Width="300"/>
             </DataGrid.Columns>
         </DataGrid>
 
@@ -80,7 +75,7 @@
                   CellEditEnding="SolutionCell">
             <DataGrid.Columns>
                 <DataGridTextColumn Binding="{Binding Id, UpdateSourceTrigger=PropertyChanged}" IsReadOnly="True" Header="id" Width="50"/>
-                <DataGridTextColumn Binding="{Binding SolutionName, UpdateSourceTrigger=PropertyChanged}" IsReadOnly="True" Header="Тип решения" Width="300"/>
+                <DataGridTextColumn Binding="{Binding SolutionName, UpdateSourceTrigger=PropertyChanged}" Header="Тип решения" Width="300"/>
             </DataGrid.Columns>
         </DataGrid>
 
