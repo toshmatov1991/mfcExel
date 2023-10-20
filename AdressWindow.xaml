@@ -4,8 +4,8 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:exel_for_mfc"
-        mc:Ignorable="d"
-        Title="AdressWindow" Height="450" Width="800">
+        mc:Ignorable="d" ResizeMode="NoResize" Icon="Resources\logomfc.png" WindowStartupLocation="CenterScreen"
+        Title="AdressWindow" Height="350" Width="550">
     <Grid>
         
     </Grid>

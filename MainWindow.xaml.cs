@@ -15,10 +15,12 @@ namespace exel_for_mfc
         {
             InitializeComponent();
             Start();
-          //TableWindow taWindow = new();
-          //taWindow.Show();
-           AdminWindow tableWindow = new();
-           tableWindow.Show();
+            //TableWindow taWindow = new();
+            //taWindow.Show();
+            //AdminWindow tableWindow = new();
+            //tableWindow.Show();
+            AdressWindow adressWindow = new();
+            adressWindow.Show();
            Close();
         }
 
