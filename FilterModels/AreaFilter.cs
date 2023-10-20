@@ -13,8 +13,8 @@ namespace exel_for_mfc.FilterModels
 
         public string? AreaName { get; set; }
 
-        public int? AreaBool { get; set; }
-        public AreaFilter(int id, string? areaName, int? areaBool)
+        public bool? AreaBool { get; set; }
+        public AreaFilter(int id, string? areaName, bool? areaBool)
         {
             Id = id;
             AreaName = areaName;

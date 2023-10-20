@@ -1072,14 +1072,12 @@ namespace exel_for_mfc
             }
             #endregion
         #region Фильтрация()
-        List<AreaFilter>? AreaFilterList = new();
+        static List<AreaFilter>? AreaFilterList = new();
         List<LocalFilter>? LocalFilterList = new();
         List<PayFilter>? PayFilterList = new();
         List<PrivFilter>? PrivFilterList = new();
         List<SolFilter>? SolFilterList = new();
 
-
-       
 
         //Заполнение таблиц Фильтров
         public async void FilterStart()
@@ -1091,7 +1089,7 @@ namespace exel_for_mfc
                     var s = await db.Areas.FromSqlRaw("SELECT * FROM Area").ToListAsync();
                     foreach (var item in s)
                     {
-                        AreaFilterList.Add(new AreaFilter(item.Id, item.AreaName, 0));
+                        AreaFilterList.Add(new AreaFilter(item.Id, item.AreaName, false));
                     }
                     areaFilter.ItemsSource = AreaFilterList.OrderBy(u => u.AreaName).ToList();
                 };
@@ -1147,12 +1145,12 @@ namespace exel_for_mfc
         //Поставил галочку Район
         private void AreaCheck(object sender, RoutedEventArgs e)
         {
-            AreaFilterList.FindAll(s => s.AreaName == (areaFilter.SelectedItem as AreaFilter)?.AreaName).ForEach(x => x.AreaBool = 1);
+            AreaFilterList.FindAll(s => s.AreaName == (areaFilter.SelectedItem as AreaFilter)?.AreaName).ForEach(x => x.AreaBool = true);
         }
             //Убрал галочку Район
         private void AreaUnchecked(object sender, RoutedEventArgs e)
         {
-            AreaFilterList.FindAll(s => s.AreaName == (areaFilter.SelectedItem as AreaFilter)?.AreaName).ForEach(x => x.AreaBool = 0);
+            AreaFilterList.FindAll(s => s.AreaName == (areaFilter.SelectedItem as AreaFilter)?.AreaName).ForEach(x => x.AreaBool = false);
         }
 
         //Поставил галочку Населенный пункт
@@ -1203,119 +1201,34 @@ namespace exel_for_mfc
         }
         #endregion
 
+
         //Применить фильтр
         private void Button_Click_4(object sender, RoutedEventArgs e)
         {
-            GoStartFilter(AreaFilterList, LocalFilterList, PayFilterList, PrivFilterList, SolFilterList);
+            //areaFilter.ItemsSource = AreaFilterList.OrderBy(u => u.AreaName).ToList();
+            //locFilter.ItemsSource = LocalFilterList.OrderBy(u => u.LocalName).ToList();
+            //payFilter.ItemsSource = PayFilterList.ToList();
+            //privFilter.ItemsSource = PrivFilterList.OrderBy(u => u.PrivilegesName).ToList();
+            //solFilter.ItemsSource = SolFilterList.ToList();
+
+            GoStartFilter();
         }
 
-            //Метод для выборки по фильтрам
-            void GoStartFilter(List<AreaFilter> AreaF, List<LocalFilter> LocalF, List<PayFilter> PayF, List<PrivFilter> PrivF, List<SolFilter> SolF)
-            {
-                var FilterAreaId = AreaF.Where(u => u.AreaBool != 0).ToList();
-                var FilterLocalId = LocalF.Where(u => u.LocalBool != 0).ToList();
-                var FilterPayId = PayF.Where(u => u.PayBool != 0).ToList();
-                var FilterSolId = SolF.Where(u => u.SolBool != 0).ToList();
-                var FilterPrivId = PrivF.Where(u => u.PrivBool != 0).ToList();
+       
 
-                List<int> AreaInt = new();
-                List<int> LocalInt = new();
-                List<int> PayInt = new();
-                List<int> SolInt = new();
-                List<int> PrivInt = new();
 
-            #region Заполнение Listov INTegerami
-            //Area
-            if (FilterAreaId.Count == 0)
+        //Метод для выборки по фильтрам
+        void GoStartFilter()
             {
-                AreaInt.Clear();
-                foreach (var item in AreaF)
-                {
-                    AreaInt.Add(item.Id - 1);
-                }
-            }
-            else if (FilterAreaId.Count != 0)
-            {
-                AreaInt.Clear();
-                foreach (var item in FilterAreaId)
-                {
-                    AreaInt.Add(item.Id - 1);
-                }
-            }
 
-            //Local
-            if (FilterLocalId.Count == 0)
+            //Район полная обработка
+            List<int> aread = new();
+            foreach (var item in AreaFilterList.Where(u => u.AreaBool == true))
             {
-                LocalInt.Clear();
-                foreach (var item in LocalF)
-                {
-                    LocalInt.Add(item.Id - 1);
-                }
+                aread.Add(item.Id - 1);
             }
-            else if (FilterLocalId.Count != 0)
-            {
-                LocalInt.Clear();
-                foreach (var item in FilterLocalId)
-                {
-                    LocalInt.Add(item.Id - 1);
-                }
-            }
+          // areaFilter.ItemsSource = AreaFilterList.OrderBy(u => u.AreaName).ToList();
 
-            //Pay
-            if (FilterPayId.Count == 0)
-            {
-                PayInt.Clear();
-                foreach (var item in PayF)
-                {
-                    PayInt.Add(item.Id - 1);
-                }
-            }
-            else if (FilterPayId.Count != 0)
-            {
-                PayInt.Clear();
-                foreach (var item in FilterPayId)
-                {
-                    PayInt.Add(item.Id - 1);
-                }
-            }
-
-            //Priv
-            if (FilterPrivId.Count == 0)
-            {
-                PrivInt.Clear();
-                foreach (var item in PrivF)
-                {
-                    PrivInt.Add(item.Id - 1);
-                }
-            }
-            else if (FilterPrivId.Count != 0)
-            {
-                PrivInt.Clear();
-                foreach (var item in FilterPrivId)
-                {
-                    PrivInt.Add(item.Id - 1);
-                }
-            }
-
-            //Sol
-            if (FilterSolId.Count == 0)
-            {
-                SolInt.Clear();
-                foreach (var item in SolF)
-                {
-                    SolInt.Add(item.Id - 1);
-                }
-            }
-            else if (FilterSolId.Count != 0)
-            {
-                SolInt.Clear();
-                foreach (var item in FilterSolId)
-                {
-                    SolInt.Add(item.Id - 1);
-                }
-                SolInt.Add(0);
-            }
-            #endregion
 
 
             try
@@ -1363,17 +1276,17 @@ namespace exel_for_mfc
                                       Trek = reg.Trek,
                                       MailingDate = reg.MailingDate,
                                       IdApplicant = appl.Id
-                                  }).Where(a => AreaInt.Contains((int)a.Area) || a.Area == null
-                          /*.Where */           && LocalInt.Contains((int)a.Local) || a.Local == null
-                          /*.Where */           && PayInt.Contains((int)a.Pay) || a.Pay == null
-                          /*.Where */           && SolInt.Contains((int)a.Solution) || a.Pay == null
-                          /*.Where */           && PrivInt.Contains((int)a.Lgota) || a.Lgota == null 
+                                  }).Where(a => aread.Contains((int)a.Area) || a.Area == null
+                          /*.Where */         //  && LocalInt.Contains((int)a.Local) || a.Local == null
+                          /*.Where */         //  && PayInt.Contains((int)a.Pay) || a.Pay == null
+                          /*.Where */         //  && SolInt.Contains((int)a.Solution) || a.Pay == null
+                          /*.Where */         //  && PrivInt.Contains((int)a.Lgota) || a.Lgota == null 
                           /*.Where */           && a.DateGetSert >= Convert.ToDateTime(dateStart.Text) 
-                                            && a.DateGetSert <= Convert.ToDateTime(dateEnd.Text)).ToList();
-                    
-                  
-                  
+                                                && a.DateGetSert <= Convert.ToDateTime(dateEnd.Text)).ToList();
 
+                    //Если коллекция полная(галочки не проставлены) то ее не учитывать в фильтре
+
+                    
 
                   
                     if (MyList.Count == 0)
@@ -1502,5 +1415,4 @@ namespace exel_for_mfc
         }
     }
 }
-#endregion
-           
+#endregion          
