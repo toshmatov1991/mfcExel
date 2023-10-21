@@ -89,7 +89,7 @@
                   VerticalAlignment="Top"
                  HorizontalAlignment="Left"
                   Grid.Column="4"
-                  Height="35" Margin="0,86,0,0" Grid.RowSpan="2"/>
+                  Height="35" Margin="0,90,0,0" Grid.Row="1" Grid.RowSpan="2"/>
 
         <TextBox 
             x:Name="Stroenie"
@@ -99,9 +99,8 @@
                   HorizontalContentAlignment="Center"
                   VerticalAlignment="Top"
                  HorizontalAlignment="Left"
-                  Grid.Row="1"
                   Grid.Column="4"
-                  Height="38" Margin="0,91,0,0" Grid.RowSpan="2"/>
+                  Height="38" Margin="0,81,0,0" Grid.RowSpan="2"/>
 
         <TextBox  
             x:Name="kvartira"
@@ -126,19 +125,19 @@
             FontStyle="Italic"
             HorizontalAlignment="Left"
             VerticalAlignment="Top"
-            FontSize="16" Background="AliceBlue" Grid.Column="3" Margin="132,33,0,0" Grid.ColumnSpan="2"><Run Language="ru-ru" Text="       "/><Run Text="№Корпуса"/><LineBreak/><Run Language="ru-ru" Text="      "/><Run Text="(при наличии)"/></TextBlock>
+            FontSize="16" Background="AliceBlue" Grid.Column="3" Margin="132,39,0,0" Grid.ColumnSpan="2" Grid.Row="1"><Run Language="ru-ru" Text="       "/><Run Text="№Корпуса"/><LineBreak/><Run Language="ru-ru" Text="      "/><Run Text="(при наличии)"/></TextBlock>
         <TextBlock
             Width="158"
             FontStyle="Italic"
             HorizontalAlignment="Left"
             VerticalAlignment="Top"
-            FontSize="16" Grid.Column="3" Background="DeepSkyBlue" Margin="132,43,0,0" Grid.ColumnSpan="2" Grid.Row="1"><Run Text="       "/><Run Language="ru-ru" Text="Строение"/><LineBreak/><Run Text="      "/><Run Text="(при наличии)"/></TextBlock>
+            FontSize="16" Grid.Column="3" Background="DeepSkyBlue" Margin="141,30,0,0" Grid.ColumnSpan="2" Height="44"><Run Text="       "/><Run Language="ru-ru" Text="Строение"/><LineBreak/><Run Text="      "/><Run Text="(при наличии)"/></TextBlock>
         <TextBlock Background="Goldenrod"
             Width="140"
             FontStyle="Italic"
             HorizontalAlignment="Left"
             VerticalAlignment="Top"
-            FontSize="16" Grid.Column="4" Margin="0,51,0,0" Grid.Row="2"><Run Language="ru-ru" Text="Номер квартиры"/></TextBlock>
+            FontSize="16" Grid.Column="4" Margin="0,54,0,0" Grid.Row="2"><Run Language="ru-ru" Text="Номер квартиры"/></TextBlock>
         <Button Grid.Column="1"
                 Content="Добавить" 
                 HorizontalAlignment="Left"

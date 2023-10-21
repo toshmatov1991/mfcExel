@@ -14,11 +14,13 @@ namespace exel_for_mfc
         public AdressWindow()
         {
             InitializeComponent();
+            name.Focus();
         }
 
         public AdressWindow(ref string str)
         {
             InitializeComponent();
+            name.Focus();
         }
 
         //Добавить адрес
@@ -34,7 +36,7 @@ namespace exel_for_mfc
             kvartira - квартира
              */
 
-            if(string.IsNullOrEmpty(name.Text) 
+            if (string.IsNullOrEmpty(name.Text) 
                 || string.IsNullOrWhiteSpace(name.Text)
                 && string.IsNullOrEmpty(numberDom.Text)
                 && string.IsNullOrWhiteSpace(numberDom.Text)
@@ -46,14 +48,16 @@ namespace exel_for_mfc
 
             else
             {
-                if(string.IsNullOrEmpty(Stroenie.Text) && string.IsNullOrEmpty(numCorpus.Text))
+                if (string.IsNullOrEmpty(Stroenie.Text) && string.IsNullOrEmpty(numCorpus.Text))
                     TableWindow.temp1 = $"{ulOrDom.Text} {name.Text}, {dom.Text} {numberDom.Text}, кв.{kvartira.Text}";
                 if(!string.IsNullOrEmpty(Stroenie.Text))
-                    TableWindow.temp1 = $"{ulOrDom.Text} {name.Text}, {dom.Text} {numberDom.Text}/{Stroenie.Text}, кв.{kvartira.Text}";
+                    TableWindow.temp1 = $"{ulOrDom.Text} {name.Text}, {dom.Text} {numberDom.Text}{"/" + Stroenie.Text}, кв.{kvartira.Text}";
+                if (!string.IsNullOrEmpty(numCorpus.Text))
+                    TableWindow.temp1 = $"{ulOrDom.Text} {name.Text}, {dom.Text} {numberDom.Text} {"корп." + numCorpus.Text}, кв.{kvartira.Text}";
+                if (!string.IsNullOrEmpty(numCorpus.Text) && !string.IsNullOrEmpty(Stroenie.Text))
+                    TableWindow.temp1 = $"{ulOrDom.Text} {name.Text}, {dom.Text} {numberDom.Text}{"/" + Stroenie.Text}, {"корп." + numCorpus.Text}, кв.{kvartira.Text}";
+                Close();
             }
-
-            Close();
-
         }
     }
 }

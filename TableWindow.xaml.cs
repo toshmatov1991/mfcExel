@@ -1379,10 +1379,7 @@ namespace exel_for_mfc
 
         }
 
-       
-
-
-        //Событие перед редактированием ячейки
+        //Событие перед редактированием ячейки Добавление адреса, если ячейка пустая()
         private void TestBeginningEdit(object sender, DataGridBeginningEditEventArgs e)
         {
             //Получаю название колонки
@@ -1403,7 +1400,7 @@ namespace exel_for_mfc
             a.Adress = temp1;
         }
 
-        //Статистические данные
+        //Статистические данные()
         private void Button_Click_2(object sender, RoutedEventArgs e)
         {
             StaticWindow staticWindow = new();
