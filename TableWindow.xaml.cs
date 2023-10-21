@@ -2,32 +2,17 @@
 using DocumentFormat.OpenXml.Spreadsheet;
 using DocumentFormat.OpenXml;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.VisualBasic;
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Data;
 using System.Linq;
-using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 using Newtonsoft.Json;
 using Microsoft.Win32;
-using System.IO.Packaging;
 using System.Globalization;
-using exel_for_mfc.FilterModels;
-using DocumentFormat.OpenXml.InkML;
-using Microsoft.IdentityModel.Tokens;
-using System.Diagnostics.CodeAnalysis;
 using exel_for_mfc.FilterDB;
 
 namespace exel_for_mfc
@@ -1078,13 +1063,6 @@ namespace exel_for_mfc
             #endregion
 
         #region Фильтрация()
-        List<AreaFilter>? AreaFilterList = new();
-        List<LocalFilter>? LocalFilterList = new();
-        List<PayFilter>? PayFilterList = new();
-        List<PrivFilter>? PrivFilterList = new();
-        List<SolFilter>? SolFilterList = new();
-        
-
         //Заполнение таблиц Фильтров
         public async void FilterStart()
             {
@@ -1161,7 +1139,6 @@ namespace exel_for_mfc
 
 
         }
-
         #region CheckBoxes
         //Поставил галочку Район
         private async void AreaCheck(object sender, RoutedEventArgs e)
@@ -1194,14 +1171,14 @@ namespace exel_for_mfc
         private async void PayChecked(object sender, RoutedEventArgs e)
         {
             using FdbContext db = new();
-            await db.Database.ExecuteSqlRawAsync("UPDATE LocalF SET Flag={0} WHERE id={1}", 1, (payFilter.SelectedItem as PayFilter)?.Id);
+            await db.Database.ExecuteSqlRawAsync("UPDATE LocalF SET Flag={0} WHERE id={1}", 1, (payFilter.SelectedItem as PayF)?.Id);
         }
 
         //Убрал галочку Выплата
         private async void PayUnChecked(object sender, RoutedEventArgs e)
         {
             using FdbContext db = new();
-            await db.Database.ExecuteSqlRawAsync("UPDATE LocalF SET Flag={0} WHERE id={1}", 0, (payFilter.SelectedItem as PayFilter)?.Id);
+            await db.Database.ExecuteSqlRawAsync("UPDATE LocalF SET Flag={0} WHERE id={1}", 0, (payFilter.SelectedItem as PayF)?.Id);
         }
 
         //Убрал галочку Льгота
@@ -1209,32 +1186,30 @@ namespace exel_for_mfc
         {
 
             using FdbContext db = new();
-            await db.Database.ExecuteSqlRawAsync("UPDATE PrivF SET Flag={0} WHERE id={1}", 0, (privFilter.SelectedItem as PrivFilter)?.Id);
+            await db.Database.ExecuteSqlRawAsync("UPDATE PrivF SET Flag={0} WHERE id={1}", 0, (privFilter.SelectedItem as PrivF)?.Id);
         }
 
         //Поставил галочку Льгота
         private async void PrivChecked(object sender, RoutedEventArgs e)
         {
             using FdbContext db = new();
-            await db.Database.ExecuteSqlRawAsync("UPDATE PrivF SET Flag={0} WHERE id={1}", 1, (privFilter.SelectedItem as PrivFilter)?.Id);
+            await db.Database.ExecuteSqlRawAsync("UPDATE PrivF SET Flag={0} WHERE id={1}", 1, (privFilter.SelectedItem as PrivF)?.Id);
         }
 
         //Поставил галочку Решение
         private async void SolChecked(object sender, RoutedEventArgs e)
         {
             using FdbContext db = new();
-            await db.Database.ExecuteSqlRawAsync("UPDATE SolF SET Flag={0} WHERE id={1}", 1, (solFilter.SelectedItem as SolFilter)?.Id);
+            await db.Database.ExecuteSqlRawAsync("UPDATE SolF SET Flag={0} WHERE id={1}", 1, (solFilter.SelectedItem as SolF)?.Id);
         }
 
         //Убрал галочку Решение
-        private void SolUnChecked(object sender, RoutedEventArgs e)
+        private async void SolUnChecked(object sender, RoutedEventArgs e)
         {
             using FdbContext db = new();
-            await db.Database.ExecuteSqlRawAsync("UPDATE SolF SET Flag={0} WHERE id={1}", 1, (solFilter.SelectedItem as SolFilter)?.Id);
+            await db.Database.ExecuteSqlRawAsync("UPDATE SolF SET Flag={0} WHERE id={1}", 1, (solFilter.SelectedItem as SolF)?.Id);
         }
         #endregion
-
-
         //Применить фильтр
         private void Button_Click_4(object sender, RoutedEventArgs e)
         {
@@ -1246,14 +1221,20 @@ namespace exel_for_mfc
 
         //Метод для выборки по фильтрам
         void GoStartFilter()
-            {
+        {
+            using FdbContext db1 = new();
 
-            //Район полная обработка
-            List<int> aread = new();
-            foreach (var item in AreaFilterList.Where(u => u.AreaBool == true))
+                //Район полная обработка
+                var readf = db1.AreaFs.Where(u => u.Flag == 1).Select(c => c.Id);
+            List<int> www = new();
+            foreach (var item in readf)
             {
-                aread.Add(item.Id - 1);
+                www.Add((int)item - 1);
             }
+
+
+
+
 
 
 
@@ -1282,7 +1263,6 @@ namespace exel_for_mfc
                     {
                         MyList = (from reg in db.Registries
                                   join appl in db.Applicants on reg.ApplicantFk equals appl.Id
-
                                   select new SClass
                                   {
                                       IdReg = reg.Id,
@@ -1303,10 +1283,14 @@ namespace exel_for_mfc
                                       Trek = reg.Trek,
                                       MailingDate = reg.MailingDate,
                                       IdApplicant = appl.Id
-                                  }).Where(a => a.DateGetSert >= Convert.ToDateTime(dateStart.Text) 
-                                                && a.DateGetSert <= Convert.ToDateTime(dateEnd.Text)).ToList();
+                                  }).Where(u => www.Contains((int)u.Area)).ToList();
 
-                  
+
+                    //.Where(a => a.DateGetSert >= Convert.ToDateTime(dateStart.Text)
+                    //                            && a.DateGetSert <= Convert.ToDateTime(dateEnd.Text)
+                    //                            && strings.Contains(a.)).ToList();
+
+
                     if (MyList.Count == 0)
                             MessageBox.Show("По вашему запросу ничего не найдено :(");
                         else
