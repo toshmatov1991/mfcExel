@@ -1130,8 +1130,24 @@ namespace exel_for_mfc
                     }
                     payFilter.ItemsSource = db1.PayFs.ToList();
 
+                    //Льготы
+                    var priv = await db.Privileges.FromSqlRaw("SELECT * FROM Privileges").ToListAsync();
+                    foreach (var item in priv)
+                    {
+                        if (item.PrivilegesName.Length >= 17)
+                            item.PrivilegesName = item.PrivilegesName[..17];
+                        await db1.Database.ExecuteSqlRawAsync("INSERT INTO PrivF(id, name, flag) VALUES ({0}, {1}, {2})", item.Id, item.PrivilegesName, 0);
+                    }
+                    privFilter.ItemsSource = db1.PrivFs.ToList();
 
 
+                    //Решение
+                    var sol = await db.SolutionTypes.FromSqlRaw("SELECT * FROM SolutionType").ToListAsync();
+                    foreach (var item in sol)
+                    {
+                        await db1.Database.ExecuteSqlRawAsync("INSERT INTO SolF(id, name, flag) VALUES ({0}, {1}, {2})", item.Id, item.SolutionName, 0);
+                    }
+                    solFilter.ItemsSource = db1.Solves.ToList();
 
 
                 };
@@ -1189,27 +1205,32 @@ namespace exel_for_mfc
         }
 
         //Убрал галочку Льгота
-        private void PrivUnchecked(object sender, RoutedEventArgs e)
+        private async void PrivUnchecked(object sender, RoutedEventArgs e)
         {
-            PrivFilterList.FindAll(s => s.PrivilegesName == (privFilter.SelectedItem as PrivFilter)?.PrivilegesName).ForEach(x => x.PrivBool = 0);
+
+            using FdbContext db = new();
+            await db.Database.ExecuteSqlRawAsync("UPDATE PrivF SET Flag={0} WHERE id={1}", 0, (privFilter.SelectedItem as PrivFilter)?.Id);
         }
 
         //Поставил галочку Льгота
-        private void PrivChecked(object sender, RoutedEventArgs e)
+        private async void PrivChecked(object sender, RoutedEventArgs e)
         {
-            PrivFilterList.FindAll(s => s.PrivilegesName == (privFilter.SelectedItem as PrivFilter)?.PrivilegesName).ForEach(x => x.PrivBool = 1);
+            using FdbContext db = new();
+            await db.Database.ExecuteSqlRawAsync("UPDATE PrivF SET Flag={0} WHERE id={1}", 1, (privFilter.SelectedItem as PrivFilter)?.Id);
         }
 
         //Поставил галочку Решение
-        private void SolChecked(object sender, RoutedEventArgs e)
+        private async void SolChecked(object sender, RoutedEventArgs e)
         {
-            SolFilterList.FindAll(s => s.SolutionName == (solFilter.SelectedItem as SolFilter)?.SolutionName).ForEach(x => x.SolBool = 1);
+            using FdbContext db = new();
+            await db.Database.ExecuteSqlRawAsync("UPDATE SolF SET Flag={0} WHERE id={1}", 1, (solFilter.SelectedItem as SolFilter)?.Id);
         }
 
         //Убрал галочку Решение
         private void SolUnChecked(object sender, RoutedEventArgs e)
         {
-            SolFilterList.FindAll(s => s.SolutionName == (solFilter.SelectedItem as SolFilter)?.SolutionName).ForEach(x => x.SolBool = 0);
+            using FdbContext db = new();
+            await db.Database.ExecuteSqlRawAsync("UPDATE SolF SET Flag={0} WHERE id={1}", 1, (solFilter.SelectedItem as SolFilter)?.Id);
         }
         #endregion
 

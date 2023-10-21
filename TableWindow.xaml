@@ -293,11 +293,11 @@
                       Grid.ColumnSpan="2" 
                       Margin="12,0,120,5" Grid.RowSpan="3">
                 <DataGrid.Columns>
-                    <DataGridTextColumn Binding="{Binding PrivilegesName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" IsReadOnly="True" Header="Льготы"/>
+                    <DataGridTextColumn Binding="{Binding Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" IsReadOnly="True" Header="Льготы"/>
                     <DataGridTemplateColumn>
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
-                                <CheckBox IsChecked="{Binding PrivBool, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Unchecked="PrivUnchecked" Checked="PrivChecked"/>
+                                <CheckBox IsChecked="{Binding Flag, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Unchecked="PrivUnchecked" Checked="PrivChecked"/>
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
@@ -319,11 +319,11 @@
                       Height="149"
                       Width="135" Grid.RowSpan="3">
                 <DataGrid.Columns>
-                    <DataGridTextColumn Binding="{Binding SolutionName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" IsReadOnly="True" Header="Решение"/>
+                    <DataGridTextColumn Binding="{Binding Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" IsReadOnly="True" Header="Решение"/>
                     <DataGridTemplateColumn>
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
-                                <CheckBox IsChecked="{Binding SolBool, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Checked="SolChecked" Unchecked="SolUnChecked"/>
+                                <CheckBox IsChecked="{Binding Flag, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Checked="SolChecked" Unchecked="SolUnChecked"/>
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
