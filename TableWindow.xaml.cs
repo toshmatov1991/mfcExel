@@ -580,6 +580,7 @@ namespace exel_for_mfc
             }
         }
         #endregion
+
         #region Поиск()
         //Поиск(Нормально)
         private void Button_Click_3(object sender, RoutedEventArgs e)
@@ -668,6 +669,7 @@ namespace exel_for_mfc
                       }).ToList();
         }
         #endregion
+
         #region События изменения значений ComboBox()
         private async void AreaComboEvent(object sender, EventArgs e)
             {
@@ -800,6 +802,7 @@ namespace exel_for_mfc
                 }
             }
             #endregion
+
         #region Выгрузка в Excel()
             //Сохранить таблицу в Excel
             static async Task SaveDataInExel()
@@ -1072,6 +1075,7 @@ namespace exel_for_mfc
                 await SaveDataInExel();
             }
             #endregion
+
         #region Фильтрация()
         List<AreaFilter>? AreaFilterList = new();
         List<LocalFilter>? LocalFilterList = new();
@@ -1083,63 +1087,33 @@ namespace exel_for_mfc
         //Заполнение таблиц Фильтров
         public async void FilterStart()
             {
-                //Заполнение таблиц Фильтров
-                using (ExDbContext db = new())
-                {
-                    AreaFilterList.Clear();
-                    var s = await db.Areas.FromSqlRaw("SELECT * FROM Area").ToListAsync();
-                    foreach (var item in s)
-                    {
-                        AreaFilterList.Add(new AreaFilter(item.Id, item.AreaName, false));
-                    }
-                    areaFilter.ItemsSource = AreaFilterList.OrderBy(u => u.AreaName).ToList();
-                };
+            //Сначала удаляю все из Sqlite
+            using (FilterdbContext db = new())
+            {
+                // удаление
+                int deleteAreaF = await db.Database.ExecuteSqlRawAsync("DELETE FROM AreaF");
+                int deleteLocalF = await db.Database.ExecuteSqlRawAsync("DELETE FROM LocalF");
+                int deletePayF = await db.Database.ExecuteSqlRawAsync("DELETE FROM PayF");
+                int deletePrivF = await db.Database.ExecuteSqlRawAsync("DELETE FROM PrivF");
+                int deleteSolF = await db.Database.ExecuteSqlRawAsync("DELETE FROM SolF");
 
+                if (deleteAreaF + deleteLocalF + deletePayF + deletePrivF + deleteSolF != 5)
+                    MessageBox.Show("Что то пошло не так, перезапустите программу");
+            }
+
+            //Заполнение таблиц Фильтров
             using (ExDbContext db = new())
             {
-                LocalFilterList.Clear();
-                var s1 = await db.Localities.FromSqlRaw("SELECT * FROM Locality").ToListAsync();
-                foreach (var item in s1)
+                using FilterdbContext db1 = new();
+                var s = await db.Areas.FromSqlRaw("SELECT * FROM Area").ToListAsync();
+                foreach (var item in s)
                 {
-                    LocalFilterList.Add(new LocalFilter(item.Id, item.LocalName, 0));
+                    AreaFilterList.Add(new AreaFilter(item.Id, item.AreaName, false));
                 }
-                locFilter.ItemsSource = LocalFilterList.OrderBy(u => u.LocalName).ToList();
+                areaFilter.ItemsSource = AreaFilterList.OrderBy(u => u.AreaName).ToList();
             };
 
-            using (ExDbContext db = new())
-            {
-                PayFilterList.Clear();
-                var s2 = await db.PayAmounts.FromSqlRaw("SELECT * FROM PayAmount").ToListAsync();
-                foreach (var item in s2)
-                {
-                    PayFilterList.Add(new PayFilter(item.Id, item.Pay, 0));
-                }
-                payFilter.ItemsSource = PayFilterList.ToList();
-            };
-
-            using (ExDbContext db = new())
-            {
-                PrivFilterList.Clear();
-                var s3 = await db.Privileges.FromSqlRaw("SELECT * FROM Privileges").ToListAsync();
-                foreach (var item in s3)
-                {
-                    if (item.PrivilegesName.Length >= 17)
-                        item.PrivilegesName = item.PrivilegesName[..17];
-                    PrivFilterList.Add(new PrivFilter(item.Id, item.PrivilegesName, 0));
-                }
-                privFilter.ItemsSource = PrivFilterList.OrderBy(u => u.PrivilegesName).ToList();
-            };
-
-            using (ExDbContext db = new())
-            {
-                SolFilterList.Clear();
-                var s4 = await db.SolutionTypes.FromSqlRaw("SELECT * FROM SolutionType").ToListAsync();
-                foreach (var item in s4)
-                {
-                    SolFilterList.Add(new SolFilter(item.Id, item.SolutionName, 0));
-                }
-                solFilter.ItemsSource = SolFilterList.ToList();
-            };
+          
         }
 
         #region CheckBoxes
@@ -1206,12 +1180,6 @@ namespace exel_for_mfc
         //Применить фильтр
         private void Button_Click_4(object sender, RoutedEventArgs e)
         {
-            //areaFilter.ItemsSource = AreaFilterList.OrderBy(u => u.AreaName).ToList();
-            //locFilter.ItemsSource = LocalFilterList.OrderBy(u => u.LocalName).ToList();
-            //payFilter.ItemsSource = PayFilterList.ToList();
-            //privFilter.ItemsSource = PrivFilterList.OrderBy(u => u.PrivilegesName).ToList();
-            //solFilter.ItemsSource = SolFilterList.ToList();
-
             GoStartFilter();
         }
 
@@ -1228,7 +1196,6 @@ namespace exel_for_mfc
             {
                 aread.Add(item.Id - 1);
             }
-          // areaFilter.ItemsSource = AreaFilterList.OrderBy(u => u.AreaName).ToList();
 
 
 
@@ -1257,6 +1224,7 @@ namespace exel_for_mfc
                     {
                         MyList = (from reg in db.Registries
                                   join appl in db.Applicants on reg.ApplicantFk equals appl.Id
+
                                   select new SClass
                                   {
                                       IdReg = reg.Id,
@@ -1277,17 +1245,8 @@ namespace exel_for_mfc
                                       Trek = reg.Trek,
                                       MailingDate = reg.MailingDate,
                                       IdApplicant = appl.Id
-                                  }).Where(a => aread.Contains((int)a.Area) || a.Area == null
-                          /*.Where */         //  && LocalInt.Contains((int)a.Local) || a.Local == null
-                          /*.Where */         //  && PayInt.Contains((int)a.Pay) || a.Pay == null
-                          /*.Where */         //  && SolInt.Contains((int)a.Solution) || a.Pay == null
-                          /*.Where */         //  && PrivInt.Contains((int)a.Lgota) || a.Lgota == null 
-                          /*.Where */           && a.DateGetSert >= Convert.ToDateTime(dateStart.Text) 
+                                  }).Where(a => a.DateGetSert >= Convert.ToDateTime(dateStart.Text) 
                                                 && a.DateGetSert <= Convert.ToDateTime(dateEnd.Text)).ToList();
-
-                    //Если коллекция полная(галочки не проставлены) то ее не учитывать в фильтре
-
-                    
 
                   
                     if (MyList.Count == 0)
@@ -1304,6 +1263,7 @@ namespace exel_for_mfc
                 }
 
             }
+        #endregion  
 
         #region Обработка возможных исключений и другие мелочи
         private void AreaExeption(object sender, MouseButtonEventArgs e)
@@ -1324,11 +1284,6 @@ namespace exel_for_mfc
                 Start();
             }
 
-
-
-
-
-        #endregion
 
         //Очистить фильтр
         private void Button_Click_5(object sender, RoutedEventArgs e)
@@ -1406,6 +1361,9 @@ namespace exel_for_mfc
             StaticWindow staticWindow = new();
             staticWindow.ShowDialog();
         }
+
+
+        #endregion
     }
 }
-#endregion          
+        
