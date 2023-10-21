@@ -1211,30 +1211,27 @@ namespace exel_for_mfc
         }
         #endregion
         //Применить фильтр
-        private void Button_Click_4(object sender, RoutedEventArgs e)
+        private async void Button_Click_4(object sender, RoutedEventArgs e)
         {
-            GoStartFilter();
+            await GoStartFilter();
         }
 
        
 
 
         //Метод для выборки по фильтрам
-        void GoStartFilter()
+        async Task GoStartFilter()
         {
-            using FdbContext db1 = new();
-
-            //Район полная обработка
-            List<long> readf = new();
-
-            readf = db1.AreaFs.Where(u => u.Flag == 1).Select(c => c.Id).ToList();
-            if(readf.Count == 0)
-                readf = db1.AreaFs.Select(c => c.Id).ToList();
-            List<int> www = new();
-            foreach (var item in readf)
+            await Task.Run(() =>
             {
-                www.Add((int)item - 1);
-            }
+                using FdbContext db1 = new();
+
+                //Район полная обработка
+                List<long> readf = new();
+
+                readf = db1.AreaFs.Where(u => u.Flag == 1).Select(c => c.Id - 1).ToList();
+                if (readf.Count == 0)
+                    readf = db1.AreaFs.Select(c => c.Id - 1).ToList();
 
 
 
@@ -1242,28 +1239,30 @@ namespace exel_for_mfc
 
 
 
-            try
-            {
-                //Проверка даты
-                // dateStart dateEnd
-                if(string.IsNullOrEmpty(dateStart.Text) && string.IsNullOrEmpty(dateEnd.Text)
-                    || string.IsNullOrWhiteSpace(dateStart.Text) && string.IsNullOrWhiteSpace(dateEnd.Text))
+                try
                 {
-                    dateStart.Text = "10.10.2003";
-                    dateEnd.Text = "10.10.2030";
-                }
-                else if(string.IsNullOrEmpty(dateStart.Text) || string.IsNullOrWhiteSpace(dateStart.Text) 
-                      && !string.IsNullOrEmpty(dateEnd.Text) || !string.IsNullOrWhiteSpace(dateEnd.Text))
-                {
-                    dateStart.Text = "10.10.2003";
-                }
-                else if (string.IsNullOrEmpty(dateEnd.Text) || string.IsNullOrWhiteSpace(dateEnd.Text)
-                    && !string.IsNullOrEmpty(dateStart.Text) || !string.IsNullOrWhiteSpace(dateStart.Text))
-                {
-                    dateEnd.Text = "10.10.2030";
-                }
-
-                using (ExDbContext db = new())
+                    Dispatcher.Invoke(() =>
+                    {
+                        //Проверка даты
+                        // dateStart dateEnd
+                        if (string.IsNullOrEmpty(dateStart.Text) && string.IsNullOrEmpty(dateEnd.Text)
+                        || string.IsNullOrWhiteSpace(dateStart.Text) && string.IsNullOrWhiteSpace(dateEnd.Text))
+                    {
+                            dateStart.Text = "10.10.2003";
+                            dateEnd.Text = "10.10.2030";
+                    }
+                    else if (string.IsNullOrEmpty(dateStart.Text) || string.IsNullOrWhiteSpace(dateStart.Text)
+                          && !string.IsNullOrEmpty(dateEnd.Text) || !string.IsNullOrWhiteSpace(dateEnd.Text))
+                    {
+                            dateStart.Text = "10.10.2003";
+                    }
+                    else if (string.IsNullOrEmpty(dateEnd.Text) || string.IsNullOrWhiteSpace(dateEnd.Text)
+                        && !string.IsNullOrEmpty(dateStart.Text) || !string.IsNullOrWhiteSpace(dateStart.Text))
+                    {
+                            dateEnd.Text = "10.10.2030";
+                    }
+                    });
+                    using (ExDbContext db = new())
                     {
                         MyList = (from reg in db.Registries
                                   join appl in db.Applicants on reg.ApplicantFk equals appl.Id
@@ -1287,28 +1286,34 @@ namespace exel_for_mfc
                                       Trek = reg.Trek,
                                       MailingDate = reg.MailingDate,
                                       IdApplicant = appl.Id
-                                  }).Where(u => www.Contains((int)u.Area)).ToList();
+                                  }).Where(u => readf.Contains((long)u.Area)).ToList();
 
 
-                    //.Where(a => a.DateGetSert >= Convert.ToDateTime(dateStart.Text)
-                    //                            && a.DateGetSert <= Convert.ToDateTime(dateEnd.Text)
-                    //                            && strings.Contains(a.)).ToList();
+                        //.Where(a => a.DateGetSert >= Convert.ToDateTime(dateStart.Text)
+                        //                            && a.DateGetSert <= Convert.ToDateTime(dateEnd.Text)
+                        //                            && strings.Contains(a.)).ToList();
 
 
-                    if (MyList.Count == 0)
+                        if (MyList.Count == 0)
                             MessageBox.Show("По вашему запросу ничего не найдено :(");
                         else
                         {
-                            dataGrid.ItemsSource = MyList.ToList();
+                            Dispatcher.Invoke(() =>
+                            {
+                                dataGrid.ItemsSource = MyList.ToList();
+                            });
                         }
                     };
                 }
+
                 catch (Exception ex)
                 {
                     MessageBox.Show(ex.Message);
                 }
 
-            }
+            });
+        }
+            
         #endregion  
 
         #region Обработка возможных исключений и другие мелочи
