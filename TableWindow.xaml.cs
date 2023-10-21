@@ -14,6 +14,8 @@ using Newtonsoft.Json;
 using Microsoft.Win32;
 using System.Globalization;
 using exel_for_mfc.FilterDB;
+using DocumentFormat.OpenXml.Vml.Office;
+using LinqKit;
 
 namespace exel_for_mfc
 {
@@ -1257,6 +1259,11 @@ namespace exel_for_mfc
                 if (solIdl.Count == 0)
                     solIdl = db1.Solves.Select(c => c.Id - 1).ToList();
 
+                //Предикат попробую юзать
+                var predicate = PredicateBuilder.True<Log>();
+
+
+
 
 
 
@@ -1308,15 +1315,48 @@ namespace exel_for_mfc
                                           MailingDate = reg.MailingDate,
                                           IdApplicant = appl.Id
                                       }).Where(u => u.DateGetSert >= Convert.ToDateTime(dateStart.Text)
-                                            && u.DateGetSert <= Convert.ToDateTime(dateEnd.Text)
-                                            && areaIdL.Contains((long)u.Area)
-                                            && localIdL.Contains((long)u.Local)
-                                            && privIdL.Contains((long)u.Lgota)
-                                            && payIdL.Contains((long)u.Pay)
-                                            && solIdl.Contains((long)u.Solution)).ToList();
-
+                                            & u.DateGetSert <= Convert.ToDateTime(dateEnd.Text)
+                                            & areaIdL.Contains((long)u.Area)
+                                            & localIdL.Contains((long)u.Local)
+                                            & privIdL.Contains((long)u.Lgota)
+                                            & payIdL.Contains((long)u.Pay)
+                                            & solIdl.Contains((long)u.Solution)).ToList();
                         };
                     });
+
+
+
+
+            //        List<Entity> list = new List<Entity>
+            //        {
+            //            new Entity {ID = 1, Name = "qwerty"},
+            //            new Entity {ID = 2, Name = "rewyt"},
+            //    new Entity {ID = 4, Name = "asdfg"},
+            //};
+
+            //        int compareId = 2;  // ID для сравнения в фильтре
+            //        string compareName = "qwerty";  // имя для сравнения в фильтре
+
+
+            //        bool filterById = true,    // указывает нужно ли фильтровать по полю ID
+            //            filterByName = false;   // указывает нужно ли фильтровать по полю Name
+
+            //        Func<Entity, bool> predicateById = x => x.ID == compareId;
+            //        Func<Entity, bool> predicateByName = x => x.Name == compareName;
+
+            //        Func<Entity, bool> mainPredicate = x => (!filterById || predicateById(x))
+            //                                                && (!filterByName || predicateByName(x));
+
+
+            //        foreach (var entity in list.Where(mainPredicate))
+            //        {
+            //            Console.WriteLine(entity);
+            //        }
+
+
+
+
+
 
                     if (MyList.Count == 0)
                             MessageBox.Show("По вашему запросу ничего не найдено :(");
