@@ -34,6 +34,7 @@ namespace exel_for_mfc
     public partial class TableWindow : Window
     {
         #region База
+        public static string temp1 = "";
         public static List<Area>? AreaCombobox { get; set; }
         public static List<Locality>? LocalCombobox { get; set; }
         public static List<PayAmount>? PayCombobox { get; set; }
@@ -101,7 +102,7 @@ namespace exel_for_mfc
                 // Редактирование ячейки (Обновление строки) - Заявитель - Регистр
 
                 //Обновление таблицы Заявитель
-                var upApp = await db.Database.ExecuteSqlRawAsync("UPDATE Applicant SET Firstname = {0}, Middlename = {1}, Lastname = {2}, Adress = {3}, Snils = {4} WHERE Id = {5}", a.Family, a.Name, a.Lastname, a.Adress, a.Snils, a.IdApplicant);
+                var upApp = await db.Database.ExecuteSqlRawAsync("UPDATE Applicant SET Firstname = {0}, Middlename = {1}, Lastname = {2}, Adress = {3}, Snils = {4} WHERE Id = {5}", a.Family, a.Name, a.Lastname, a.Adress, a.Snils, a.IdApplicant) ;
                 if (upApp == 0)
                     MessageBox.Show("Произошла ошибка при обновлении таблицы(Заявитель)\nПовторите попытку");
                 //Обновление таблицы Регистр
@@ -1072,12 +1073,12 @@ namespace exel_for_mfc
             }
             #endregion
         #region Фильтрация()
-        static List<AreaFilter>? AreaFilterList = new();
+        List<AreaFilter>? AreaFilterList = new();
         List<LocalFilter>? LocalFilterList = new();
         List<PayFilter>? PayFilterList = new();
         List<PrivFilter>? PrivFilterList = new();
         List<SolFilter>? SolFilterList = new();
-
+        
 
         //Заполнение таблиц Фильтров
         public async void FilterStart()
@@ -1388,23 +1389,18 @@ namespace exel_for_mfc
             if (e.Column.Header.ToString() == "Адрес")
             {
                 string content = (e.EditingEventArgs.Source as TextBlock).Text;
-
+                temp1 = "";
                 if (string.IsNullOrEmpty(content))
                 {
-                    string temp = "";
                     //Здесь заполняю Адрес, если пустая строка
-                    AdressWindow adres = new(ref temp);
+                    AdressWindow adres = new(ref temp1);
                     adres.ShowDialog();
                 }
                 else return;
             }
-
-                
-           
-             
-            
-
-
+            //Считывание строки
+            SClass? a = e.Row.Item as SClass;
+            a.Adress = temp1;
         }
 
         //Статистические данные
