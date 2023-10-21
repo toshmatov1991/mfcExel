@@ -1104,9 +1104,12 @@ namespace exel_for_mfc
                 using (ExDbContext db = new())
                 {
                     using FdbContext db1 = new();
-                    //var s = await db.Areas.FromSqlRaw("SELECT * FROM Area").ToListAsync();
-                                                                              
-                   int numberOfRowInserted2 = await db1.Database.ExecuteSqlRawAsync("INSERT INTO AreaF(id, name, flag) VALUES ({0}, {1}, {2})", 15, "asdasd", 0);
+                    var s = await db.Areas.FromSqlRaw("SELECT * FROM Area").ToListAsync();
+                    foreach (var item in s)
+                    {
+                        await db1.Database.ExecuteSqlRawAsync("INSERT INTO AreaF(id, name, flag) VALUES ({0}, {1}, {2})", item.Id, item.AreaName, 0);
+                    }
+                    areaFilter.ItemsSource = db1.AreaFs.ToList();
                 };
             }
             catch (Exception ex)
@@ -1121,14 +1124,16 @@ namespace exel_for_mfc
 
         #region CheckBoxes
         //Поставил галочку Район
-        private void AreaCheck(object sender, RoutedEventArgs e)
+        private async void AreaCheck(object sender, RoutedEventArgs e)
         {
-            AreaFilterList.FindAll(s => s.AreaName == (areaFilter.SelectedItem as AreaFilter)?.AreaName).ForEach(x => x.AreaBool = true);
+            using FdbContext db = new();
+            await db.Database.ExecuteSqlRawAsync("UPDATE AreaF SET Flag={0} WHERE id={1}", 1, (areaFilter.SelectedItem as AreaF)?.Id);
         }
             //Убрал галочку Район
-        private void AreaUnchecked(object sender, RoutedEventArgs e)
+        private async void AreaUnchecked(object sender, RoutedEventArgs e)
         {
-            AreaFilterList.FindAll(s => s.AreaName == (areaFilter.SelectedItem as AreaFilter)?.AreaName).ForEach(x => x.AreaBool = false);
+            using FdbContext db = new();
+            await db.Database.ExecuteSqlRawAsync("UPDATE AreaF SET Flag={0} WHERE id={1}", 0, (areaFilter.SelectedItem as AreaF)?.Id);
         }
 
         //Поставил галочку Населенный пункт

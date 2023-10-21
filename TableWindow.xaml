@@ -225,11 +225,11 @@
                       Width="152"
                       Margin="5 0 0 5">
                 <DataGrid.Columns>
-                    <DataGridTextColumn Binding="{Binding AreaName}" IsReadOnly="True" Header="Район"/>
+                    <DataGridTextColumn Binding="{Binding Name}" IsReadOnly="True" Header="Район"/>
                     <DataGridTemplateColumn>
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
-                                <CheckBox IsChecked="{Binding AreaBool}" Checked="AreaCheck" Unchecked="AreaUnchecked"/>
+                                <CheckBox IsChecked="{Binding Flag, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Checked="AreaCheck" Unchecked="AreaUnchecked"/>
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
