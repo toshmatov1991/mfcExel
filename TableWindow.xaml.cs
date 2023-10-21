@@ -1224,8 +1224,12 @@ namespace exel_for_mfc
         {
             using FdbContext db1 = new();
 
-                //Район полная обработка
-                var readf = db1.AreaFs.Where(u => u.Flag == 1).Select(c => c.Id);
+            //Район полная обработка
+            List<long> readf = new();
+
+            readf = db1.AreaFs.Where(u => u.Flag == 1).Select(c => c.Id).ToList();
+            if(readf.Count == 0)
+                readf = db1.AreaFs.Select(c => c.Id).ToList();
             List<int> www = new();
             foreach (var item in readf)
             {
