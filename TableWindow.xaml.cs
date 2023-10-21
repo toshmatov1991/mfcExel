@@ -28,6 +28,7 @@ using exel_for_mfc.FilterModels;
 using DocumentFormat.OpenXml.InkML;
 using Microsoft.IdentityModel.Tokens;
 using System.Diagnostics.CodeAnalysis;
+using exel_for_mfc.FilterDB;
 
 namespace exel_for_mfc
 {
@@ -1088,7 +1089,7 @@ namespace exel_for_mfc
         public async void FilterStart()
             {
             //Сначала удаляю все из Sqlite
-            using (FilterdbContext db = new())
+            using (FdbContext db = new())
             {
                 // удаление
                 int deleteAreaF = await db.Database.ExecuteSqlRawAsync("DELETE FROM AreaF");
@@ -1096,24 +1097,37 @@ namespace exel_for_mfc
                 int deletePayF = await db.Database.ExecuteSqlRawAsync("DELETE FROM PayF");
                 int deletePrivF = await db.Database.ExecuteSqlRawAsync("DELETE FROM PrivF");
                 int deleteSolF = await db.Database.ExecuteSqlRawAsync("DELETE FROM SolF");
-
-                if (deleteAreaF + deleteLocalF + deletePayF + deletePrivF + deleteSolF != 5)
-                    MessageBox.Show("Что то пошло не так, перезапустите программу");
             }
 
-            //Заполнение таблиц Фильтров
-            using (ExDbContext db = new())
+            try
             {
-                using FilterdbContext db1 = new();
-                var s = await db.Areas.FromSqlRaw("SELECT * FROM Area").ToListAsync();
-                foreach (var item in s)
+                using (ExDbContext db = new())
                 {
-                    AreaFilterList.Add(new AreaFilter(item.Id, item.AreaName, false));
-                }
-                areaFilter.ItemsSource = AreaFilterList.OrderBy(u => u.AreaName).ToList();
-            };
-
+                    using FdbContext db1 = new();
+                    var s = await db.Areas.FromSqlRaw("SELECT * FROM Area").ToListAsync();
+                    //foreach (var item in s)
+                    //{
+                    //    await db1.AreaFs.AddAsync(new AreaF(item.Id, item.AreaName, 0));
+                    //}
+                    AreaF areaF = new()
+                    {
+                        Id = 5,
+                        Name = "fdgdfg",
+                        Flag = 1
+                    };
+                    db1.AreaFs.Add(areaF);
+                    db1.SaveChanges();
+                    //areaFilter.ItemsSource = AreaFilterList.OrderBy(u => u.AreaName).ToList();
+                };
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+            //Заполнение таблиц Фильтров
           
+
+
         }
 
         #region CheckBoxes
