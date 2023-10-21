@@ -1089,14 +1089,14 @@ namespace exel_for_mfc
         public async void FilterStart()
             {
             //Сначала удаляю все из Sqlite
-            using (FdbContext db = new())
+            using (FdbContext db1 = new())
             {
                 // удаление
-                int deleteAreaF = await db.Database.ExecuteSqlRawAsync("DELETE FROM AreaF");
-                int deleteLocalF = await db.Database.ExecuteSqlRawAsync("DELETE FROM LocalF");
-                int deletePayF = await db.Database.ExecuteSqlRawAsync("DELETE FROM PayF");
-                int deletePrivF = await db.Database.ExecuteSqlRawAsync("DELETE FROM PrivF");
-                int deleteSolF = await db.Database.ExecuteSqlRawAsync("DELETE FROM SolF");
+                int deleteAreaF = await db1.Database.ExecuteSqlRawAsync("DELETE FROM AreaF");
+                int deleteLocalF = await db1.Database.ExecuteSqlRawAsync("DELETE FROM LocalF");
+                int deletePayF = await db1.Database.ExecuteSqlRawAsync("DELETE FROM PayF");
+                int deletePrivF = await db1.Database.ExecuteSqlRawAsync("DELETE FROM PrivF");
+                int deleteSolF = await db1.Database.ExecuteSqlRawAsync("DELETE FROM SolF");
             }
 
             try
@@ -1104,20 +1104,9 @@ namespace exel_for_mfc
                 using (ExDbContext db = new())
                 {
                     using FdbContext db1 = new();
-                    var s = await db.Areas.FromSqlRaw("SELECT * FROM Area").ToListAsync();
-                    //foreach (var item in s)
-                    //{
-                    //    await db1.AreaFs.AddAsync(new AreaF(item.Id, item.AreaName, 0));
-                    //}
-                    AreaF areaF = new()
-                    {
-                        Id = 5,
-                        Name = "fdgdfg",
-                        Flag = 1
-                    };
-                    db1.AreaFs.Add(areaF);
-                    db1.SaveChanges();
-                    //areaFilter.ItemsSource = AreaFilterList.OrderBy(u => u.AreaName).ToList();
+                    //var s = await db.Areas.FromSqlRaw("SELECT * FROM Area").ToListAsync();
+                                                                              
+                   int numberOfRowInserted2 = await db1.Database.ExecuteSqlRawAsync("INSERT INTO AreaF(id, name, flag) VALUES ({0}, {1}, {2})", 15, "asdasd", 0);
                 };
             }
             catch (Exception ex)

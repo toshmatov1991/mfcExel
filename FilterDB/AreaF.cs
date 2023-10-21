@@ -10,4 +10,6 @@ public partial class AreaF
     public string? Name { get; set; }
 
     public long? Flag { get; set; }
+
+
 }
