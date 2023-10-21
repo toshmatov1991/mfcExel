@@ -1227,14 +1227,35 @@ namespace exel_for_mfc
                 using FdbContext db1 = new();
 
                 //Район полная обработка
-                List<long> readf = new();
+                List<long> areaIdL = new();
+                areaIdL = db1.AreaFs.Where(u => u.Flag == 1).Select(c => c.Id - 1).ToList();
+                if (areaIdL.Count == 0)
+                    areaIdL = db1.AreaFs.Select(c => c.Id - 1).ToList();
 
-                readf = db1.AreaFs.Where(u => u.Flag == 1).Select(c => c.Id - 1).ToList();
-                if (readf.Count == 0)
-                    readf = db1.AreaFs.Select(c => c.Id - 1).ToList();
+                //Населенный пункт полная обработка
+                List<long> localIdL = new();
+                localIdL = db1.Localves.Where(u => u.Flag == 1).Select(c => c.Id - 1).ToList();
+                if (localIdL.Count == 0)
+                    localIdL = db1.Localves.Select(c => c.Id - 1).ToList();
+
+               //Льгота полная обработка
+               List<long> privIdL = new();
+               privIdL = db1.PrivFs.Where(u => u.Flag == 1).Select(c => c.Id - 1).ToList();
+               if (privIdL.Count == 0)
+                       privIdL = db1.PrivFs.Select(c => c.Id - 1).ToList();
 
 
+                //Выплата полная обработка
+                List<long> payIdL = new();
+                payIdL = db1.PayFs.Where(u => u.Flag == 1).Select(c => c.Id - 1).ToList();
+                if (payIdL.Count == 0)
+                    payIdL = db1.PrivFs.Select(c => c.Id - 1).ToList();
 
+                //Решение полная обработка
+                List<long> solIdl = new();
+                solIdl = db1.Solves.Where(u => u.Flag == 1).Select(c => c.Id - 1).ToList();
+                if (solIdl.Count == 0)
+                    solIdl = db1.Solves.Select(c => c.Id - 1).ToList();
 
 
 
@@ -1261,40 +1282,43 @@ namespace exel_for_mfc
                     {
                             dateEnd.Text = "10.10.2030";
                     }
+
+                        using (ExDbContext db = new())
+                        {
+                            MyList = (from reg in db.Registries
+                                      join appl in db.Applicants on reg.ApplicantFk equals appl.Id
+                                      select new SClass
+                                      {
+                                          IdReg = reg.Id,
+                                          Family = appl.Firstname,
+                                          Name = appl.Middlename,
+                                          Lastname = appl.Lastname,
+                                          Snils = appl.Snils,
+                                          Area = appl.AreaFk - 1,
+                                          Local = appl.LocalityFk - 1,
+                                          Adress = appl.Adress,
+                                          Lgota = appl.PrivilegesFk - 1,
+                                          Pay = reg.PayAmountFk - 1,
+                                          Sernumb = reg.SerialAndNumberSert,
+                                          DateGetSert = reg.DateGetSert,
+                                          Solution = reg.SolutionFk - 1,
+                                          DateAndNumbSolutionSert = reg.DateAndNumbSolutionSert,
+                                          Comment = reg.Comment,
+                                          Trek = reg.Trek,
+                                          MailingDate = reg.MailingDate,
+                                          IdApplicant = appl.Id
+                                      }).Where(u => u.DateGetSert >= Convert.ToDateTime(dateStart.Text)
+                                            && u.DateGetSert <= Convert.ToDateTime(dateEnd.Text)
+                                            && areaIdL.Contains((long)u.Area)
+                                            && localIdL.Contains((long)u.Local)
+                                            && privIdL.Contains((long)u.Lgota)
+                                            && payIdL.Contains((long)u.Pay)
+                                            && solIdl.Contains((long)u.Solution)).ToList();
+
+                        };
                     });
-                    using (ExDbContext db = new())
-                    {
-                        MyList = (from reg in db.Registries
-                                  join appl in db.Applicants on reg.ApplicantFk equals appl.Id
-                                  select new SClass
-                                  {
-                                      IdReg = reg.Id,
-                                      Family = appl.Firstname,
-                                      Name = appl.Middlename,
-                                      Lastname = appl.Lastname,
-                                      Snils = appl.Snils,
-                                      Area = appl.AreaFk - 1,
-                                      Local = appl.LocalityFk - 1,
-                                      Adress = appl.Adress,
-                                      Lgota = appl.PrivilegesFk - 1,
-                                      Pay = reg.PayAmountFk - 1,
-                                      Sernumb = reg.SerialAndNumberSert,
-                                      DateGetSert = reg.DateGetSert,
-                                      Solution = reg.SolutionFk - 1,
-                                      DateAndNumbSolutionSert = reg.DateAndNumbSolutionSert,
-                                      Comment = reg.Comment,
-                                      Trek = reg.Trek,
-                                      MailingDate = reg.MailingDate,
-                                      IdApplicant = appl.Id
-                                  }).Where(u => readf.Contains((long)u.Area)).ToList();
 
-
-                        //.Where(a => a.DateGetSert >= Convert.ToDateTime(dateStart.Text)
-                        //                            && a.DateGetSert <= Convert.ToDateTime(dateEnd.Text)
-                        //                            && strings.Contains(a.)).ToList();
-
-
-                        if (MyList.Count == 0)
+                    if (MyList.Count == 0)
                             MessageBox.Show("По вашему запросу ничего не найдено :(");
                         else
                         {
@@ -1303,7 +1327,7 @@ namespace exel_for_mfc
                                 dataGrid.ItemsSource = MyList.ToList();
                             });
                         }
-                    };
+                    
                 }
 
                 catch (Exception ex)
