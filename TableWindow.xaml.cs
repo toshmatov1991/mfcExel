@@ -1091,7 +1091,7 @@ namespace exel_for_mfc
             //Сначала удаляю все из Sqlite
             using (FdbContext db1 = new())
             {
-                // удаление
+                // удаление при старте проги
                 int deleteAreaF = await db1.Database.ExecuteSqlRawAsync("DELETE FROM AreaF");
                 int deleteLocalF = await db1.Database.ExecuteSqlRawAsync("DELETE FROM LocalF");
                 int deletePayF = await db1.Database.ExecuteSqlRawAsync("DELETE FROM PayF");
@@ -1101,8 +1101,10 @@ namespace exel_for_mfc
 
             try
             {
+                //Заполнение таблиц Фильтров
                 using (ExDbContext db = new())
                 {
+                    //Район
                     using FdbContext db1 = new();
                     var s = await db.Areas.FromSqlRaw("SELECT * FROM Area").ToListAsync();
                     foreach (var item in s)
@@ -1110,13 +1112,35 @@ namespace exel_for_mfc
                         await db1.Database.ExecuteSqlRawAsync("INSERT INTO AreaF(id, name, flag) VALUES ({0}, {1}, {2})", item.Id, item.AreaName, 0);
                     }
                     areaFilter.ItemsSource = db1.AreaFs.ToList();
+
+
+                    //Населенный пункт
+                    var local = await db.Localities.FromSqlRaw("SELECT * FROM Locality").ToListAsync();
+                    foreach (var item in local)
+                    {
+                        await db1.Database.ExecuteSqlRawAsync("INSERT INTO LocalF(id, name, flag) VALUES ({0}, {1}, {2})", item.Id, item.LocalName, 0);
+                    }
+                    locFilter.ItemsSource = db1.Localves.ToList();
+
+                    //Выплата
+                    var pay = await db.PayAmounts.FromSqlRaw("SELECT * FROM PayAmount").ToListAsync();
+                    foreach (var item in pay)
+                    {
+                        await db1.Database.ExecuteSqlRawAsync("INSERT INTO PayF(id, name, flag) VALUES ({0}, {1}, {2})", item.Id, item.Pay.ToString(), 0);
+                    }
+                    payFilter.ItemsSource = db1.PayFs.ToList();
+
+
+
+
+
                 };
             }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
             }
-            //Заполнение таблиц Фильтров
+            
           
 
 
@@ -1129,6 +1153,7 @@ namespace exel_for_mfc
             using FdbContext db = new();
             await db.Database.ExecuteSqlRawAsync("UPDATE AreaF SET Flag={0} WHERE id={1}", 1, (areaFilter.SelectedItem as AreaF)?.Id);
         }
+
             //Убрал галочку Район
         private async void AreaUnchecked(object sender, RoutedEventArgs e)
         {
@@ -1136,27 +1161,31 @@ namespace exel_for_mfc
             await db.Database.ExecuteSqlRawAsync("UPDATE AreaF SET Flag={0} WHERE id={1}", 0, (areaFilter.SelectedItem as AreaF)?.Id);
         }
 
-        //Поставил галочку Населенный пункт
-        private void LocalUnchecked(object sender, RoutedEventArgs e)
-        {
-            LocalFilterList.FindAll(s => s.LocalName == (locFilter.SelectedItem as LocalFilter)?.LocalName).ForEach(x => x.LocalBool = 0);
-        }
         //Убрал галочку Населенный пункт
-        private void LocalChecked(object sender, RoutedEventArgs e)
+        private async void LocalUnchecked(object sender, RoutedEventArgs e)
         {
-            LocalFilterList.FindAll(s => s.LocalName == (locFilter.SelectedItem as LocalFilter)?.LocalName).ForEach(x => x.LocalBool = 1);
+            using FdbContext db = new();
+            await db.Database.ExecuteSqlRawAsync("UPDATE LocalF SET Flag={0} WHERE id={1}", 0, (locFilter.SelectedItem as LocalF)?.Id);
+        }
+        //Поставил галочку Населенный пункт
+        private async void LocalChecked(object sender, RoutedEventArgs e)
+        {
+            using FdbContext db = new();
+            await db.Database.ExecuteSqlRawAsync("UPDATE LocalF SET Flag={0} WHERE id={1}", 1, (locFilter.SelectedItem as LocalF)?.Id);
         }
 
         //Поставил галочку Выплата
-        private void PayChecked(object sender, RoutedEventArgs e)
+        private async void PayChecked(object sender, RoutedEventArgs e)
         {
-            PayFilterList.FindAll(s => s.Pay == (payFilter.SelectedItem as PayFilter)?.Pay).ForEach(x => x.PayBool = 1);
+            using FdbContext db = new();
+            await db.Database.ExecuteSqlRawAsync("UPDATE LocalF SET Flag={0} WHERE id={1}", 1, (payFilter.SelectedItem as PayFilter)?.Id);
         }
 
         //Убрал галочку Выплата
-        private void PayUnChecked(object sender, RoutedEventArgs e)
+        private async void PayUnChecked(object sender, RoutedEventArgs e)
         {
-            PayFilterList.FindAll(s => s.Pay == (payFilter.SelectedItem as PayFilter)?.Pay).ForEach(x => x.PayBool = 0);
+            using FdbContext db = new();
+            await db.Database.ExecuteSqlRawAsync("UPDATE LocalF SET Flag={0} WHERE id={1}", 0, (payFilter.SelectedItem as PayFilter)?.Id);
         }
 
         //Убрал галочку Льгота

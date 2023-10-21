@@ -247,11 +247,11 @@
                       CanUserSortColumns="False"
                       Height="149" Margin="161,0,155,5" Grid.ColumnSpan="3">
                 <DataGrid.Columns>
-                    <DataGridTextColumn Binding="{Binding LocalName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" IsReadOnly="True" Header="Населенный пункт"/>
+                    <DataGridTextColumn Binding="{Binding Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" IsReadOnly="True" Header="Населенный пункт"/>
                     <DataGridTemplateColumn>
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
-                                <CheckBox IsChecked="{Binding LocalBool, UpdateSourceTrigger=PropertyChanged}" Unchecked="LocalUnchecked" Checked="LocalChecked"/>
+                                <CheckBox IsChecked="{Binding Flag, UpdateSourceTrigger=PropertyChanged}" Unchecked="LocalUnchecked" Checked="LocalChecked"/>
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
@@ -269,11 +269,11 @@
                       VerticalAlignment="Bottom"
                       Height="149" Margin="47,0,15,5" Grid.RowSpan="3">
                 <DataGrid.Columns>
-                    <DataGridTextColumn Binding="{Binding Pay, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" IsReadOnly="True" Header="Выплаты"/>
+                    <DataGridTextColumn Binding="{Binding Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" IsReadOnly="True" Header="Выплаты"/>
                     <DataGridTemplateColumn>
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
-                                <CheckBox IsChecked="{Binding PayBool, UpdateSourceTrigger=PropertyChanged}" Checked="PayChecked" Unchecked="PayUnChecked"/>
+                                <CheckBox IsChecked="{Binding Flag, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Checked="PayChecked" Unchecked="PayUnChecked"/>
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
@@ -297,7 +297,7 @@
                     <DataGridTemplateColumn>
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
-                                <CheckBox IsChecked="{Binding PrivBool, UpdateSourceTrigger=PropertyChanged}" Unchecked="PrivUnchecked" Checked="PrivChecked"/>
+                                <CheckBox IsChecked="{Binding PrivBool, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Unchecked="PrivUnchecked" Checked="PrivChecked"/>
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
@@ -323,7 +323,7 @@
                     <DataGridTemplateColumn>
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
-                                <CheckBox IsChecked="{Binding SolBool, UpdateSourceTrigger=PropertyChanged}" Checked="SolChecked" Unchecked="SolUnChecked"/>
+                                <CheckBox IsChecked="{Binding SolBool, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Checked="SolChecked" Unchecked="SolUnChecked"/>
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
