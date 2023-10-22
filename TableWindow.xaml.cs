@@ -1239,11 +1239,12 @@ namespace exel_for_mfc
                 areaIdL = db1.AreaFs.Where(u => u.Flag == 1).Select(c => c.Id - 1).ToList();
                 if (areaIdL.Count == 0)
                 {
-                    areaIdL = db1.AreaFs.Select(c => c.Id - 1).ToList();
-                    predicate = predicate.Or(e => areaIdL.Contains((long)e.Area));
+                    return;
+                    //areaIdL = db1.AreaFs.Select(c => c.Id - 1).ToList();
+                    //predicate = predicate.Or(e => areaIdL.Contains((long)e.Area));
                 }
                 else
-                    predicate = predicate.Or(e => areaIdL.Contains((long)e.Area));
+                    predicate = predicate.And(e => areaIdL.Contains((long)e.Area));
 
 
                 //Населенный пункт полная обработка + предикат
@@ -1251,31 +1252,57 @@ namespace exel_for_mfc
                 localIdL = db1.Localves.Where(u => u.Flag == 1).Select(c => c.Id - 1).ToList();
                 if (localIdL.Count == 0)
                 {
-                    localIdL = db1.Localves.Select(c => c.Id - 1).ToList();
-                    predicate = predicate.Or(e => localIdL.Contains((long)e.Local));
+                    return;
+                    //localIdL = db1.Localves.Select(c => c.Id - 1).ToList();
+                    //predicate = predicate.Or(e => localIdL.Contains((long)e.Local));
                 }
                 else
-                    predicate = predicate.Or(e => localIdL.Contains((long)e.Local));
+                    predicate = predicate.And(e => localIdL.Contains((long)e.Local));
 
 
-                //Льгота полная обработка
+                //Льгота полная обработка + предикат
                 List<long> privIdL = new();
                privIdL = db1.PrivFs.Where(u => u.Flag == 1).Select(c => c.Id - 1).ToList();
                if (privIdL.Count == 0)
-                       privIdL = db1.PrivFs.Select(c => c.Id - 1).ToList();
+                {
+                    return;
+                    //privIdL = db1.PrivFs.Select(c => c.Id - 1).ToList();
+                    //predicate = predicate.Or(e => privIdL.Contains((long)e.Lgota));
+                }
+               else
+                    predicate = predicate.And(e => privIdL.Contains((long)e.Lgota));
 
-
-                //Выплата полная обработка
+                //Выплата полная обработка + предикат
                 List<long> payIdL = new();
                 payIdL = db1.PayFs.Where(u => u.Flag == 1).Select(c => c.Id - 1).ToList();
                 if (payIdL.Count == 0)
-                    payIdL = db1.PrivFs.Select(c => c.Id - 1).ToList();
+                {
+                    return;
+                    //payIdL = db1.PayFs.Select(c => c.Id - 1).ToList();
+                    //predicate = predicate.Or(e => payIdL.Contains((long)e.Pay));
+                }
+                else
+                    predicate = predicate.And(e => payIdL.Contains((long)e.Pay));
 
-                //Решение полная обработка
+
+
+                //Решение полная обработка + предикат
                 List<long> solIdl = new();
                 solIdl = db1.Solves.Where(u => u.Flag == 1).Select(c => c.Id - 1).ToList();
                 if (solIdl.Count == 0)
-                    solIdl = db1.Solves.Select(c => c.Id - 1).ToList();
+                {
+                    return;
+                    //solIdl = db1.Solves.Select(c => c.Id - 1).ToList();
+                    //predicate = predicate.Or(e => solIdl.Contains((long)e.Solution));
+                }
+                else
+                    predicate = predicate.And(e => solIdl.Contains((long)e.Solution));
+
+
+
+
+
+
 
                 try
                 {
