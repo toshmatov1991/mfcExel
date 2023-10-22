@@ -1461,6 +1461,13 @@ namespace exel_for_mfc
 
 
         #endregion
+
+
+        //Отчет
+        private void Button_Click_6(object sender, RoutedEventArgs e)
+        {
+            MessageBox.Show("Отчет");
+        }
     }
 }
         

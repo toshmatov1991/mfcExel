@@ -192,24 +192,23 @@
             </DataGrid>
 
             <Button Background="Yellow" 
-                Grid.Column="6"
+                Grid.Column="7"
                 Grid.Row="10"
                 Content="Обновить таблицу"
                 Height="42" 
                     HorizontalAlignment="Left"
-                VerticalAlignment="Top" 
-                Click="Button_Click_1" Grid.ColumnSpan="2" Margin="88,32,0,0" RenderTransformOrigin="0.521,0.202" Grid.RowSpan="2" />
+                VerticalAlignment="Center" 
+                Click="Button_Click_1" Margin="50,0,0,0" RenderTransformOrigin="0.521,0.202" />
 
             <Button Content="Выгрузить в Excel"
-                Grid.Column="6"
+                Grid.Column="7"
                 Grid.Row="11"
-                    Grid.ColumnSpan="2"
-                    VerticalAlignment="Top"
+                    VerticalAlignment="Center"
                 HorizontalAlignment="Left"
                 Background="LightGreen"
                 Height="42"
                 Width="106"
-                Click="Button_Click" Margin="88,49,0,0" Grid.RowSpan="2"/>
+                Click="Button_Click" Margin="50,0,0,0"/>
 
             <!--  Фильтрация  -->
             <!-- Район -->
@@ -224,7 +223,7 @@
                       CanUserAddRows="False"
                       Height="149"
                       Width="180"
-                      Margin="5 0 0 5">
+                      Margin="4 0 0 5">
                 <DataGrid.Columns>
                     <DataGridTextColumn Binding="{Binding Name}" IsReadOnly="True" Header="Район"/>
                     <DataGridTemplateColumn>
@@ -277,7 +276,7 @@
                       HorizontalAlignment="Left"
                       Height="149"
                       Width="130"
-                      Margin="61,0,0,5"
+                      Margin="65,0,0,5"
                       Grid.RowSpan="3">
                 <DataGrid.Columns>
                     <DataGridTextColumn Binding="{Binding Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" IsReadOnly="True" Header="Выплаты"/>
@@ -304,7 +303,7 @@
                       Width="180"
                       Height="149" 
                       Grid.ColumnSpan="2" 
-                      Margin="42,0,0,5"
+                      Margin="44,0,0,5"
                       Grid.RowSpan="3">
                 <DataGrid.Columns>
                     <DataGridTextColumn Binding="{Binding Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" IsReadOnly="True" Header="Льготы"/>
@@ -326,11 +325,11 @@
                       CanUserAddRows="False"
                       CanUserDeleteRows="False"
                       CanUserSortColumns="False"
-                      Margin="34,0,0,5"
+                      Margin="36,0,0,5"
                       HorizontalAlignment="Left"
                       VerticalAlignment="Bottom"
                       Height="149"
-                      Width="134"
+                      Width="135"
                       Grid.RowSpan="3"
                       Grid.ColumnSpan="2">
                 <DataGrid.Columns>
@@ -350,61 +349,76 @@
                         IsDropDownOpen="False"
                         SelectedDateFormat="Short"
                         Grid.Column="5"
-                        Grid.ColumnSpan="2"
-                        Grid.Row="11"
-                        HorizontalAlignment="Left"
-                        VerticalAlignment="Center"/>
+                        Grid.Row="10"
+                        HorizontalAlignment="Left" RenderTransformOrigin="0.717,-0.282" Margin="40,18,0,10"/>
 
             <DatePicker x:Name="dateEnd"
                         IsDropDownOpen="False"
                         SelectedDateFormat="Short"
-                        Grid.Column="5"
-                        Grid.ColumnSpan="2"
-                        Grid.Row="11"
-                        HorizontalAlignment="Center"
-                        VerticalAlignment="Center"/>
-
-            <TextBlock  FontStyle="Italic"
-                        Grid.Column="5"
-                        Grid.ColumnSpan="2"
+                        Grid.Column="6"
                         Grid.Row="10"
-                        FontSize="15"
                         HorizontalAlignment="Left"
-                        VerticalAlignment="Center"
-                        Width="200" 
-                        Margin="13,12,0,0">
-              Дата выдачи сертификата<LineBreak></LineBreak>___От  ----И----  До___</TextBlock>
+                        VerticalAlignment="Top" Margin="14,18,0,0" RenderTransformOrigin="0.944,0.52"/>
 
 
             <!-- Кнопка применить фильтр к таблице -->
             <Button Content="Применить фильтр"
                     Grid.Column="5"
                     Grid.ColumnSpan="2"
-                    Grid.Row="12"
-                    HorizontalAlignment="Center"
-                    Background="Bisque"
-                    Width="116" Click="Button_Click_4" Margin="0,5,0,10"/>
+                    FontSize="11"
+                    Grid.Row="11"
+                    HorizontalAlignment="Left"
+                    Background="FloralWhite"
+                    FontWeight="Bold"
+                    Width="116" 
+                    Click="Button_Click_4"
+                    Margin="89,7,0,8"/>
 
             <!-- Очистить фильтры к таблице -->
             <Button Content="Очистить фильтр"
-                    Grid.Column="4"
-                    Grid.ColumnSpan="2"
+                    Grid.Column="5"
                     Grid.Row="12"
                     HorizontalAlignment="Left"
                     Background="Aqua"
-                    Width="113" Margin="129,5,0,10" Click="Button_Click_5"/>
+                    Width="116" Margin="89,8,0,7" Click="Button_Click_5" Grid.ColumnSpan="2"/>
 
 
             <Button Content="Статистика"
                     Grid.Column="7"
-                    Grid.Row="11"
+                    Grid.Row="12"
                     HorizontalAlignment="Left"
                     VerticalAlignment="Top"
-                    Margin="50,14,0,0"
+                    Margin="50,6,0,0"
                     Height="42"
-                    Width="101"
-                    Grid.RowSpan="2"
+                    Width="106"
                     Background="BlanchedAlmond" Click="Button_Click_2"/>
+            <TextBlock 
+                Grid.Column="5" 
+                HorizontalAlignment="Left"
+                Margin="19,22,0,0" 
+                Grid.Row="10"
+                TextWrapping="Wrap"
+                VerticalAlignment="Top"><Run Language="ru-ru" Text="От"/></TextBlock>
+
+            <TextBlock 
+                Grid.Column="5" 
+                HorizontalAlignment="Left" 
+                Margin="155,22,0,0" 
+                Grid.Row="10" 
+                TextWrapping="Wrap" 
+                VerticalAlignment="Top" Grid.ColumnSpan="2"><Run Language="ru-ru" Text="До"/></TextBlock>
+            <Button Content="Отчет"
+                Grid.Column="6"
+                Grid.Row="12"
+                HorizontalAlignment="Left"
+                VerticalAlignment="Top"
+                Margin="80,6,0,0"
+                Height="42"
+                Width="106"
+                    FontSize="18"
+                    Foreground="WhiteSmoke"
+                Background="Crimson"
+                Grid.ColumnSpan="2" Click="Button_Click_6"/>
 
 
 
