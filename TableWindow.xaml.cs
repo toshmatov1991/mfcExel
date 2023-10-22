@@ -1071,6 +1071,8 @@ namespace exel_for_mfc
         //Заполнение таблиц Фильтров
         public async void FilterStart()
             {
+            dateStart.Text = "";
+            dateEnd.Text = "";
             //Сначала удаляю все из Sqlite
             using (FdbContext db1 = new())
             {
@@ -1230,6 +1232,7 @@ namespace exel_for_mfc
             await Task.Run(async () =>
             {
                 var predicate = PredicateBuilder.New<SClass>();
+                
                 using (FdbContext db1 = new())
                 {
                     List<long> areaIdL = new();
@@ -1254,7 +1257,7 @@ namespace exel_for_mfc
                     //}
                    
                     if (localIdL.Count != 0)
-                        predicate = predicate.Or(e => localIdL.Contains((long)e.Local));
+                        predicate = predicate.And(e => localIdL.Contains((long)e.Local));
                     //else
                     //{
                     //    localIdL = db1.Localves.Select(c => c.Id - 1).ToList();
@@ -1289,17 +1292,23 @@ namespace exel_for_mfc
                 Dispatcher.Invoke(() =>
                 {
                     //Проверка пустые оба
-                    if (string.IsNullOrEmpty(dateStart.Text) && string.IsNullOrEmpty(dateEnd.Text)
-                     || string.IsNullOrWhiteSpace(dateStart.Text) && string.IsNullOrWhiteSpace(dateEnd.Text))
+                    if (dateStart.Text == "" & dateEnd.Text == "")
                     {
                         dateStart.Text = "10.10.2003";
                         dateEnd.Text = "10.10.2030";
                         predicate = predicate.And(e => e.DateGetSert >= Convert.ToDateTime(dateStart.Text) && e.DateGetSert <= Convert.ToDateTime(dateEnd.Text));
                     }
 
+                    //Иначе если Даты заполнены то беру их
+                    else if (dateStart.Text != "" & dateEnd.Text != "")
+                    {
+                        predicate = predicate.And(e => e.DateGetSert >= Convert.ToDateTime(dateStart.Text) && e.DateGetSert <= Convert.ToDateTime(dateEnd.Text));
+                    }
+
+
+
                     //Если пустая дата начала
-                    else if (string.IsNullOrEmpty(dateStart.Text) || string.IsNullOrWhiteSpace(dateStart.Text)
-                         && !string.IsNullOrEmpty(dateEnd.Text) || !string.IsNullOrWhiteSpace(dateEnd.Text))
+                    else if (dateStart.Text == "" & dateEnd.Text != "")
                     {
                         dateStart.Text = "10.10.2003";
                         predicate = predicate.And(e => e.DateGetSert <= Convert.ToDateTime(dateEnd.Text));
@@ -1307,20 +1316,11 @@ namespace exel_for_mfc
                        
 
                     //Если пустая дата окончания
-                    else if (string.IsNullOrEmpty(dateEnd.Text) || string.IsNullOrWhiteSpace(dateEnd.Text)
-                         && !string.IsNullOrEmpty(dateStart.Text) || !string.IsNullOrWhiteSpace(dateStart.Text))
+                     else if (dateStart.Text != "" & dateEnd.Text == "")
                     {
                         dateEnd.Text = "10.10.2030";
                         predicate = predicate.And(e => e.DateGetSert >= Convert.ToDateTime(dateStart.Text));
                     }
-
-                    //Иначе если Даты заполнены то беру их
-                    else if (!string.IsNullOrEmpty(dateEnd.Text) || !string.IsNullOrWhiteSpace(dateEnd.Text)
-                        && !string.IsNullOrEmpty(dateStart.Text) || !string.IsNullOrWhiteSpace(dateStart.Text))
-                    {
-                        predicate = predicate.And(e => e.DateGetSert >= Convert.ToDateTime(dateStart.Text) && e.DateGetSert <= Convert.ToDateTime(dateEnd.Text));
-                    }
-
 
                     using (ExDbContext db = new())
                     {

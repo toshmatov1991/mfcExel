@@ -79,7 +79,7 @@
             <DataGrid x:Name="dataGrid"
                   Grid.ColumnSpan="8"
                   Grid.RowSpan="11"
-                  CanUserSortColumns="False"
+                  CanUserSortColumns="True"
                   CanUserDeleteRows="False"
                   AutoGenerateColumns="False"
                   CanUserAddRows="True"
@@ -131,7 +131,7 @@
                         </DataGridTemplateColumn.CellTemplate>
                         <DataGridTemplateColumn.CellEditingTemplate>
                             <DataTemplate>
-                                <DatePicker SelectedDate="{Binding DateGetSert, StringFormat=dd.MM.yyyy, UpdateSourceTrigger=PropertyChanged}" />
+                                <DatePicker SelectedDate="{Binding DateGetSert, StringFormat=dd.MM.yyyy, UpdateSourceTrigger=PropertyChanged}"/>
                             </DataTemplate>
                         </DataGridTemplateColumn.CellEditingTemplate>
                     </DataGridTemplateColumn>
