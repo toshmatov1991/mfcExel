@@ -571,7 +571,6 @@ namespace exel_for_mfc
             }
         }
         #endregion
-
         #region Поиск()
         //Поиск(Нормально)
         private void Button_Click_3(object sender, RoutedEventArgs e)
@@ -660,7 +659,6 @@ namespace exel_for_mfc
                       }).ToList();
         }
         #endregion
-
         #region События изменения значений ComboBox()
         private async void AreaComboEvent(object sender, EventArgs e)
             {
@@ -793,7 +791,6 @@ namespace exel_for_mfc
                 }
             }
             #endregion
-
         #region Выгрузка в Excel()
             //Сохранить таблицу в Excel
             static async Task SaveDataInExel()
@@ -1066,7 +1063,6 @@ namespace exel_for_mfc
                 await SaveDataInExel();
             }
             #endregion
-
         #region Фильтрация()
         //Заполнение таблиц Фильтров
         public async void FilterStart()
@@ -1362,12 +1358,10 @@ namespace exel_for_mfc
                             dataGrid.ItemsSource = MyList.ToList();
                         });
                     }
-                
             });
         }
             
         #endregion  
-
         #region Обработка возможных исключений и другие мелочи
         private void AreaExeption(object sender, MouseButtonEventArgs e)
             {
