@@ -1230,7 +1230,6 @@ namespace exel_for_mfc
             await Task.Run(async () =>
             {
                 var predicate = PredicateBuilder.New<SClass>();
-                int temp = 0;
                 using (FdbContext db1 = new())
                 {
                     List<long> areaIdL = new();
@@ -1248,7 +1247,6 @@ namespace exel_for_mfc
 
                     if (areaIdL.Count != 0)
                         predicate = predicate.And(e => areaIdL.Contains((long)e.Area));
-                    else temp++;
                     //else
                     //{
                     //    //areaIdL = db1.AreaFs.Select(c => c.Id - 1).ToList();
@@ -1256,8 +1254,7 @@ namespace exel_for_mfc
                     //}
                    
                     if (localIdL.Count != 0)
-                        predicate = predicate.And(e => localIdL.Contains((long)e.Local));
-                    else temp++;
+                        predicate = predicate.Or(e => localIdL.Contains((long)e.Local));
                     //else
                     //{
                     //    localIdL = db1.Localves.Select(c => c.Id - 1).ToList();
@@ -1266,7 +1263,6 @@ namespace exel_for_mfc
 
                     if (privIdL.Count != 0)
                         predicate = predicate.And(e => privIdL.Contains((long)e.Lgota));
-                    else temp++;
                     //else
                     //{
                     //    privIdL = db1.PrivFs.Select(c => c.Id - 1).ToList();
@@ -1275,7 +1271,6 @@ namespace exel_for_mfc
 
                     if (payIdL.Count != 0)
                         predicate = predicate.And(e => payIdL.Contains((long)e.Pay));
-                    else temp++;
                     //else
                     //{
                     //    payIdL = db1.PayFs.Select(c => c.Id - 1).ToList();
@@ -1284,7 +1279,6 @@ namespace exel_for_mfc
 
                     if (solIdl.Count != 0)
                         predicate = predicate.And(e => solIdl.Contains((long)e.Solution));
-                    else temp++;
                     //else
                     //{
                     //    solIdl = db1.Solves.Select(c => c.Id - 1).ToList();
@@ -1292,19 +1286,35 @@ namespace exel_for_mfc
                     //}
                 };
 
-
-                if(temp == 5)
+                Dispatcher.Invoke(() =>
                 {
-                    Dispatcher.Invoke(() =>
+                    //Проверка даты  //Еще добавить NULL?
+                    // dateStart dateEnd
+                    if (string.IsNullOrEmpty(dateStart.Text) && string.IsNullOrEmpty(dateEnd.Text)
+                     || string.IsNullOrWhiteSpace(dateStart.Text) && string.IsNullOrWhiteSpace(dateEnd.Text))
                     {
-                        Start();
-                        FilterStart();
-                    });
-                   
+                        dateStart.Text = "10.10.2003";
+                        dateEnd.Text = "10.10.2030";
+                        predicate = predicate.And(e => e.DateGetSert >= Convert.ToDateTime(dateStart.Text) && e.DateGetSert <= Convert.ToDateTime(dateEnd.Text));
+                    }
 
-                }
-                else
-                {
+                    else if (string.IsNullOrEmpty(dateStart.Text) || string.IsNullOrWhiteSpace(dateStart.Text)
+                         && !string.IsNullOrEmpty(dateEnd.Text) || !string.IsNullOrWhiteSpace(dateEnd.Text))
+                    {
+                        dateStart.Text = "10.10.2003";
+                        predicate = predicate.And(e => e.DateGetSert >= Convert.ToDateTime(dateStart.Text));
+                    }
+                       
+
+
+                    else if (string.IsNullOrEmpty(dateEnd.Text) || string.IsNullOrWhiteSpace(dateEnd.Text)
+                         && !string.IsNullOrEmpty(dateStart.Text) || !string.IsNullOrWhiteSpace(dateStart.Text))
+                    {
+                        dateEnd.Text = "10.10.2030";
+                        predicate = predicate.And(e => e.DateGetSert <= Convert.ToDateTime(dateEnd.Text));
+                    }
+
+
                     using (ExDbContext db = new())
                     {
                         MyList = (from reg in db.Registries
@@ -1331,6 +1341,9 @@ namespace exel_for_mfc
                                       IdApplicant = appl.Id
                                   }).AsExpandable().Where(predicate).ToList();
                     };
+                });
+
+                   
 
 
                     if (MyList.Count == 0)
@@ -1342,7 +1355,7 @@ namespace exel_for_mfc
                             dataGrid.ItemsSource = MyList.ToList();
                         });
                     }
-                }
+                
             });
         }
             
