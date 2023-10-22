@@ -16,6 +16,9 @@ using System.Globalization;
 using exel_for_mfc.FilterDB;
 using DocumentFormat.OpenXml.Vml.Office;
 using LinqKit;
+using LinqKit.Core;
+using DocumentFormat.OpenXml.InkML;
+using System.Xml;
 
 namespace exel_for_mfc
 {
@@ -1227,21 +1230,36 @@ namespace exel_for_mfc
             await Task.Run(() =>
             {
                 using FdbContext db1 = new();
+                var predicate = PredicateBuilder.New<SClass>();
 
-                //Район полная обработка
+
+
+                //Район полная обработка + предикат
                 List<long> areaIdL = new();
                 areaIdL = db1.AreaFs.Where(u => u.Flag == 1).Select(c => c.Id - 1).ToList();
                 if (areaIdL.Count == 0)
+                {
                     areaIdL = db1.AreaFs.Select(c => c.Id - 1).ToList();
+                    predicate = predicate.Or(e => areaIdL.Contains((long)e.Area));
+                }
+                else
+                    predicate = predicate.Or(e => areaIdL.Contains((long)e.Area));
 
-                //Населенный пункт полная обработка
+
+                //Населенный пункт полная обработка + предикат
                 List<long> localIdL = new();
                 localIdL = db1.Localves.Where(u => u.Flag == 1).Select(c => c.Id - 1).ToList();
                 if (localIdL.Count == 0)
+                {
                     localIdL = db1.Localves.Select(c => c.Id - 1).ToList();
+                    predicate = predicate.Or(e => localIdL.Contains((long)e.Local));
+                }
+                else
+                    predicate = predicate.Or(e => localIdL.Contains((long)e.Local));
 
-               //Льгота полная обработка
-               List<long> privIdL = new();
+
+                //Льгота полная обработка
+                List<long> privIdL = new();
                privIdL = db1.PrivFs.Where(u => u.Flag == 1).Select(c => c.Id - 1).ToList();
                if (privIdL.Count == 0)
                        privIdL = db1.PrivFs.Select(c => c.Id - 1).ToList();
@@ -1258,14 +1276,6 @@ namespace exel_for_mfc
                 solIdl = db1.Solves.Where(u => u.Flag == 1).Select(c => c.Id - 1).ToList();
                 if (solIdl.Count == 0)
                     solIdl = db1.Solves.Select(c => c.Id - 1).ToList();
-
-                //Предикат попробую юзать
-                var predicate = PredicateBuilder.True<Log>();
-
-
-
-
-
 
                 try
                 {
@@ -1314,13 +1324,7 @@ namespace exel_for_mfc
                                           Trek = reg.Trek,
                                           MailingDate = reg.MailingDate,
                                           IdApplicant = appl.Id
-                                      }).Where(u => u.DateGetSert >= Convert.ToDateTime(dateStart.Text)
-                                            & u.DateGetSert <= Convert.ToDateTime(dateEnd.Text)
-                                            & areaIdL.Contains((long)u.Area)
-                                            & localIdL.Contains((long)u.Local)
-                                            & privIdL.Contains((long)u.Lgota)
-                                            & payIdL.Contains((long)u.Pay)
-                                            & solIdl.Contains((long)u.Solution)).ToList();
+                                      }).AsExpandable().Where(predicate).ToList();
                         };
                     });
 
