@@ -1219,9 +1219,6 @@ namespace exel_for_mfc
             await GoStartFilter();
         }
 
-       
-
-
         //Метод для выборки по фильтрам
         async Task GoStartFilter()
         {
@@ -1431,6 +1428,8 @@ namespace exel_for_mfc
 
         }
 
+
+
         //Событие перед редактированием ячейки Добавление адреса, если ячейка пустая()
         private void TestBeginningEdit(object sender, DataGridBeginningEditEventArgs e)
         {
@@ -1444,12 +1443,26 @@ namespace exel_for_mfc
                     //Здесь заполняю Адрес, если пустая строка
                     AdressWindow adres = new(ref temp1);
                     adres.ShowDialog();
+                    //Считывание строки
+                    SClass? a = e.Row.Item as SClass;
+                    a.Adress = temp1;
                 }
                 else return;
             }
-            //Считывание строки
-            SClass? a = e.Row.Item as SClass;
-            a.Adress = temp1;
+
+            if (e.Column.Header.ToString() == "Серия и № сертификата" 
+                & (e.EditingEventArgs.Source as TextBlock).Text == "" 
+                | string.IsNullOrEmpty((e.EditingEventArgs.Source as TextBlock).Text)
+                | string.IsNullOrWhiteSpace((e.EditingEventArgs.Source as TextBlock).Text))
+            {
+                MessageBox.Show("Серия и № сертификата");
+                //Даты выдачи заполнить автоматом сразу после СериалНамбСерт
+                //Дата и номер решения тоже автоматом
+            }
+
+
+
+
         }
 
         //Статистические данные()
