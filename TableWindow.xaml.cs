@@ -1288,8 +1288,7 @@ namespace exel_for_mfc
 
                 Dispatcher.Invoke(() =>
                 {
-                    //Проверка даты  //Еще добавить NULL?
-                    // dateStart dateEnd
+                    //Проверка пустые оба
                     if (string.IsNullOrEmpty(dateStart.Text) && string.IsNullOrEmpty(dateEnd.Text)
                      || string.IsNullOrWhiteSpace(dateStart.Text) && string.IsNullOrWhiteSpace(dateEnd.Text))
                     {
@@ -1298,20 +1297,28 @@ namespace exel_for_mfc
                         predicate = predicate.And(e => e.DateGetSert >= Convert.ToDateTime(dateStart.Text) && e.DateGetSert <= Convert.ToDateTime(dateEnd.Text));
                     }
 
+                    //Если пустая дата начала
                     else if (string.IsNullOrEmpty(dateStart.Text) || string.IsNullOrWhiteSpace(dateStart.Text)
                          && !string.IsNullOrEmpty(dateEnd.Text) || !string.IsNullOrWhiteSpace(dateEnd.Text))
                     {
                         dateStart.Text = "10.10.2003";
-                        predicate = predicate.And(e => e.DateGetSert >= Convert.ToDateTime(dateStart.Text));
+                        predicate = predicate.And(e => e.DateGetSert <= Convert.ToDateTime(dateEnd.Text));
                     }
                        
 
-
+                    //Если пустая дата окончания
                     else if (string.IsNullOrEmpty(dateEnd.Text) || string.IsNullOrWhiteSpace(dateEnd.Text)
                          && !string.IsNullOrEmpty(dateStart.Text) || !string.IsNullOrWhiteSpace(dateStart.Text))
                     {
                         dateEnd.Text = "10.10.2030";
-                        predicate = predicate.And(e => e.DateGetSert <= Convert.ToDateTime(dateEnd.Text));
+                        predicate = predicate.And(e => e.DateGetSert >= Convert.ToDateTime(dateStart.Text));
+                    }
+
+                    //Иначе если Даты заполнены то беру их
+                    else if (!string.IsNullOrEmpty(dateEnd.Text) || !string.IsNullOrWhiteSpace(dateEnd.Text)
+                        && !string.IsNullOrEmpty(dateStart.Text) || !string.IsNullOrWhiteSpace(dateStart.Text))
+                    {
+                        predicate = predicate.And(e => e.DateGetSert >= Convert.ToDateTime(dateStart.Text) && e.DateGetSert <= Convert.ToDateTime(dateEnd.Text));
                     }
 
 
