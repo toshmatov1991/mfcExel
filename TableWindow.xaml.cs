@@ -1434,7 +1434,7 @@ namespace exel_for_mfc
         //Событие перед редактированием ячейки Добавление адреса, если ячейка пустая()
         private void TestBeginningEdit(object sender, DataGridBeginningEditEventArgs e)
         {
-            
+
             //Получаю название колонки
             if (e.Column.Header.ToString() == "Адрес")
             {
@@ -1452,37 +1452,34 @@ namespace exel_for_mfc
                 else return;
             }
 
-          else if (e.Column.Header.ToString() == "Серия и № сертификата")
-          {
-
-//                &(e.EditingEventArgs.Source as TextBlock).Text == ""
-//| string.IsNullOrEmpty((e.EditingEventArgs.Source as TextBlock).Text)
-//| string.IsNullOrWhiteSpace((e.EditingEventArgs.Source as TextBlock).Text))
-
-
-                //Даты выдачи заполнить автоматом сразу после СериалНамбСерт
-                //Дата и номер решения тоже автоматом
+            else if (e.Column.Header.ToString() == "Серия и № сертификата")
+            {
                 SClass? a = e.Row.Item as SClass;
-                a.Sernumb = "№ " + a.IdReg;
-                DateTime dateTime = DateTime.Now;
-                a.DateGetSert = dateTime;
-                dataGrid.Items.Refresh();
-                // a.DateGetSert = Convert.ToDateTime("10.09.2002");
-                // a.DateAndNumbSolutionSert = a.Sernumb + "-СГ от " + a.DateGetSert;
-                //if (a.DateGetSert == null 
-                //    || a.DateGetSert.ToString() == "" 
-                //    || string.IsNullOrEmpty(a.DateGetSert.ToString())
-                //    || string.IsNullOrWhiteSpace(a.DateGetSert.ToString()))
-                //
-
-                //if(a.DateAndNumbSolutionSert == ""
-                //    || string.IsNullOrEmpty(a.DateAndNumbSolutionSert) 
-                //    || string.IsNullOrWhiteSpace(a.DateAndNumbSolutionSert)
-                //    || a.DateAndNumbSolutionSert == null)
-                //a.DateAndNumbSolutionSert = a.Sernumb + "-СГ от " + a.DateGetSert;
+                if (string.IsNullOrEmpty(a.Sernumb) || string.IsNullOrWhiteSpace(a.Sernumb))
+                    a.Sernumb = "№ " + a.IdReg;
+                else return;
             }
 
-            
+            else if (e.Column.Header.ToString() == "Дата выдачи")
+            {
+                SClass? a = e.Row.Item as SClass;
+                if (a.DateGetSert.ToString() == "" || a.DateGetSert == null)
+                {
+                    DateTime dateTime = DateTime.Now;
+                    a.DateGetSert = dateTime;
+                }
+                else return;
+            }
+
+            else if (e.Column.Header.ToString() == "Дата и номер решения")
+            {
+                SClass? a = e.Row.Item as SClass;
+                if (a.DateAndNumbSolutionSert == "" || a.DateAndNumbSolutionSert == null || string.IsNullOrWhiteSpace(a.DateAndNumbSolutionSert))
+                    a.DateAndNumbSolutionSert = "№ " + a.IdReg + "-СГ от " + Convert.ToDateTime(a.DateGetSert).ToString("d");
+                else return;
+            }
+
+
 
 
         }
