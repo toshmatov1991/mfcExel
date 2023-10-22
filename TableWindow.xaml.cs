@@ -1238,64 +1238,58 @@ namespace exel_for_mfc
                 List<long> areaIdL = new();
                 areaIdL = db1.AreaFs.Where(u => u.Flag == 1).Select(c => c.Id - 1).ToList();
                 if (areaIdL.Count != 0)
-                    predicate = predicate.Or(e => areaIdL.Contains((long)e.Area));
+                    predicate = predicate.And(e => areaIdL.Contains((long)e.Area));
                 else
                 {
                     areaIdL = db1.AreaFs.Select(c => c.Id - 1).ToList();
-                    predicate = predicate.And(e => areaIdL.Contains((long)e.Area));
+                    predicate = predicate.Or(e => areaIdL.Contains((long)e.Area));
                 }
 
                 //Населенный пункт полная обработка + предикат
                 List<long> localIdL = new();
                 localIdL = db1.Localves.Where(u => u.Flag == 1).Select(c => c.Id - 1).ToList();
                 if (localIdL.Count != 0)
-                    predicate = predicate.Or(e => localIdL.Contains((long)e.Local));
+                    predicate = predicate.And(e => localIdL.Contains((long)e.Local));
                 else
                 {
                     localIdL = db1.Localves.Select(c => c.Id - 1).ToList();
-                    predicate = predicate.And(e => localIdL.Contains((long)e.Local));
+                    predicate = predicate.Or(e => localIdL.Contains((long)e.Local));
                 }
 
 
                 //Льгота полная обработка + предикат
                 List<long> privIdL = new();
                 privIdL = db1.PrivFs.Where(u => u.Flag == 1).Select(c => c.Id - 1).ToList();
-                if (privIdL.Count == 0)
-                {
-                    return;
-                    //privIdL = db1.PrivFs.Select(c => c.Id - 1).ToList();
-                    //predicate = predicate.Or(e => privIdL.Contains((long)e.Lgota));
-                }
-                else
+                if (privIdL.Count != 0)
                     predicate = predicate.And(e => privIdL.Contains((long)e.Lgota));
-
-                // //Выплата полная обработка + предикат
-                // List<long> payIdL = new();
-                // payIdL = db1.PayFs.Where(u => u.Flag == 1).Select(c => c.Id - 1).ToList();
-                // if (payIdL.Count == 0)
-                // {
-                //     return;
-                //     //payIdL = db1.PayFs.Select(c => c.Id - 1).ToList();
-                //     //predicate = predicate.Or(e => payIdL.Contains((long)e.Pay));
-                // }
-                // else
-                //     predicate = predicate.And(e => payIdL.Contains((long)e.Pay));
+                else
+                {
+                    privIdL = db1.PrivFs.Select(c => c.Id - 1).ToList();
+                    predicate = predicate.Or(e => privIdL.Contains((long)e.Lgota));
+                }
 
 
+                //Выплата полная обработка + предикат
+                List<long> payIdL = new();
+                payIdL = db1.PayFs.Where(u => u.Flag == 1).Select(c => c.Id - 1).ToList();
+                if (payIdL.Count != 0)
+                    predicate = predicate.And(e => payIdL.Contains((long)e.Pay));
+                else
+                    payIdL = db1.PayFs.Select(c => c.Id - 1).ToList();
+                    predicate = predicate.Or(e => payIdL.Contains((long)e.Pay));
 
-                // //Решение полная обработка + предикат
-                // List<long> solIdl = new();
-                // solIdl = db1.Solves.Where(u => u.Flag == 1).Select(c => c.Id - 1).ToList();
-                // if (solIdl.Count == 0)
-                // {
-                //     return;
-                //     //solIdl = db1.Solves.Select(c => c.Id - 1).ToList();
-                //     //predicate = predicate.Or(e => solIdl.Contains((long)e.Solution));
-                // }
-                // else
-                // {
-                //     predicate = predicate.And(e => solIdl.Contains((long)e.Solution));
-                // }
+
+
+                //Решение полная обработка + предикат
+                List<long> solIdl = new();
+                solIdl = db1.Solves.Where(u => u.Flag == 1).Select(c => c.Id - 1).ToList();
+                if (solIdl.Count == 0)
+                    predicate = predicate.And(e => solIdl.Contains((long)e.Solution));
+                else
+                {
+                    solIdl = db1.Solves.Select(c => c.Id - 1).ToList();
+                    predicate = predicate.Or(e => solIdl.Contains((long)e.Solution));
+                }
 
 
 
