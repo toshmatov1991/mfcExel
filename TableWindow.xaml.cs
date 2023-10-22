@@ -1237,175 +1237,126 @@ namespace exel_for_mfc
                 //Район полная обработка + предикат
                 List<long> areaIdL = new();
                 areaIdL = db1.AreaFs.Where(u => u.Flag == 1).Select(c => c.Id - 1).ToList();
-                if (areaIdL.Count == 0)
-                {
-                    return;
-                    //areaIdL = db1.AreaFs.Select(c => c.Id - 1).ToList();
-                    //predicate = predicate.Or(e => areaIdL.Contains((long)e.Area));
-                }
+                if (areaIdL.Count != 0)
+                    predicate = predicate.Or(e => areaIdL.Contains((long)e.Area));
                 else
+                {
+                    areaIdL = db1.AreaFs.Select(c => c.Id - 1).ToList();
                     predicate = predicate.And(e => areaIdL.Contains((long)e.Area));
-
+                }
 
                 //Населенный пункт полная обработка + предикат
                 List<long> localIdL = new();
                 localIdL = db1.Localves.Where(u => u.Flag == 1).Select(c => c.Id - 1).ToList();
-                if (localIdL.Count == 0)
-                {
-                    return;
-                    //localIdL = db1.Localves.Select(c => c.Id - 1).ToList();
-                    //predicate = predicate.Or(e => localIdL.Contains((long)e.Local));
-                }
+                if (localIdL.Count != 0)
+                    predicate = predicate.Or(e => localIdL.Contains((long)e.Local));
                 else
+                {
+                    localIdL = db1.Localves.Select(c => c.Id - 1).ToList();
                     predicate = predicate.And(e => localIdL.Contains((long)e.Local));
+                }
 
 
                 //Льгота полная обработка + предикат
                 List<long> privIdL = new();
-               privIdL = db1.PrivFs.Where(u => u.Flag == 1).Select(c => c.Id - 1).ToList();
-               if (privIdL.Count == 0)
+                privIdL = db1.PrivFs.Where(u => u.Flag == 1).Select(c => c.Id - 1).ToList();
+                if (privIdL.Count == 0)
                 {
                     return;
                     //privIdL = db1.PrivFs.Select(c => c.Id - 1).ToList();
                     //predicate = predicate.Or(e => privIdL.Contains((long)e.Lgota));
                 }
-               else
+                else
                     predicate = predicate.And(e => privIdL.Contains((long)e.Lgota));
 
-                //Выплата полная обработка + предикат
-                List<long> payIdL = new();
-                payIdL = db1.PayFs.Where(u => u.Flag == 1).Select(c => c.Id - 1).ToList();
-                if (payIdL.Count == 0)
-                {
-                    return;
-                    //payIdL = db1.PayFs.Select(c => c.Id - 1).ToList();
-                    //predicate = predicate.Or(e => payIdL.Contains((long)e.Pay));
-                }
-                else
-                    predicate = predicate.And(e => payIdL.Contains((long)e.Pay));
+                // //Выплата полная обработка + предикат
+                // List<long> payIdL = new();
+                // payIdL = db1.PayFs.Where(u => u.Flag == 1).Select(c => c.Id - 1).ToList();
+                // if (payIdL.Count == 0)
+                // {
+                //     return;
+                //     //payIdL = db1.PayFs.Select(c => c.Id - 1).ToList();
+                //     //predicate = predicate.Or(e => payIdL.Contains((long)e.Pay));
+                // }
+                // else
+                //     predicate = predicate.And(e => payIdL.Contains((long)e.Pay));
 
 
 
-                //Решение полная обработка + предикат
-                List<long> solIdl = new();
-                solIdl = db1.Solves.Where(u => u.Flag == 1).Select(c => c.Id - 1).ToList();
-                if (solIdl.Count == 0)
-                {
-                    return;
-                    //solIdl = db1.Solves.Select(c => c.Id - 1).ToList();
-                    //predicate = predicate.Or(e => solIdl.Contains((long)e.Solution));
-                }
-                else
-                    predicate = predicate.And(e => solIdl.Contains((long)e.Solution));
+                // //Решение полная обработка + предикат
+                // List<long> solIdl = new();
+                // solIdl = db1.Solves.Where(u => u.Flag == 1).Select(c => c.Id - 1).ToList();
+                // if (solIdl.Count == 0)
+                // {
+                //     return;
+                //     //solIdl = db1.Solves.Select(c => c.Id - 1).ToList();
+                //     //predicate = predicate.Or(e => solIdl.Contains((long)e.Solution));
+                // }
+                // else
+                // {
+                //     predicate = predicate.And(e => solIdl.Contains((long)e.Solution));
+                // }
 
 
 
 
-
-
-
-                try
-                {
-                    Dispatcher.Invoke(() =>
+                Dispatcher.Invoke(() =>
                     {
                         //Проверка даты
                         // dateStart dateEnd
                         if (string.IsNullOrEmpty(dateStart.Text) && string.IsNullOrEmpty(dateEnd.Text)
-                        || string.IsNullOrWhiteSpace(dateStart.Text) && string.IsNullOrWhiteSpace(dateEnd.Text))
-                    {
-                            dateStart.Text = "10.10.2003";
-                            dateEnd.Text = "10.10.2030";
-                    }
-                    else if (string.IsNullOrEmpty(dateStart.Text) || string.IsNullOrWhiteSpace(dateStart.Text)
-                          && !string.IsNullOrEmpty(dateEnd.Text) || !string.IsNullOrWhiteSpace(dateEnd.Text))
-                    {
-                            dateStart.Text = "10.10.2003";
-                    }
-                    else if (string.IsNullOrEmpty(dateEnd.Text) || string.IsNullOrWhiteSpace(dateEnd.Text)
-                        && !string.IsNullOrEmpty(dateStart.Text) || !string.IsNullOrWhiteSpace(dateStart.Text))
-                    {
-                            dateEnd.Text = "10.10.2030";
-                    }
-
-                        using (ExDbContext db = new())
+                         || string.IsNullOrWhiteSpace(dateStart.Text) && string.IsNullOrWhiteSpace(dateEnd.Text))
                         {
-                            MyList = (from reg in db.Registries
-                                      join appl in db.Applicants on reg.ApplicantFk equals appl.Id
-                                      select new SClass
-                                      {
-                                          IdReg = reg.Id,
-                                          Family = appl.Firstname,
-                                          Name = appl.Middlename,
-                                          Lastname = appl.Lastname,
-                                          Snils = appl.Snils,
-                                          Area = appl.AreaFk - 1,
-                                          Local = appl.LocalityFk - 1,
-                                          Adress = appl.Adress,
-                                          Lgota = appl.PrivilegesFk - 1,
-                                          Pay = reg.PayAmountFk - 1,
-                                          Sernumb = reg.SerialAndNumberSert,
-                                          DateGetSert = reg.DateGetSert,
-                                          Solution = reg.SolutionFk - 1,
-                                          DateAndNumbSolutionSert = reg.DateAndNumbSolutionSert,
-                                          Comment = reg.Comment,
-                                          Trek = reg.Trek,
-                                          MailingDate = reg.MailingDate,
-                                          IdApplicant = appl.Id
-                                      }).AsExpandable().Where(predicate).ToList();
-                        };
+                            dateStart.Text = "10.10.2003";
+                            dateEnd.Text = "10.10.2030";
+                        }
+
+                        else if (string.IsNullOrEmpty(dateStart.Text) || string.IsNullOrWhiteSpace(dateStart.Text)
+                             && !string.IsNullOrEmpty(dateEnd.Text) || !string.IsNullOrWhiteSpace(dateEnd.Text))
+                            dateStart.Text = "10.10.2003";
+                         
+                        
+                        else if (string.IsNullOrEmpty(dateEnd.Text) || string.IsNullOrWhiteSpace(dateEnd.Text)
+                             && !string.IsNullOrEmpty(dateStart.Text) || !string.IsNullOrWhiteSpace(dateStart.Text))
+                            dateEnd.Text = "10.10.2030";
+
                     });
-
-
-
-
-            //        List<Entity> list = new List<Entity>
-            //        {
-            //            new Entity {ID = 1, Name = "qwerty"},
-            //            new Entity {ID = 2, Name = "rewyt"},
-            //    new Entity {ID = 4, Name = "asdfg"},
-            //};
-
-            //        int compareId = 2;  // ID для сравнения в фильтре
-            //        string compareName = "qwerty";  // имя для сравнения в фильтре
-
-
-            //        bool filterById = true,    // указывает нужно ли фильтровать по полю ID
-            //            filterByName = false;   // указывает нужно ли фильтровать по полю Name
-
-            //        Func<Entity, bool> predicateById = x => x.ID == compareId;
-            //        Func<Entity, bool> predicateByName = x => x.Name == compareName;
-
-            //        Func<Entity, bool> mainPredicate = x => (!filterById || predicateById(x))
-            //                                                && (!filterByName || predicateByName(x));
-
-
-            //        foreach (var entity in list.Where(mainPredicate))
-            //        {
-            //            Console.WriteLine(entity);
-            //        }
-
-
-
-
+                        using ExDbContext db = new();
+                        MyList = (from reg in db.Registries
+                                  join appl in db.Applicants on reg.ApplicantFk equals appl.Id
+                                  select new SClass
+                                  {
+                                      IdReg = reg.Id,
+                                      Family = appl.Firstname,
+                                      Name = appl.Middlename,
+                                      Lastname = appl.Lastname,
+                                      Snils = appl.Snils,
+                                      Area = appl.AreaFk - 1,
+                                      Local = appl.LocalityFk - 1,
+                                      Adress = appl.Adress,
+                                      Lgota = appl.PrivilegesFk - 1,
+                                      Pay = reg.PayAmountFk - 1,
+                                      Sernumb = reg.SerialAndNumberSert,
+                                      DateGetSert = reg.DateGetSert,
+                                      Solution = reg.SolutionFk - 1,
+                                      DateAndNumbSolutionSert = reg.DateAndNumbSolutionSert,
+                                      Comment = reg.Comment,
+                                      Trek = reg.Trek,
+                                      MailingDate = reg.MailingDate,
+                                      IdApplicant = appl.Id
+                                  }).Where(predicate).ToList();
+                    
 
 
                     if (MyList.Count == 0)
                             MessageBox.Show("По вашему запросу ничего не найдено :(");
-                        else
+                    else
+                    {
+                        Dispatcher.Invoke(() =>
                         {
-                            Dispatcher.Invoke(() =>
-                            {
-                                dataGrid.ItemsSource = MyList.ToList();
-                            });
-                        }
-                    
-                }
-
-                catch (Exception ex)
-                {
-                    MessageBox.Show(ex.Message);
-                }
-
+                            dataGrid.ItemsSource = MyList.ToList();
+                        });
+                    }
             });
         }
             
