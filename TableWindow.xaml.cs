@@ -1230,6 +1230,7 @@ namespace exel_for_mfc
             await Task.Run(async () =>
             {
                 var predicate = PredicateBuilder.New<SClass>();
+                int temp = 0;
                 using (FdbContext db1 = new())
                 {
                     List<long> areaIdL = new();
@@ -1247,6 +1248,7 @@ namespace exel_for_mfc
 
                     if (areaIdL.Count != 0)
                         predicate = predicate.And(e => areaIdL.Contains((long)e.Area));
+                    else temp++;
                     //else
                     //{
                     //    //areaIdL = db1.AreaFs.Select(c => c.Id - 1).ToList();
@@ -1255,14 +1257,16 @@ namespace exel_for_mfc
                    
                     if (localIdL.Count != 0)
                         predicate = predicate.And(e => localIdL.Contains((long)e.Local));
+                    else temp++;
                     //else
                     //{
                     //    localIdL = db1.Localves.Select(c => c.Id - 1).ToList();
                     //    predicate = predicate.Or(e => localIdL.Contains((long)e.Local));
                     //}
-                    
+
                     if (privIdL.Count != 0)
                         predicate = predicate.And(e => privIdL.Contains((long)e.Lgota));
+                    else temp++;
                     //else
                     //{
                     //    privIdL = db1.PrivFs.Select(c => c.Id - 1).ToList();
@@ -1271,6 +1275,7 @@ namespace exel_for_mfc
 
                     if (payIdL.Count != 0)
                         predicate = predicate.And(e => payIdL.Contains((long)e.Pay));
+                    else temp++;
                     //else
                     //{
                     //    payIdL = db1.PayFs.Select(c => c.Id - 1).ToList();
@@ -1279,6 +1284,7 @@ namespace exel_for_mfc
 
                     if (solIdl.Count != 0)
                         predicate = predicate.And(e => solIdl.Contains((long)e.Solution));
+                    else temp++;
                     //else
                     //{
                     //    solIdl = db1.Solves.Select(c => c.Id - 1).ToList();
@@ -1287,46 +1293,55 @@ namespace exel_for_mfc
                 };
 
 
-
-
-
-
-                using (ExDbContext db = new())
-                {
-                    MyList = (from reg in db.Registries
-                              join appl in db.Applicants on reg.ApplicantFk equals appl.Id
-                              select new SClass
-                              {
-                                  IdReg = reg.Id,
-                                  Family = appl.Firstname,
-                                  Name = appl.Middlename,
-                                  Lastname = appl.Lastname,
-                                  Snils = appl.Snils,
-                                  Area = appl.AreaFk - 1,
-                                  Local = appl.LocalityFk - 1,
-                                  Adress = appl.Adress,
-                                  Lgota = appl.PrivilegesFk - 1,
-                                  Pay = reg.PayAmountFk - 1,
-                                  Sernumb = reg.SerialAndNumberSert,
-                                  DateGetSert = reg.DateGetSert,
-                                  Solution = reg.SolutionFk - 1,
-                                  DateAndNumbSolutionSert = reg.DateAndNumbSolutionSert,
-                                  Comment = reg.Comment,
-                                  Trek = reg.Trek,
-                                  MailingDate = reg.MailingDate,
-                                  IdApplicant = appl.Id
-                              }).AsExpandable().Where(predicate).ToList();
-                };
-                
-
-                if (MyList.Count == 0)
-                        MessageBox.Show("По вашему запросу ничего не найдено :(");
-                else
+                if(temp == 5)
                 {
                     Dispatcher.Invoke(() =>
                     {
-                        dataGrid.ItemsSource = MyList.ToList();
+                        Start();
+                        FilterStart();
                     });
+                   
+
+                }
+                else
+                {
+                    using (ExDbContext db = new())
+                    {
+                        MyList = (from reg in db.Registries
+                                  join appl in db.Applicants on reg.ApplicantFk equals appl.Id
+                                  select new SClass
+                                  {
+                                      IdReg = reg.Id,
+                                      Family = appl.Firstname,
+                                      Name = appl.Middlename,
+                                      Lastname = appl.Lastname,
+                                      Snils = appl.Snils,
+                                      Area = appl.AreaFk - 1,
+                                      Local = appl.LocalityFk - 1,
+                                      Adress = appl.Adress,
+                                      Lgota = appl.PrivilegesFk - 1,
+                                      Pay = reg.PayAmountFk - 1,
+                                      Sernumb = reg.SerialAndNumberSert,
+                                      DateGetSert = reg.DateGetSert,
+                                      Solution = reg.SolutionFk - 1,
+                                      DateAndNumbSolutionSert = reg.DateAndNumbSolutionSert,
+                                      Comment = reg.Comment,
+                                      Trek = reg.Trek,
+                                      MailingDate = reg.MailingDate,
+                                      IdApplicant = appl.Id
+                                  }).AsExpandable().Where(predicate).ToList();
+                    };
+
+
+                    if (MyList.Count == 0)
+                        MessageBox.Show("По вашему запросу ничего не найдено :(");
+                    else
+                    {
+                        Dispatcher.Invoke(() =>
+                        {
+                            dataGrid.ItemsSource = MyList.ToList();
+                        });
+                    }
                 }
             });
         }
