@@ -249,7 +249,7 @@
                       CanUserSortColumns="False"
                       Width="180"
                       Height="149"
-                      Margin="28,2,0,5"
+                      Margin="24,0,0,5"
                       Grid.ColumnSpan="2"
                       Grid.Column="1">
                 <DataGrid.Columns>
@@ -269,11 +269,16 @@
                       AutoGenerateColumns="False"
                       Grid.Row="10" 
                       Grid.Column="3"
+                      Grid.ColumnSpan="2"
                       CanUserAddRows="False"
                       CanUserDeleteRows="False"
                       CanUserSortColumns="False"
                       VerticalAlignment="Bottom"
-                      Height="149" Margin="47,0,15,5" Grid.RowSpan="3">
+                      HorizontalAlignment="Left"
+                      Height="149"
+                      Width="130"
+                      Margin="61,0,0,5"
+                      Grid.RowSpan="3">
                 <DataGrid.Columns>
                     <DataGridTextColumn Binding="{Binding Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" IsReadOnly="True" Header="Выплаты"/>
                     <DataGridTemplateColumn>
@@ -289,15 +294,18 @@
             <!-- Льгота -->
             <DataGrid x:Name="privFilter"
                       AutoGenerateColumns="False"
-                      Grid.Row="9" 
-                      Grid.Column="3"
+                      Grid.Row="10" 
+                      Grid.Column="2"
                       CanUserAddRows="False"
                       CanUserDeleteRows="False"
                       CanUserSortColumns="False"
                       VerticalAlignment="Bottom"
+                      HorizontalAlignment="Left"
+                      Width="180"
                       Height="149" 
                       Grid.ColumnSpan="2" 
-                      Margin="92,0,41,13" Grid.RowSpan="4">
+                      Margin="42,0,0,5"
+                      Grid.RowSpan="3">
                 <DataGrid.Columns>
                     <DataGridTextColumn Binding="{Binding Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" IsReadOnly="True" Header="Льготы"/>
                     <DataGridTemplateColumn>
@@ -314,16 +322,17 @@
             <DataGrid x:Name="solFilter"
                       AutoGenerateColumns="False"
                       Grid.Row="10" 
-                      Grid.Column="3"
-                      Grid.ColumnSpan="2"
+                      Grid.Column="4"
                       CanUserAddRows="False"
                       CanUserDeleteRows="False"
                       CanUserSortColumns="False"
-                      Margin="148,0,0,5"
+                      Margin="34,0,0,5"
                       HorizontalAlignment="Left"
                       VerticalAlignment="Bottom"
                       Height="149"
-                      Width="135" Grid.RowSpan="3">
+                      Width="134"
+                      Grid.RowSpan="3"
+                      Grid.ColumnSpan="2">
                 <DataGrid.Columns>
                     <DataGridTextColumn Binding="{Binding Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" IsReadOnly="True" Header="Решение"/>
                     <DataGridTemplateColumn>
