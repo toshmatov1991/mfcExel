@@ -141,9 +141,9 @@ namespace exel_for_mfc
                                           join ap in await db.Applicants.AsNoTracking().ToListAsync() on r.ApplicantFk equals ap.Id
                                           where ap.Snils == myQuery.Snils
                                                && ap.Firstname == myQuery.Firstname
-                                               && ap.Middlename == myQuery.Firstname
-                                               && ap.Lastname == myQuery.Firstname
-                                               && ap.Adress == myQuery.Firstname
+                                               && ap.Middlename == myQuery.Middlename
+                                               && ap.Lastname == myQuery.Lastname
+                                               && ap.Adress == myQuery.Adress
                                           select new
                                           {
                                               r.Id,
@@ -157,8 +157,8 @@ namespace exel_for_mfc
 
                         string str = "";
 
-                        if (myQuery1234 == null)
-                            MessageBox.Show("Что то пошло не так");
+                        if (!myQuery1234.Any())
+                            return;
                         else
                         {
                             foreach (var item in myQuery1234)
