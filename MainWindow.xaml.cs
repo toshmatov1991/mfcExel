@@ -17,8 +17,8 @@ namespace exel_for_mfc
             Start();
             TableWindow taWindow = new();
             taWindow.Show();
-            //AdminWindow admin = new();
-            //admin.Show();
+            AdminWindow admin = new();
+            admin.Show();
             Close();
         }
 
