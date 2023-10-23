@@ -1373,7 +1373,6 @@ namespace exel_for_mfc
             {
                 return;
             }
-
             private void Button_Click_1(object sender, RoutedEventArgs e)
             {
                 Start();
@@ -1428,9 +1427,6 @@ namespace exel_for_mfc
             }
 
         }
-
-
-
         //Событие перед редактированием ячейки Добавление адреса, если ячейка пустая()
         private void TestBeginningEdit(object sender, DataGridBeginningEditEventArgs e)
         {
@@ -1498,15 +1494,14 @@ namespace exel_for_mfc
             staticWindow.ShowDialog();
         }
 
-
-        #endregion
-
-
         //Отчет
         private void Button_Click_6(object sender, RoutedEventArgs e)
         {
-            
+            ReportWindow reportWindow = new();
+            reportWindow.ShowDialog();
         }
+
+        #endregion
     }
 }
         
