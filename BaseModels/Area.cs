@@ -9,5 +9,7 @@ public partial class Area
 
     public string? AreaName { get; set; }
 
+    public int? HidingArea { get; set; }
+
     public virtual ICollection<Applicant> Applicants { get; set; } = new List<Applicant>();
 }

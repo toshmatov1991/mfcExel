@@ -12,5 +12,7 @@ public partial class SolutionType
     public string? Passwords { get; set; }
     public string? Rolle { get; set; }
 
+    public int? HidingSol { get; set; }
+
     public virtual ICollection<Registry> Registries { get; set; } = new List<Registry>();
 }

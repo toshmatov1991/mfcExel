@@ -9,5 +9,7 @@ public partial class Locality
 
     public string? LocalName { get; set; }
 
+    public int? HidingLocal { get; set; }
+
     public virtual ICollection<Applicant> Applicants { get; set; } = new List<Applicant>();
 }

@@ -73,6 +73,8 @@ public partial class ExDbContext : DbContext
 
             entity.Property(e => e.AreaName).HasMaxLength(120);
 
+            entity.Property(e => e.HidingArea);
+
         });
 
         modelBuilder.Entity<Locality>(entity =>
@@ -82,6 +84,8 @@ public partial class ExDbContext : DbContext
             entity.ToTable("Locality");
 
             entity.Property(e => e.LocalName).HasMaxLength(100);
+
+            entity.Property(e => e.HidingLocal);
 
         });
 
@@ -93,6 +97,8 @@ public partial class ExDbContext : DbContext
 
             entity.Property(e => e.Pay).HasColumnType("decimal(18, 0)");
 
+            entity.Property(e => e.HidingPay);
+
         });
 
         modelBuilder.Entity<Privilege>(entity =>
@@ -100,6 +106,8 @@ public partial class ExDbContext : DbContext
             entity.HasKey(e => e.Id).HasName("PK__Privileg__3214EC07CE9AC58C");
 
             entity.Property(e => e.PrivilegesName).HasMaxLength(100);
+
+            entity.Property(e => e.HidingPriv);
 
         });
 
@@ -148,6 +156,8 @@ public partial class ExDbContext : DbContext
             entity.Property(e => e.Passwords).HasMaxLength(30);
 
             entity.Property(e => e.Rolle).HasMaxLength(30);
+
+            entity.Property(e => e.HidingSol);
 
         });
 

@@ -9,5 +9,7 @@ public partial class PayAmount
 
     public decimal? Pay { get; set; }
 
+    public int? HidingPay { get; set; }
+
     public virtual ICollection<Registry> Registries { get; set; } = new List<Registry>();
 }

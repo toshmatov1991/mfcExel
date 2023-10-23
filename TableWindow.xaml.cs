@@ -1478,10 +1478,6 @@ namespace exel_for_mfc
                     a.DateAndNumbSolutionSert = "№ " + a.IdReg + "-СГ от " + Convert.ToDateTime(a.DateGetSert).ToString("d");
                 else return;
             }
-
-
-
-
         }
 
         //Статистические данные()

@@ -3,6 +3,7 @@ using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Spreadsheet;
 using DocumentFormat.OpenXml.Wordprocessing;
 using exel_for_mfc;
+using exel_for_mfc.FilterDB;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Win32;
 using System;
@@ -759,6 +760,80 @@ namespace exel_for_mfc
                 }
             }
             return idPay;
+        }
+        #endregion
+
+
+        #region CheckBoxesHiding
+        //Чек Район
+        private async void AreaCheck(object sender, RoutedEventArgs e)
+        {
+            using ExDbContext db = new();
+            await db.Database.ExecuteSqlRawAsync("UPDATE Area SET hidingArea={0} WHERE id={1}", 1, (AreaX.SelectedItem as Area)?.Id);
+        }
+
+        //Анчек район
+        private async void UnCheckArea(object sender, RoutedEventArgs e)
+        {
+            using ExDbContext db = new();
+            await db.Database.ExecuteSqlRawAsync("UPDATE Area SET hidingArea={0} WHERE id={1}", 0, (AreaX.SelectedItem as Area)?.Id);
+        }
+
+        //Чек локал
+        private async void CheckLocal(object sender, RoutedEventArgs e)
+        {
+            using ExDbContext db = new();
+            await db.Database.ExecuteSqlRawAsync("UPDATE Locality SET hidingLocal={0} WHERE id={1}", 1, (LocalX.SelectedItem as Locality)?.Id);
+        }
+
+        //Анчек локал
+        private async void UnCheckLocal(object sender, RoutedEventArgs e)
+        {
+            using ExDbContext db = new();
+            await db.Database.ExecuteSqlRawAsync("UPDATE Locality SET hidingLocal={0} WHERE id={1}", 0, (LocalX.SelectedItem as Locality)?.Id);
+        }
+
+        //Чек прив
+        private async void ChPriv(object sender, RoutedEventArgs e)
+        {
+            using ExDbContext db = new();
+            await db.Database.ExecuteSqlRawAsync("UPDATE Privileges SET hidingPriv={0} WHERE id={1}", 1, (PrivelX.SelectedItem as Privilege)?.Id);
+        }
+
+        //Анчек прив
+        private async void UnchPriv(object sender, RoutedEventArgs e)
+        {
+            using ExDbContext db = new();
+            await db.Database.ExecuteSqlRawAsync("UPDATE Privileges SET hidingPriv={0} WHERE id={1}", 0, (PrivelX.SelectedItem as Privilege)?.Id);
+        }
+
+
+        //Чек Пай
+        private async void ChPay(object sender, RoutedEventArgs e)
+        {
+            using ExDbContext db = new();
+            await db.Database.ExecuteSqlRawAsync("UPDATE PayAmount SET hidingPay={0} WHERE id={1}", 1, (PayX.SelectedItem as PayAmount)?.Id);
+        }
+
+        //АнЧек Пай
+        private async void UnChPay(object sender, RoutedEventArgs e)
+        {
+            using ExDbContext db = new();
+            await db.Database.ExecuteSqlRawAsync("UPDATE PayAmount SET hidingPay={0} WHERE id={1}", 0, (PayX.SelectedItem as PayAmount)?.Id);
+        }
+
+        //Чек Сол
+        private async void ChSol(object sender, RoutedEventArgs e)
+        {
+            using ExDbContext db = new();
+            await db.Database.ExecuteSqlRawAsync("UPDATE SolutionType SET hidingSol={0} WHERE id={1}", 1, (SolutionX.SelectedItem as SolutionType)?.Id);
+        }
+
+        //Анчек Сол
+        private async void UnChSol(object sender, RoutedEventArgs e)
+        {
+            using ExDbContext db = new();
+            await db.Database.ExecuteSqlRawAsync("UPDATE SolutionType SET hidingSol={0} WHERE id={1}", 0, (SolutionX.SelectedItem as SolutionType)?.Id);
         }
         #endregion
     }

@@ -9,5 +9,7 @@ public partial class Privilege
 
     public string? PrivilegesName { get; set; }
 
+    public int? HidingPriv { get; set; }
+
     public virtual ICollection<Applicant> Applicants { get; set; } = new List<Applicant>();
 }
