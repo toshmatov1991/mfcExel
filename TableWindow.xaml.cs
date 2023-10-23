@@ -20,6 +20,7 @@ using LinqKit.Core;
 using DocumentFormat.OpenXml.InkML;
 using System.Xml;
 using Microsoft.IdentityModel.Tokens;
+using DocumentFormat.OpenXml.Office2010.PowerPoint;
 
 namespace exel_for_mfc
 {
@@ -122,16 +123,16 @@ namespace exel_for_mfc
                 {
 
                     //Проверка-запрос ФИО Адрес Снилс
-                    var myQuery = await db.Applicants.FromSqlRaw("SELECT * FROM Applicant WHERE Firstname LIKE {0} AND Middlename LIKE {1} AND Lastname LIKE {2} AND Adress LIKE {3} AND Snils LIKE {4}", a.Family, a.Name, a.Lastname, a.Adress, a.Snils).AsNoTracking().FirstOrDefaultAsync();
+                    var myQuery = await db.Applicants.FromSqlRaw("SELECT * FROM Applicant WHERE Firstname LIKE {0} AND Middlename LIKE {1} AND Lastname LIKE {2} AND Adress LIKE {3} AND Snils LIKE {4}", a.Family.Trim(), a.Name.Trim(), a.Lastname.Trim(), a.Adress.Trim(), ReturnSnils(a.Snils)).AsNoTracking().FirstOrDefaultAsync();
 
                     //Проверка-запрос Снилс
-                    var myQuerySnils = await db.Applicants.FromSqlRaw("SELECT * FROM Applicant WHERE Snils LIKE {0}", a.Snils).AsNoTracking().FirstOrDefaultAsync();
+                    var myQuerySnils = await db.Applicants.FromSqlRaw("SELECT * FROM Applicant WHERE Snils LIKE {0}", ReturnSnils(a.Snils)).AsNoTracking().FirstOrDefaultAsync();
 
                     //Проверка-запрос Адреса
-                    var myQueryAdress = await db.Applicants.FromSqlRaw("SELECT * FROM Applicant WHERE Adress LIKE {0}", a.Adress).AsNoTracking().FirstOrDefaultAsync();
+                    var myQueryAdress = await db.Applicants.FromSqlRaw("SELECT * FROM Applicant WHERE Adress LIKE {0}", a.Adress.Trim()).AsNoTracking().FirstOrDefaultAsync();
 
                     //Проверка-запрос ФИО
-                    var myQueryFIO = await db.Applicants.FromSqlRaw("SELECT * FROM Applicant WHERE Firstname LIKE {0} AND Middlename LIKE {1} AND Lastname LIKE {2}", a.Family, a.Name, a.Lastname).AsNoTracking().FirstOrDefaultAsync();
+                    var myQueryFIO = await db.Applicants.FromSqlRaw("SELECT * FROM Applicant WHERE Firstname LIKE {0} AND Middlename LIKE {1} AND Lastname LIKE {2}", a.Family.Trim(), a.Name.Trim(), a.Lastname.Trim()).AsNoTracking().FirstOrDefaultAsync();
 
 
                     // 1) Если совпали все условия ФИО Адрес Снилс
@@ -514,6 +515,7 @@ namespace exel_for_mfc
                     }
 
                     Start();
+
                 }
             }
             #endregion
@@ -1428,64 +1430,82 @@ namespace exel_for_mfc
 
         }
         //Событие перед редактированием ячейки Добавление адреса, если ячейка пустая()
-        private void TestBeginningEdit(object sender, DataGridBeginningEditEventArgs e)
-        {
 
-            //Получаю название колонки
-            if (e.Column.Header.ToString() == "Адрес")
-            {
-                string content = (e.EditingEventArgs.Source as TextBlock).Text;
-                temp1 = "";
-                if (string.IsNullOrEmpty(content))
-                {
-                    //Здесь заполняю Адрес, если пустая строка
-                    AdressWindow adres = new(ref temp1);
-                    adres.ShowDialog();
-                    //Считывание строки
-                    SClass? a = e.Row.Item as SClass;
-                    a.Adress = temp1;
-                }
-                else return;
-            }
+        //private bool flagfix = true;
+        //private void TestBeginningEdit(object sender, DataGridBeginningEditEventArgs e)
+        //{
+        //    return;
+        //    ////Получаю название колонки
+        //    //if (e.Column.Header.ToString() == "Адрес" && flagfix)
+        //    //{
+        //    //    SClass? a = e.Row.Item as SClass;
+        //    //    string content = (e.EditingEventArgs.Source as TextBlock).Text;
+        //    //    temp1 = "";
+        //    //    if (string.IsNullOrEmpty(content))
+        //    //    {
+        //    //        //Здесь заполняю Адрес, если пустая строка
+        //    //        AdressWindow adres = new(ref temp1);
+        //    //        adres.ShowDialog();
+        //    //        a.Adress = temp1;
+        //    //        flagfix = false;
+        //    //        dataGrid.CancelEdit();
+        //    //        dataGrid.CancelEdit();
+        //    //        flagfix = true;
+        //    //    }
+        //    //    else return;
+        //    //}
 
-            else if (e.Column.Header.ToString() == "Серия и № сертификата")
-            {
-                SClass? a = e.Row.Item as SClass;
-                if (string.IsNullOrEmpty(a.Sernumb) || string.IsNullOrWhiteSpace(a.Sernumb))
-                    a.Sernumb = "№ " + a.IdReg;
-                else return;
-            }
+        //    //else if (e.Column.Header.ToString() == "Серия и № сертификата" && flagfix)
+        //    //{
+        //    //    SClass? a = e.Row.Item as SClass;
+        //    //    string content = (e.EditingEventArgs.Source as TextBlock).Text;
+        //    //    if (string.IsNullOrEmpty(content))
+        //    //    {
+        //    //        a.Sernumb = "№ " + a.IdReg;
+        //    //        flagfix = false;
+        //    //        dataGrid.CancelEdit();
+        //    //        dataGrid.CancelEdit();
+        //    //        flagfix = true;
+        //    //        dataGrid.Items.Refresh();
+        //    //    }
+              
+        //    //    else return;
+        //    //}
 
-            else if (e.Column.Header.ToString() == "Дата выдачи")
-            {
-                SClass? a = e.Row.Item as SClass;
-                if (a.DateGetSert.ToString() == "" || a.DateGetSert == null)
-                {
-                    DateTime dateTime = DateTime.Now;
-                    a.DateGetSert = dateTime;
-                }
-                else return;
-            }
+        //    //else if (e.Column.Header.ToString() == "Дата выдачи")
+        //    //{
+        //    //    SClass? a = e.Row.Item as SClass;
+        //    //    if (a.DateGetSert.ToString() == "" || a.DateGetSert == null)
+        //    //    {
+        //    //        DateTime dateTime = DateTime.Now;
+        //    //        a.DateGetSert = dateTime;
+        //    //    }
+        //    //    else return;
+        //    //}
 
-            else if (e.Column.Header.ToString() == "Дата и номер решения")
-            {
-                SClass? a = e.Row.Item as SClass;
-                if (a.DateAndNumbSolutionSert == "" || a.DateAndNumbSolutionSert == null || string.IsNullOrWhiteSpace(a.DateAndNumbSolutionSert))
-                    a.DateAndNumbSolutionSert = "№ " + a.IdReg + "-СГ от " + Convert.ToDateTime(a.DateGetSert).ToString("d");
-                else return;
-            }
+        //    //else if (e.Column.Header.ToString() == "Дата и номер решения")
+        //    //{
+        //    //    SClass? a = e.Row.Item as SClass;
+        //    //    if (a.DateAndNumbSolutionSert == "" || a.DateAndNumbSolutionSert == null || string.IsNullOrWhiteSpace(a.DateAndNumbSolutionSert))
+        //    //        a.DateAndNumbSolutionSert = "№ " + a.IdReg + "-СГ от " + Convert.ToDateTime(a.DateGetSert).ToString("d");
+        //    //    else return;
+        //    //}
 
-            else if (e.Column.Header.ToString() == "Дата отправки почтой")
-            {
-                SClass? a = e.Row.Item as SClass;
-                if (a.MailingDate.ToString() == "" || a.MailingDate == null || string.IsNullOrWhiteSpace(a.MailingDate.ToString()))
-                {
-                    DateTime dateTime = DateTime.Now;
-                    a.MailingDate = dateTime;
-                }   
-                else return;
-            }
-        }
+        //    //else if (e.Column.Header.ToString() == "Дата отправки почтой")
+        //    //{
+        //    //    SClass? a = e.Row.Item as SClass;
+             
+        //    //    DateTime dateTime = DateTime.Now;
+        //    //    a.MailingDate = dateTime;
+        //    //    //string? content = (e.EditingEventArgs.Source as TextBlock).Text;
+        //    //    //if (string.IsNullOrEmpty(content) || string.IsNullOrWhiteSpace(content))
+        //    //    //{
+        //    //    //    DateTime dateTime = DateTime.Now;
+        //    //    //    a.MailingDate = dateTime;
+        //    //    //}   
+        //    //    //else return;
+        //    //}
+        //}
 
         //Статистические данные()
         private void Button_Click_2(object sender, RoutedEventArgs e)
