@@ -1093,7 +1093,7 @@ namespace exel_for_mfc
                     {
                         await db1.Database.ExecuteSqlRawAsync("INSERT INTO AreaF(id, name, flag) VALUES ({0}, {1}, {2})", item.Id, item.AreaName, 0);
                     }
-                    areaFilter.ItemsSource = db1.AreaFs.ToList();
+                    areaFilter.ItemsSource = db1.AreaFs.OrderBy(u => u.Name).ToList();
 
 
                     //Населенный пункт
@@ -1102,7 +1102,7 @@ namespace exel_for_mfc
                     {
                         await db1.Database.ExecuteSqlRawAsync("INSERT INTO LocalF(id, name, flag) VALUES ({0}, {1}, {2})", item.Id, item.LocalName, 0);
                     }
-                    locFilter.ItemsSource = db1.Localves.ToList();
+                    locFilter.ItemsSource = db1.Localves.OrderBy(u => u.Name).ToList();
 
                     //Выплата
                     var pay = await db.PayAmounts.FromSqlRaw("SELECT * FROM PayAmount").ToListAsync();
@@ -1110,7 +1110,7 @@ namespace exel_for_mfc
                     {
                         await db1.Database.ExecuteSqlRawAsync("INSERT INTO PayF(id, name, flag) VALUES ({0}, {1}, {2})", item.Id, item.Pay.ToString(), 0);
                     }
-                    payFilter.ItemsSource = db1.PayFs.ToList();
+                    payFilter.ItemsSource = db1.PayFs.OrderBy(u => u.Name).ToList();
 
                     //Льготы
                     var priv = await db.Privileges.FromSqlRaw("SELECT * FROM Privileges").ToListAsync();
@@ -1120,7 +1120,7 @@ namespace exel_for_mfc
                             item.PrivilegesName = item.PrivilegesName[..17];
                         await db1.Database.ExecuteSqlRawAsync("INSERT INTO PrivF(id, name, flag) VALUES ({0}, {1}, {2})", item.Id, item.PrivilegesName, 0);
                     }
-                    privFilter.ItemsSource = db1.PrivFs.ToList();
+                    privFilter.ItemsSource = db1.PrivFs.OrderBy(u => u.Name).ToList();
 
 
                     //Решение
@@ -1129,7 +1129,7 @@ namespace exel_for_mfc
                     {
                         await db1.Database.ExecuteSqlRawAsync("INSERT INTO SolF(id, name, flag) VALUES ({0}, {1}, {2})", item.Id, item.SolutionName, 0);
                     }
-                    solFilter.ItemsSource = db1.Solves.ToList();
+                    solFilter.ItemsSource = db1.Solves.OrderBy(u => u.Name).ToList();
 
 
                 };
