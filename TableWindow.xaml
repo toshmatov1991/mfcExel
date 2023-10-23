@@ -350,7 +350,10 @@
                         SelectedDateFormat="Short"
                         Grid.Column="5"
                         Grid.Row="10"
-                        HorizontalAlignment="Left" RenderTransformOrigin="0.717,-0.282" Margin="40,18,0,10"/>
+                        HorizontalAlignment="Left"
+                        VerticalAlignment="Bottom"
+                        RenderTransformOrigin="0.717,-0.282"
+                        Margin="40,18,0,10"/>
 
             <DatePicker x:Name="dateEnd"
                         IsDropDownOpen="False"
@@ -358,7 +361,7 @@
                         Grid.Column="6"
                         Grid.Row="10"
                         HorizontalAlignment="Left"
-                        VerticalAlignment="Top" Margin="14,18,0,0" RenderTransformOrigin="0.944,0.52"/>
+                        VerticalAlignment="Bottom" Margin="14,0,0,10" RenderTransformOrigin="0.944,0.52"/>
 
 
             <!-- Кнопка применить фильтр к таблице -->
@@ -395,18 +398,19 @@
             <TextBlock 
                 Grid.Column="5" 
                 HorizontalAlignment="Left"
-                Margin="19,22,0,0" 
+                Margin="20,0,0,13" 
                 Grid.Row="10"
                 TextWrapping="Wrap"
-                VerticalAlignment="Top"><Run Language="ru-ru" Text="От"/></TextBlock>
+                VerticalAlignment="Bottom"><Run Language="ru-ru" Text="От"/></TextBlock>
 
             <TextBlock 
                 Grid.Column="5" 
                 HorizontalAlignment="Left" 
-                Margin="155,22,0,0" 
+                Margin="155,0,0,13" 
                 Grid.Row="10" 
                 TextWrapping="Wrap" 
-                VerticalAlignment="Top" Grid.ColumnSpan="2"><Run Language="ru-ru" Text="До"/></TextBlock>
+                VerticalAlignment="Bottom"
+                Grid.ColumnSpan="2"><Run Language="ru-ru" Text="До"/></TextBlock>
             <Button Content="Отчет"
                 Grid.Column="6"
                 Grid.Row="12"
