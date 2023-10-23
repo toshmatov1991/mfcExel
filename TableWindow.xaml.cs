@@ -561,7 +561,7 @@ namespace exel_for_mfc
                         a = null;
 
                     else
-                        a = e.OriginalSource.ToString().Substring(33);
+                        a = e.OriginalSource.ToString()[33..];
 
                     using ExDbContext db = new();
                     await db.Database.ExecuteSqlRawAsync("UPDATE Registry SET Comment = {0} WHERE Id = {1}", a, (dataGrid.SelectedItem as SClass)?.IdReg);
@@ -645,14 +645,14 @@ namespace exel_for_mfc
                           Name = appl.Middlename,
                           Lastname = appl.Lastname,
                           Snils = appl.Snils,
-                          //Area = ar,
-                          Local = appl.LocalityFk - 1,
+                          Area = appl.AreaFk,
+                          Local = appl.LocalityFk,
                           Adress = appl.Adress,
-                          Lgota = appl.PrivilegesFk - 1,
-                          Pay = reg.PayAmountFk - 1,
+                          Lgota = appl.PrivilegesFk,
+                          Pay = reg.PayAmountFk,
                           Sernumb = reg.SerialAndNumberSert,
                           DateGetSert = reg.DateGetSert,
-                          Solution = reg.SolutionFk - 1,
+                          Solution = reg.SolutionFk,
                           DateAndNumbSolutionSert = reg.DateAndNumbSolutionSert,
                           Comment = reg.Comment,
                           Trek = reg.Trek,
@@ -1236,15 +1236,15 @@ namespace exel_for_mfc
                     List<long> payIdL = new();
                     List<long> solIdl = new();
 
-                    areaIdL = await db1.AreaFs.Where(u => u.Flag == 1).Select(c => c.Id - 1).ToListAsync();
-                    localIdL = await db1.Localves.Where(u => u.Flag == 1).Select(c => c.Id - 1).ToListAsync();
-                    privIdL = await db1.PrivFs.Where(u => u.Flag == 1).Select(c => c.Id - 1).ToListAsync();
-                    payIdL = await db1.PayFs.Where(u => u.Flag == 1).Select(c => c.Id - 1).ToListAsync();
-                    solIdl = await db1.Solves.Where(u => u.Flag == 1).Select(c => c.Id - 1).ToListAsync();
+                    areaIdL = await db1.AreaFs.Where(u => u.Flag == 1).Select(c => c.Id).ToListAsync();
+                    localIdL = await db1.Localves.Where(u => u.Flag == 1).Select(c => c.Id).ToListAsync();
+                    privIdL = await db1.PrivFs.Where(u => u.Flag == 1).Select(c => c.Id).ToListAsync();
+                    payIdL = await db1.PayFs.Where(u => u.Flag == 1).Select(c => c.Id).ToListAsync();
+                    solIdl = await db1.Solves.Where(u => u.Flag == 1).Select(c => c.Id).ToListAsync();
 
 
                     if (areaIdL.Count != 0)
-                       // predicate = predicate.And(e => areaIdL.Contains((long)e.Area));
+                        predicate = predicate.And(e => areaIdL.Contains((long)e.Area));
                     //else
                     //{
                     //    //areaIdL = db1.AreaFs.Select(c => c.Id - 1).ToList();
@@ -1328,14 +1328,14 @@ namespace exel_for_mfc
                                       Name = appl.Middlename,
                                       Lastname = appl.Lastname,
                                       Snils = appl.Snils,
-                                     // Area = appl.AreaFk - 1,
-                                      Local = appl.LocalityFk - 1,
+                                      Area = appl.AreaFk,
+                                      Local = appl.LocalityFk,
                                       Adress = appl.Adress,
-                                      Lgota = appl.PrivilegesFk - 1,
-                                      Pay = reg.PayAmountFk - 1,
+                                      Lgota = appl.PrivilegesFk,
+                                      Pay = reg.PayAmountFk,
                                       Sernumb = reg.SerialAndNumberSert,
                                       DateGetSert = reg.DateGetSert,
-                                      Solution = reg.SolutionFk - 1,
+                                      Solution = reg.SolutionFk,
                                       DateAndNumbSolutionSert = reg.DateAndNumbSolutionSert,
                                       Comment = reg.Comment,
                                       Trek = reg.Trek,
@@ -1399,14 +1399,14 @@ namespace exel_for_mfc
                                   Name = appl.Middlename,
                                   Lastname = appl.Lastname,
                                   Snils = appl.Snils,
-                                 // Area = appl.AreaFk - 1,
-                                  Local = appl.LocalityFk - 1,
+                                  Area = appl.AreaFk,
+                                  Local = appl.LocalityFk,
                                   Adress = appl.Adress,
-                                  Lgota = appl.PrivilegesFk - 1,
-                                  Pay = reg.PayAmountFk - 1,
+                                  Lgota = appl.PrivilegesFk,
+                                  Pay = reg.PayAmountFk,
                                   Sernumb = reg.SerialAndNumberSert,
                                   DateGetSert = reg.DateGetSert,
-                                  Solution = reg.SolutionFk - 1,
+                                  Solution = reg.SolutionFk,
                                   DateAndNumbSolutionSert = reg.DateAndNumbSolutionSert,
                                   Comment = reg.Comment,
                                   Trek = reg.Trek,
