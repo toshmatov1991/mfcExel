@@ -71,13 +71,15 @@ namespace exel_for_mfc
                               IdApplicant = appl.Id
                           }).ToList();
 
-                dataGrid.ItemsSource = MyList;
+               
 
                 AreaCombobox = db.Areas.FromSqlRaw("SELECT * FROM Area").Where(u => u.HidingArea == 1).ToList();
                 LocalCombobox = db.Localities.FromSqlRaw("SELECT * FROM Locality").Where(u => u.HidingLocal == 1).ToList();
                 PayCombobox = db.PayAmounts.FromSqlRaw("SELECT * FROM PayAmount").Where(u => u.HidingPay == 1).ToList();
                 PrivelCombobox = db.Privileges.FromSqlRaw("SELECT * FROM Privileges").Where(u => u.HidingPriv == 1).ToList();
                 SolCombobox = db.SolutionTypes.FromSqlRaw("SELECT * FROM SolutionType").Where(u => u.HidingSol == 1).ToList();
+
+                dataGrid.ItemsSource = MyList;
             };
         }
       
@@ -1089,7 +1091,7 @@ namespace exel_for_mfc
                 {
                     //Район
                     using FdbContext db1 = new();
-                    var s = await db.Areas.FromSqlRaw("SELECT * FROM Area").ToListAsync();
+                    var s = await db.Areas.FromSqlRaw("SELECT * FROM Area").Where(u => u.HidingArea == 1).ToListAsync();
                     foreach (var item in s)
                     {
                         await db1.Database.ExecuteSqlRawAsync("INSERT INTO AreaF(id, name, flag) VALUES ({0}, {1}, {2})", item.Id, item.AreaName, 0);
@@ -1098,7 +1100,7 @@ namespace exel_for_mfc
 
 
                     //Населенный пункт
-                    var local = await db.Localities.FromSqlRaw("SELECT * FROM Locality").ToListAsync();
+                    var local = await db.Localities.FromSqlRaw("SELECT * FROM Locality").Where(u => u.HidingLocal == 1).ToListAsync();
                     foreach (var item in local)
                     {
                         await db1.Database.ExecuteSqlRawAsync("INSERT INTO LocalF(id, name, flag) VALUES ({0}, {1}, {2})", item.Id, item.LocalName, 0);
@@ -1106,7 +1108,7 @@ namespace exel_for_mfc
                     locFilter.ItemsSource = db1.Localves.OrderBy(u => u.Name).ToList();
 
                     //Выплата
-                    var pay = await db.PayAmounts.FromSqlRaw("SELECT * FROM PayAmount").ToListAsync();
+                    var pay = await db.PayAmounts.FromSqlRaw("SELECT * FROM PayAmount").Where(u => u.HidingPay == 1).ToListAsync();
                     foreach (var item in pay)
                     {
                         await db1.Database.ExecuteSqlRawAsync("INSERT INTO PayF(id, name, flag) VALUES ({0}, {1}, {2})", item.Id, item.Pay.ToString(), 0);
@@ -1114,7 +1116,7 @@ namespace exel_for_mfc
                     payFilter.ItemsSource = db1.PayFs.OrderBy(u => u.Name).ToList();
 
                     //Льготы
-                    var priv = await db.Privileges.FromSqlRaw("SELECT * FROM Privileges").ToListAsync();
+                    var priv = await db.Privileges.FromSqlRaw("SELECT * FROM Privileges").Where(u => u.HidingPriv == 1).ToListAsync();
                     foreach (var item in priv)
                     {
                         if (item.PrivilegesName.Length >= 17)
@@ -1125,7 +1127,7 @@ namespace exel_for_mfc
 
 
                     //Решение
-                    var sol = await db.SolutionTypes.FromSqlRaw("SELECT * FROM SolutionType").ToListAsync();
+                    var sol = await db.SolutionTypes.FromSqlRaw("SELECT * FROM SolutionType").Where(u => u.HidingSol == 1).ToListAsync();
                     foreach (var item in sol)
                     {
                         await db1.Database.ExecuteSqlRawAsync("INSERT INTO SolF(id, name, flag) VALUES ({0}, {1}, {2})", item.Id, item.SolutionName, 0);
