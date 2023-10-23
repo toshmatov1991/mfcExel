@@ -48,6 +48,7 @@ namespace exel_for_mfc
             {
                 MyList = (from reg in db.Registries
                           join appl in db.Applicants on reg.ApplicantFk equals appl.Id
+                          join areaa in db.Areas on appl.AreaFk equals areaa.Id
                           select new SClass
                           {
                               IdReg = reg.Id,
@@ -55,14 +56,14 @@ namespace exel_for_mfc
                               Name = appl.Middlename,
                               Lastname = appl.Lastname,
                               Snils = appl.Snils,
-                              Area = appl.AreaFk - 1,
-                              Local = appl.LocalityFk - 1,
+                              Area = appl.AreaFk,
+                              Local = appl.LocalityFk,
                               Adress = appl.Adress,
-                              Lgota = appl.PrivilegesFk - 1,
-                              Pay = reg.PayAmountFk - 1,
+                              Lgota = appl.PrivilegesFk,
+                              Pay = reg.PayAmountFk,
                               Sernumb = reg.SerialAndNumberSert,
                               DateGetSert = reg.DateGetSert,
-                              Solution = reg.SolutionFk - 1,
+                              Solution = reg.SolutionFk,
                               DateAndNumbSolutionSert = reg.DateAndNumbSolutionSert,
                               Comment = reg.Comment,
                               Trek = reg.Trek,
@@ -72,11 +73,11 @@ namespace exel_for_mfc
 
                 dataGrid.ItemsSource = MyList;
 
-                AreaCombobox = db.Areas.FromSqlRaw("SELECT * FROM Area").ToList();
-                LocalCombobox = db.Localities.FromSqlRaw("SELECT * FROM Locality").ToList();
-                PayCombobox = db.PayAmounts.FromSqlRaw("SELECT * FROM PayAmount").ToList();
-                PrivelCombobox = db.Privileges.FromSqlRaw("SELECT * FROM Privileges").ToList();
-                SolCombobox = db.SolutionTypes.FromSqlRaw("SELECT * FROM SolutionType").ToList();
+                AreaCombobox = db.Areas.FromSqlRaw("SELECT * FROM Area").Where(u => u.HidingArea == 1).ToList();
+                LocalCombobox = db.Localities.FromSqlRaw("SELECT * FROM Locality").Where(u => u.HidingLocal == 1).ToList();
+                PayCombobox = db.PayAmounts.FromSqlRaw("SELECT * FROM PayAmount").Where(u => u.HidingPay == 1).ToList();
+                PrivelCombobox = db.Privileges.FromSqlRaw("SELECT * FROM Privileges").Where(u => u.HidingPriv == 1).ToList();
+                SolCombobox = db.SolutionTypes.FromSqlRaw("SELECT * FROM SolutionType").Where(u => u.HidingSol == 1).ToList();
             };
         }
       
@@ -644,7 +645,7 @@ namespace exel_for_mfc
                           Name = appl.Middlename,
                           Lastname = appl.Lastname,
                           Snils = appl.Snils,
-                          Area = appl.AreaFk - 1,
+                          //Area = ar,
                           Local = appl.LocalityFk - 1,
                           Adress = appl.Adress,
                           Lgota = appl.PrivilegesFk - 1,
@@ -1243,7 +1244,7 @@ namespace exel_for_mfc
 
 
                     if (areaIdL.Count != 0)
-                        predicate = predicate.And(e => areaIdL.Contains((long)e.Area));
+                       // predicate = predicate.And(e => areaIdL.Contains((long)e.Area));
                     //else
                     //{
                     //    //areaIdL = db1.AreaFs.Select(c => c.Id - 1).ToList();
@@ -1327,7 +1328,7 @@ namespace exel_for_mfc
                                       Name = appl.Middlename,
                                       Lastname = appl.Lastname,
                                       Snils = appl.Snils,
-                                      Area = appl.AreaFk - 1,
+                                     // Area = appl.AreaFk - 1,
                                       Local = appl.LocalityFk - 1,
                                       Adress = appl.Adress,
                                       Lgota = appl.PrivilegesFk - 1,
@@ -1398,7 +1399,7 @@ namespace exel_for_mfc
                                   Name = appl.Middlename,
                                   Lastname = appl.Lastname,
                                   Snils = appl.Snils,
-                                  Area = appl.AreaFk - 1,
+                                 // Area = appl.AreaFk - 1,
                                   Local = appl.LocalityFk - 1,
                                   Adress = appl.Adress,
                                   Lgota = appl.PrivilegesFk - 1,

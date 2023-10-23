@@ -95,8 +95,10 @@
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
                                 <ComboBox ItemsSource="{Binding Path=AreaCombobox, RelativeSource={RelativeSource AncestorType={x:Type Window}}}"
-                                      DisplayMemberPath="AreaName"
-                                      SelectedIndex="{Binding Area, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" DropDownClosed="AreaComboEvent" MouseDoubleClick="AreaExeption" KeyDown="AreaKeyDown" KeyUp="AreaKeyUp"/>
+                                          SelectedValue="{Binding Area, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                          DisplayMemberPath="AreaName"
+                                          SelectedValuePath="Id"
+                                          DropDownClosed="AreaComboEvent"/>
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
@@ -104,8 +106,10 @@
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
                                 <ComboBox ItemsSource="{Binding Path=LocalCombobox, RelativeSource={RelativeSource AncestorType={x:Type Window}}}"
-                                      DisplayMemberPath="LocalName"
-                                      SelectedIndex="{Binding Local, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" DropDownClosed="LocalComboEvent">
+                                          SelectedValue="{Binding Local, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                          DisplayMemberPath="LocalName"
+                                          SelectedValuePath="Id"
+                                          DropDownClosed="LocalComboEvent">
                                 </ComboBox>
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
@@ -115,8 +119,10 @@
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
                                 <ComboBox ItemsSource="{Binding Path=PrivelCombobox, RelativeSource={RelativeSource AncestorType={x:Type Window}}}"
-                                      DisplayMemberPath="PrivilegesName"
-                                      SelectedIndex="{Binding Lgota, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" DropDownClosed="PrivilegesComboEvent">
+                                          SelectedValue="{Binding Lgota, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                          DisplayMemberPath="PrivilegesName"
+                                          SelectedValuePath="Id"
+                                          DropDownClosed="PrivilegesComboEvent">
                                 </ComboBox>
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
@@ -139,8 +145,10 @@
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
                                 <ComboBox ItemsSource="{Binding Path=SolCombobox, RelativeSource={RelativeSource AncestorType={x:Type Window}}}"
-                                      DisplayMemberPath="SolutionName"
-                                      SelectedIndex="{Binding Solution, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" DropDownClosed="SolutionComboEvent">
+                                          SelectedValue="{Binding Solution, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                          DisplayMemberPath="SolutionName"
+                                          SelectedValuePath="Id"
+                                          DropDownClosed="SolutionComboEvent">
                                 </ComboBox>
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
@@ -150,8 +158,10 @@
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
                                 <ComboBox ItemsSource="{Binding Path=PayCombobox, RelativeSource={RelativeSource AncestorType={x:Type Window}}}"
-                                      DisplayMemberPath="Pay"
-                                      SelectedIndex="{Binding Pay, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" DropDownClosed="PayComboEvent">
+                                          SelectedValue="{Binding Pay, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                          DisplayMemberPath="Pay"
+                                          SelectedValuePath="Id" 
+                                          DropDownClosed="PayComboEvent">
                                 </ComboBox>
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
