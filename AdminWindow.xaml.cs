@@ -34,9 +34,6 @@ namespace exel_for_mfc
             InitializeComponent();
             StartAdminWin();
         }
-
-
-
         #region Редактирование таблиц
         private void StartAdminWin()
         {
@@ -600,7 +597,7 @@ namespace exel_for_mfc
                                         temp = 0;
                                         using (ExDbContext db = new())
                                         {
-
+                                            
                                             db.Applicants.Add(app);
                                             db.SaveChanges();
                                             //Делай запрос чтоб получить данного заявителя и вставлю id в idApplicant
@@ -762,8 +759,6 @@ namespace exel_for_mfc
             return idPay;
         }
         #endregion
-
-
         #region CheckBoxesHiding
         //Чек Район
         private async void AreaCheck(object sender, RoutedEventArgs e)

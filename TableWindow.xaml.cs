@@ -1481,6 +1481,17 @@ namespace exel_for_mfc
                     a.DateAndNumbSolutionSert = "№ " + a.IdReg + "-СГ от " + Convert.ToDateTime(a.DateGetSert).ToString("d");
                 else return;
             }
+
+            else if (e.Column.Header.ToString() == "Дата отправки почтой")
+            {
+                SClass? a = e.Row.Item as SClass;
+                if (a.MailingDate.ToString() == "" || a.MailingDate == null || string.IsNullOrWhiteSpace(a.MailingDate.ToString()))
+                {
+                    DateTime dateTime = DateTime.Now;
+                    a.MailingDate = dateTime;
+                }   
+                else return;
+            }
         }
 
         //Статистические данные()
