@@ -50,7 +50,9 @@ namespace exel_for_mfc
             {
                 if (string.IsNullOrEmpty(Stroenie.Text) && string.IsNullOrEmpty(numCorpus.Text))
                     TableWindow.temp1 = $"{ulOrDom.Text} {name.Text}, {dom.Text} {numberDom.Text}, кв.{kvartira.Text}";
-                if(!string.IsNullOrEmpty(Stroenie.Text))
+                if (string.IsNullOrEmpty(Stroenie.Text) && string.IsNullOrEmpty(numCorpus.Text) && string.IsNullOrEmpty(kvartira.Text))
+                    TableWindow.temp1 = $"{ulOrDom.Text} {name.Text}, {dom.Text} {numberDom.Text}";
+                if (!string.IsNullOrEmpty(Stroenie.Text))
                     TableWindow.temp1 = $"{ulOrDom.Text} {name.Text}, {dom.Text} {numberDom.Text}{"/" + Stroenie.Text}, кв.{kvartira.Text}";
                 if (!string.IsNullOrEmpty(numCorpus.Text))
                     TableWindow.temp1 = $"{ulOrDom.Text} {name.Text}, {dom.Text} {numberDom.Text} {"корп." + numCorpus.Text}, кв.{kvartira.Text}";

@@ -14,14 +14,15 @@ using System.Windows.Shapes;
 
 namespace exel_for_mfc
 {
-    /// <summary>
-    /// Логика взаимодействия для ReportWindow.xaml
-    /// </summary>
     public partial class ReportWindow : Window
     {
         public ReportWindow()
         {
             InitializeComponent();
         }
+
+
+
+
     }
 }
