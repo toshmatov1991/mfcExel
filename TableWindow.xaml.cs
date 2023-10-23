@@ -198,7 +198,7 @@ namespace exel_for_mfc
                                     {
                                         //Добавить новую запись в таблицу Регистр
                                         var inReg = await db.Database.ExecuteSqlInterpolatedAsync($"INSERT INTO Registry(Applicant_FK, SerialAndNumberSert, DateGetSert, PayAmount_FK, Solution_FK, DateAndNumbSolutionSert, Comment, Trek, MailingDate) VALUES({getIdLastApp.Id}, {a.Sernumb}, {a.DateGetSert}, {null}, {null}, {a.DateAndNumbSolutionSert}, {a.Comment}, {a.Trek}, {a.MailingDate})");
-                                        await Task.Delay(75);
+                                        await Task.Delay(50);
                                         if (inReg == 0)
                                             MessageBox.Show("Произошла ошибка вставки записи в таблицу Регистр\nПовторите попытку");
                                     }
@@ -207,7 +207,7 @@ namespace exel_for_mfc
                                     {
                                         //Добавить новую запись в таблицу Регистр
                                         var inReg = await db.Database.ExecuteSqlInterpolatedAsync($"INSERT INTO Registry(Applicant_FK, SerialAndNumberSert, DateGetSert, PayAmount_FK, Solution_FK, DateAndNumbSolutionSert, Comment, Trek, MailingDate) VALUES({getIdLastApp.Id}, {a.Sernumb}, {a.DateGetSert}, {a.Pay} ,  {a.Solution}, {a.DateAndNumbSolutionSert}, {a.Comment}, {a.Trek}, {a.MailingDate})");
-                                        await Task.Delay(75);
+                                        await Task.Delay(50);
                                         if (inReg == 0)
                                             MessageBox.Show("Произошла ошибка вставки записи в таблицу Регистр\nПовторите попытку");
                                     }
@@ -237,13 +237,13 @@ namespace exel_for_mfc
 
                         string str = "";
 
-                        if (myQuery1234 == null)
+                        if (!myQuery1234.Any())
                             return;
                         else
                         {
                             foreach (var item in myQuery1234)
                             {
-                                str += $"\nId-{item.Id} {item.Firstname} {item.Middlename.Substring(0, 1)}. {item.Lastname.Substring(0, 1)}. {item.SerialAndNumberSert} {Convert.ToDateTime(item.DateGetSert).ToString("d", new CultureInfo("Ru-ru"))} {ReturnStr(item.sol)}\n";
+                                str += $"\nId-{item.Id} {item.Firstname} {item.Middlename[..1]}. {item.Lastname[..1]}. {item.SerialAndNumberSert} {Convert.ToDateTime(item.DateGetSert).ToString("d", new CultureInfo("Ru-ru"))} {ReturnStr(item.sol)}\n";
                             }
 
                             //Информировать что такая запись найдена
@@ -254,7 +254,7 @@ namespace exel_for_mfc
                                 if (a.Lgota == null)
                                 {
                                     //Добавить новую запись в таблицу заявитель
-                                    var inApp = await db.Database.ExecuteSqlInterpolatedAsync($"INSERT INTO Applicant(Firstname, Middlename, Lastname, Area_FK, Locality_FK, Adress, Snils, Privileges_FK) VALUES({a.Family}, {a.Name}, {a.Lastname}, {a.Area} ,  {a.Local}, {a.Adress}, {ReturnSnils(a.Snils)}, {null})");
+                                    var inApp = await db.Database.ExecuteSqlInterpolatedAsync($"INSERT INTO Applicant(Firstname, Middlename, Lastname, Area_FK, Locality_FK, Adress, Snils, Privileges_FK) VALUES({a.Family.Trim()}, {a.Name.Trim()}, {a.Lastname.Trim()}, {a.Area} ,  {a.Local}, {a.Adress.Trim()}, {ReturnSnils(a.Snils)}, {null})");
                                     if (inApp == 0)
                                         MessageBox.Show("Произошла ошибка при вставке записи в таблицу Заявитель\nПовторите попытку");
 
@@ -263,7 +263,7 @@ namespace exel_for_mfc
                                 else if (a.Area != null && a.Local != null && a.Lgota != null)
                                 {
                                     //Добавить новую запись в таблицу заявитель
-                                    var inApp = await db.Database.ExecuteSqlInterpolatedAsync($"INSERT INTO Applicant(Firstname, Middlename, Lastname, Area_FK, Locality_FK, Adress, Snils, Privileges_FK) VALUES({a.Family}, {a.Name}, {a.Lastname}, {a.Area}, {a.Local}, {a.Adress}, {ReturnSnils(a.Snils)}, {a.Lgota})");
+                                    var inApp = await db.Database.ExecuteSqlInterpolatedAsync($"INSERT INTO Applicant(Firstname, Middlename, Lastname, Area_FK, Locality_FK, Adress, Snils, Privileges_FK) VALUES({a.Family.Trim()}, {a.Name.Trim()}, {a.Lastname.Trim()}, {a.Area}, {a.Local}, {a.Adress.Trim()}, {ReturnSnils(a.Snils)}, {a.Lgota})");
                                     if (inApp == 0)
                                         MessageBox.Show("Произошла ошибка при вставке записи в таблицу Заявитель\nПовторите попытку");
                                 }
@@ -319,13 +319,13 @@ namespace exel_for_mfc
 
                         string str = "";
 
-                        if (myQuery1234 == null)
+                        if (!myQuery1234.Any())
                             return;
                         else
                         {
                             foreach (var item in myQuery1234)
                             {
-                                str += $"\nId-{item.Id} {item.Firstname} {item.Middlename.Substring(0, 1)}. {item.Lastname.Substring(0, 1)}. {item.SerialAndNumberSert} {Convert.ToDateTime(item.DateGetSert).ToString("d", new CultureInfo("Ru-ru"))} {ReturnStr(item.sol)}\n";
+                                str += $"\nId-{item.Id} {item.Firstname} {item.Middlename[..1]}. {item.Lastname[..1]}. {item.SerialAndNumberSert} {Convert.ToDateTime(item.DateGetSert).ToString("d", new CultureInfo("Ru-ru"))} {ReturnStr(item.sol)}\n";
                             }
 
                             //Информировать что такая запись найдена
@@ -336,7 +336,7 @@ namespace exel_for_mfc
                                 if (a.Lgota == null)
                                 {
                                     //Добавить новую запись в таблицу заявитель
-                                    var inApp = await db.Database.ExecuteSqlInterpolatedAsync($"INSERT INTO Applicant(Firstname, Middlename, Lastname, Area_FK, Locality_FK, Adress, Snils, Privileges_FK) VALUES({a.Family}, {a.Name}, {a.Lastname}, {a.Area}, {a.Local}, {a.Adress}, {ReturnSnils(a.Snils)}, {null})");
+                                    var inApp = await db.Database.ExecuteSqlInterpolatedAsync($"INSERT INTO Applicant(Firstname, Middlename, Lastname, Area_FK, Locality_FK, Adress, Snils, Privileges_FK) VALUES({a.Family.Trim()}, {a.Name.Trim()}, {a.Lastname.Trim()}, {a.Area}, {a.Local}, {a.Adress.Trim()}, {ReturnSnils(a.Snils)}, {null})");
                                     if (inApp == 0)
                                         MessageBox.Show("Произошла ошибка при вставке записи в таблицу Заявитель\nПовторите попытку");
 
@@ -345,7 +345,7 @@ namespace exel_for_mfc
                                 else if (a.Area != null && a.Local != null && a.Lgota != null)
                                 {
                                     //Добавить новую запись в таблицу заявитель
-                                    var inApp = await db.Database.ExecuteSqlInterpolatedAsync($"INSERT INTO Applicant(Firstname, Middlename, Lastname, Area_FK, Locality_FK, Adress, Snils, Privileges_FK) VALUES({a.Family}, {a.Name}, {a.Lastname}, {a.Area}, {a.Local}, {a.Adress}, {ReturnSnils(a.Snils)}, {a.Lgota})");
+                                    var inApp = await db.Database.ExecuteSqlInterpolatedAsync($"INSERT INTO Applicant(Firstname, Middlename, Lastname, Area_FK, Locality_FK, Adress, Snils, Privileges_FK) VALUES({a.Family.Trim()}, {a.Name.Trim()}, {a.Lastname.Trim()}, {a.Area}, {a.Local}, {a.Adress.Trim()}, {ReturnSnils(a.Snils)}, {a.Lgota})");
                                     if (inApp == 0)
                                         MessageBox.Show("Произошла ошибка при вставке записи в таблицу Заявитель\nПовторите попытку");
                                 }
@@ -362,7 +362,7 @@ namespace exel_for_mfc
                                     {
                                         //Добавить новую запись в таблицу Регистр
                                         var inReg = await db.Database.ExecuteSqlInterpolatedAsync($"INSERT INTO Registry(Applicant_FK, SerialAndNumberSert, DateGetSert, PayAmount_FK, Solution_FK, DateAndNumbSolutionSert, Comment, Trek, MailingDate) VALUES({getIdLastApp.Id}, {a.Sernumb}, {a.DateGetSert}, {null}, {null}, {a.DateAndNumbSolutionSert}, {a.Comment}, {a.Trek}, {a.MailingDate})");
-                                        await Task.Delay(75);
+                                        await Task.Delay(50);
                                         if (inReg == 0)
                                             MessageBox.Show("Произошла ошибка при вставке записи в таблицу Регистр\nПовторите попытку");
                                     }
@@ -370,8 +370,8 @@ namespace exel_for_mfc
                                     else if (a.Pay != null && a.Solution != null)
                                     {
                                         //Добавить новую запись в таблицу Регистр
-                                        var inReg = await db.Database.ExecuteSqlInterpolatedAsync($"INSERT INTO Registry(Applicant_FK, SerialAndNumberSert, DateGetSert, PayAmount_FK, Solution_FK, DateAndNumbSolutionSert, Comment, Trek, MailingDate) VALUES({getIdLastApp.Id}, {a.Sernumb}, {a.DateGetSert}, {a.Pay + 1}, {a.Solution + 1}, {a.DateAndNumbSolutionSert}, {a.Comment}, {a.Trek}, {a.MailingDate})");
-                                        await Task.Delay(75);
+                                        var inReg = await db.Database.ExecuteSqlInterpolatedAsync($"INSERT INTO Registry(Applicant_FK, SerialAndNumberSert, DateGetSert, PayAmount_FK, Solution_FK, DateAndNumbSolutionSert, Comment, Trek, MailingDate) VALUES({getIdLastApp.Id}, {a.Sernumb}, {a.DateGetSert}, {a.Pay}, {a.Solution}, {a.DateAndNumbSolutionSert}, {a.Comment}, {a.Trek}, {a.MailingDate})");
+                                        await Task.Delay(50);
                                         if (inReg == 0)
                                             MessageBox.Show("Произошла ошибка при вставке записи в таблицу Регистр\nПовторите попытку");
                                     }
@@ -403,13 +403,13 @@ namespace exel_for_mfc
 
                         string str = "";
 
-                        if (myQuery1234 == null)
+                        if (!myQuery1234.Any())
                             return;
                         else
                         {
                             foreach (var item in myQuery1234)
                             {
-                                str += $"\nId-{item.Id} {item.Firstname} {item.Middlename.Substring(0, 1)}. {item.Lastname[..1]}. {item.SerialAndNumberSert} {Convert.ToDateTime(item.DateGetSert).ToString("d", new CultureInfo("Ru-ru"))} {ReturnStr(item.sol)}\n";
+                                str += $"\nId-{item.Id} {item.Firstname} {item.Middlename[..1]}. {item.Lastname[..1]}. {item.SerialAndNumberSert} {Convert.ToDateTime(item.DateGetSert).ToString("d", new CultureInfo("Ru-ru"))} {ReturnStr(item.sol)}\n";
                             }
 
                             //Информировать что такая запись найдена
@@ -420,7 +420,7 @@ namespace exel_for_mfc
                                 if (a.Lgota == null)
                                 {
                                     //Добавить новую запись в таблицу заявитель
-                                    var inApp = await db.Database.ExecuteSqlInterpolatedAsync($"INSERT INTO Applicant(Firstname, Middlename, Lastname, Area_FK, Locality_FK, Adress, Snils, Privileges_FK) VALUES({a.Family}, {a.Name}, {a.Lastname}, {a.Area}, {a.Local}, {a.Adress}, {ReturnSnils(a.Snils)}, {null})");
+                                    var inApp = await db.Database.ExecuteSqlInterpolatedAsync($"INSERT INTO Applicant(Firstname, Middlename, Lastname, Area_FK, Locality_FK, Adress, Snils, Privileges_FK) VALUES({a.Family.Trim()}, {a.Name.Trim()}, {a.Lastname.Trim()}, {a.Area}, {a.Local}, {a.Adress.Trim()}, {ReturnSnils(a.Snils)}, {null})");
                                     if (inApp == 0)
                                         MessageBox.Show("Произошла ошибка при вставке записи в таблицу Заявитель\nПовторите попытку");
 
@@ -429,7 +429,7 @@ namespace exel_for_mfc
                                 else if (a.Area != null && a.Local != null && a.Lgota != null)
                                 {
                                     //Добавить новую запись в таблицу заявитель
-                                    var inApp = await db.Database.ExecuteSqlInterpolatedAsync($"INSERT INTO Applicant(Firstname, Middlename, Lastname, Area_FK, Locality_FK, Adress, Snils, Privileges_FK) VALUES({a.Family}, {a.Name}, {a.Lastname}, {a.Area}, {a.Local}, {a.Adress}, {ReturnSnils(a.Snils)}, {a.Lgota})");
+                                    var inApp = await db.Database.ExecuteSqlInterpolatedAsync($"INSERT INTO Applicant(Firstname, Middlename, Lastname, Area_FK, Locality_FK, Adress, Snils, Privileges_FK) VALUES({a.Family.Trim()}, {a.Name.Trim()}, {a.Lastname.Trim()}, {a.Area}, {a.Local}, {a.Adress.Trim()}, {ReturnSnils(a.Snils)}, {a.Lgota})");
                                     if (inApp == 0)
                                         MessageBox.Show("Произошла ошибка при вставке записи в таблицу Заявитель\nПовторите попытку");
                                 }
@@ -446,7 +446,7 @@ namespace exel_for_mfc
                                     {
                                         //Добавить новую запись в таблицу Регистр
                                         var inReg = await db.Database.ExecuteSqlInterpolatedAsync($"INSERT INTO Registry(Applicant_FK, SerialAndNumberSert, DateGetSert, PayAmount_FK, Solution_FK, DateAndNumbSolutionSert, Comment, Trek, MailingDate) VALUES({getIdLastApp.Id}, {a.Sernumb}, {a.DateGetSert}, {null}, {null}, {a.DateAndNumbSolutionSert}, {a.Comment}, {a.Trek}, {a.MailingDate})");
-                                        await Task.Delay(75);
+                                        await Task.Delay(50);
                                         if (inReg == 0)
                                             MessageBox.Show("Произошла ошибка при вставке записи в таблицу Регистр\nПовторите попытку");
                                     }
@@ -455,7 +455,7 @@ namespace exel_for_mfc
                                     {
                                         //Добавить новую запись в таблицу Регистр
                                         var inReg = await db.Database.ExecuteSqlInterpolatedAsync($"INSERT INTO Registry(Applicant_FK, SerialAndNumberSert, DateGetSert, PayAmount_FK, Solution_FK, DateAndNumbSolutionSert, Comment, Trek, MailingDate) VALUES({getIdLastApp.Id}, {a.Sernumb}, {a.DateGetSert}, {a.Pay}, {a.Solution}, {a.DateAndNumbSolutionSert}, {a.Comment}, {a.Trek}, {a.MailingDate})");
-                                        await Task.Delay(75);
+                                        await Task.Delay(50);
                                         if (inReg == 0)
                                             MessageBox.Show("Произошла ошибка при вставке записи в таблицу Регистр\nПовторите попытку");
                                     }
@@ -472,7 +472,7 @@ namespace exel_for_mfc
                         if (a.Lgota == null)
                         {
                             //Добавить новую запись в таблицу заявитель
-                            var inApp = await db.Database.ExecuteSqlInterpolatedAsync($"INSERT INTO Applicant(Firstname, Middlename, Lastname, Area_FK, Locality_FK, Adress, Snils, Privileges_FK) VALUES({a.Family}, {a.Name}, {a.Lastname}, {a.Area}, {a.Local}, {a.Adress}, {ReturnSnils(a.Snils)}, {null})");
+                            var inApp = await db.Database.ExecuteSqlInterpolatedAsync($"INSERT INTO Applicant(Firstname, Middlename, Lastname, Area_FK, Locality_FK, Adress, Snils, Privileges_FK) VALUES({a.Family.Trim()}, {a.Name.Trim()}, {a.Lastname.Trim()}, {a.Area}, {a.Local}, {a.Adress.Trim()}, {ReturnSnils(a.Snils)}, {null})");
                             if (inApp == 0)
                                 MessageBox.Show("Произошла ошибка при вставке записи в таблицу Заявитель\nПовторите попытку");
                         }
@@ -480,7 +480,7 @@ namespace exel_for_mfc
                         else if (a.Area != null && a.Local != null && a.Lgota != null)
                         {
                             //Добавить новую запись в таблицу заявитель
-                            var inApp = await db.Database.ExecuteSqlInterpolatedAsync($"INSERT INTO Applicant(Firstname, Middlename, Lastname, Area_FK, Locality_FK, Adress, Snils, Privileges_FK) VALUES({a.Family}, {a.Name}, {a.Lastname}, {a.Area}, {a.Local}, {a.Adress}, {ReturnSnils(a.Snils)}, {a.Lgota})");
+                            var inApp = await db.Database.ExecuteSqlInterpolatedAsync($"INSERT INTO Applicant(Firstname, Middlename, Lastname, Area_FK, Locality_FK, Adress, Snils, Privileges_FK) VALUES({a.Family.Trim()}, {a.Name.Trim()}, {a.Lastname.Trim()}, {a.Area}, {a.Local}, {a.Adress.Trim()}, {ReturnSnils(a.Snils)}, {a.Lgota})");
                             if (inApp == 0)
                                 MessageBox.Show("Произошла ошибка при вставке записи в таблицу Заявитель\nПовторите попытку");
                         }
@@ -497,7 +497,7 @@ namespace exel_for_mfc
                             {
                                 //Добавить новую запись в таблицу Регистр
                                 var inReg = await db.Database.ExecuteSqlInterpolatedAsync($"INSERT INTO Registry(Applicant_FK, SerialAndNumberSert, DateGetSert, PayAmount_FK, Solution_FK, DateAndNumbSolutionSert, Comment, Trek, MailingDate) VALUES({getIdLastApp.Id}, {a.Sernumb}, {a.DateGetSert}, {null}, {null}, {a.DateAndNumbSolutionSert}, {a.Comment}, {a.Trek}, {a.MailingDate})");
-                                await Task.Delay(75);
+                                await Task.Delay(50);
                                 if (inReg == 0)
                                     MessageBox.Show("Произошла ошибка при вставке записи в таблицу Регистр\nПовторите попытку");
                             }
@@ -506,12 +506,11 @@ namespace exel_for_mfc
                             {
                                 //Добавить новую запись в таблицу Регистр
                                 var inReg = await db.Database.ExecuteSqlInterpolatedAsync($"INSERT INTO Registry(Applicant_FK, SerialAndNumberSert, DateGetSert, PayAmount_FK, Solution_FK, DateAndNumbSolutionSert, Comment, Trek, MailingDate) VALUES({getIdLastApp.Id}, {a.Sernumb}, {a.DateGetSert}, {a.Pay}, {a.Solution}, {a.DateAndNumbSolutionSert}, {a.Comment}, {a.Trek}, {a.MailingDate})");
-                                await Task.Delay(75);
+                                await Task.Delay(50);
                                 if (inReg == 0)
                                     MessageBox.Show("Произошла ошибка при вставке записи в таблицу Регистр\nПовторите попытку");
                             }
                         }
-                     
                     }
 
                     Start();
