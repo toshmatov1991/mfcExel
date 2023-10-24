@@ -1367,14 +1367,6 @@ namespace exel_for_mfc
             {
                 return;
             }
-            private void AreaKeyDown(object sender, KeyEventArgs e)
-            {
-                return;
-            }
-            private void AreaKeyUp(object sender, KeyEventArgs e)
-            {
-                return;
-            }
             private void Button_Click_1(object sender, RoutedEventArgs e)
             {
                 Start();
@@ -1482,8 +1474,7 @@ namespace exel_for_mfc
             else if (e.Column.Header.ToString() == "Дата отправки почтой")
             {
                 SClass? a = e.Row.Item as SClass;
-                string? content = (e.EditingEventArgs.Source as TextBlock).Text;
-                if (string.IsNullOrEmpty(content))
+                if (a.MailingDate.ToString() == "" || a.MailingDate == null)
                 {
                     DateTime dateTime = DateTime.Now;
                     a.MailingDate = dateTime;
