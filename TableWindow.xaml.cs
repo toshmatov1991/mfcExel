@@ -97,8 +97,8 @@ namespace exel_for_mfc
             {
                 // Редактирование ячейки (Обновление строки) - Заявитель - Регистр
 
-                //Обновление таблицы Заявитель
-                var upApp = await db.Database.ExecuteSqlRawAsync("UPDATE Applicant SET Firstname = {0}, Middlename = {1}, Lastname = {2}, Adress = {3}, Snils = {4} WHERE Id = {5}", a.Family.Trim(), a.Name.Trim(), a.Lastname.Trim(), a.Adress.Trim(), ReturnSnils(a.Snils), a.IdApplicant) ;
+                    //Обновление таблицы Заявитель
+                var upApp = await db.Database.ExecuteSqlRawAsync("UPDATE Applicant SET Firstname = {0}, Middlename = {1}, Lastname = {2}, Adress = {3}, Snils = {4} WHERE Id = {5}", a.Family, a.Name, a.Lastname, a.Adress, a.Snils, a.IdApplicant) ;
                 if (upApp == 0)
                     MessageBox.Show("Произошла ошибка при обновлении таблицы(Заявитель)\nПовторите попытку");
                 //Обновление таблицы Регистр

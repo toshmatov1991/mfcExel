@@ -79,18 +79,18 @@
             <DataGrid x:Name="dataGrid"
                   Grid.ColumnSpan="8"
                   Grid.RowSpan="11"
-                  CanUserSortColumns="True"
+                  CanUserSortColumns="False"
                   CanUserDeleteRows="False"
                   AutoGenerateColumns="False"
                   CanUserAddRows="True"
                   CellEditEnding="dataGrid_CellEditEnding" 
-                  Margin="3,44,3,52" AllowDrop="True" RowBackground="White">
+                  Margin="3,44,3,52" AllowDrop="False" RowBackground="White">
                 <DataGrid.Columns>
                     <DataGridTextColumn Binding="{Binding IdReg, UpdateSourceTrigger=PropertyChanged}" IsReadOnly="True" Header="№п/п"/>
-                    <DataGridTextColumn Binding="{Binding Family, UpdateSourceTrigger=PropertyChanged}" Header="Фамилия"/>
-                    <DataGridTextColumn Binding="{Binding Name, UpdateSourceTrigger=PropertyChanged}" Header="Имя"/>
-                    <DataGridTextColumn Binding="{Binding Lastname, UpdateSourceTrigger=PropertyChanged}" Header="Отчество"/>
-                    <DataGridTextColumn Binding="{Binding Snils, UpdateSourceTrigger=PropertyChanged}" Header="Снилс"/>
+                    <DataGridTextColumn Binding="{Binding Family, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Header="Фамилия"/>
+                    <DataGridTextColumn Binding="{Binding Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Header="Имя"/>
+                    <DataGridTextColumn Binding="{Binding Lastname, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Header="Отчество"/>
+                    <DataGridTextColumn Binding="{Binding Snils, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Header="Снилс"/>
                     <DataGridTemplateColumn CanUserSort="True" Header="Район" SortMemberPath="Area">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
@@ -114,7 +114,7 @@
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
-                    <DataGridTextColumn Binding="{Binding Adress, UpdateSourceTrigger=PropertyChanged}" Header="Адрес"/>
+                    <DataGridTextColumn Binding="{Binding Adress, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Header="Адрес"/>
                     <DataGridTemplateColumn Header="Льгота" CanUserSort="True" SortMemberPath="Lgota">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
