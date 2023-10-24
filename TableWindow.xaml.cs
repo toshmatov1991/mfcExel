@@ -1429,83 +1429,68 @@ namespace exel_for_mfc
             }
 
         }
+
         //Событие перед редактированием ячейки Добавление адреса, если ячейка пустая()
+        private void TestBeginningEdit(object sender, DataGridBeginningEditEventArgs e)
+        {
+            //Получаю название колонки
+            if (e.Column.Header.ToString() == "Адрес")
+            {
+                SClass? a = e.Row.Item as SClass;
+                string content = (e.EditingEventArgs.Source as TextBlock).Text;
+                temp1 = "";
+                if (string.IsNullOrEmpty(content))
+                {
+                    //Здесь заполняю Адрес, если пустая строка
+                    AdressWindow adres = new(ref temp1);
+                    adres.ShowDialog();
+                    a.Adress = temp1;
+                }
+                else return;
+            }
 
-        //private bool flagfix = true;
-        //private void TestBeginningEdit(object sender, DataGridBeginningEditEventArgs e)
-        //{
-        //    return;
-        //    ////Получаю название колонки
-        //    //if (e.Column.Header.ToString() == "Адрес" && flagfix)
-        //    //{
-        //    //    SClass? a = e.Row.Item as SClass;
-        //    //    string content = (e.EditingEventArgs.Source as TextBlock).Text;
-        //    //    temp1 = "";
-        //    //    if (string.IsNullOrEmpty(content))
-        //    //    {
-        //    //        //Здесь заполняю Адрес, если пустая строка
-        //    //        AdressWindow adres = new(ref temp1);
-        //    //        adres.ShowDialog();
-        //    //        a.Adress = temp1;
-        //    //        flagfix = false;
-        //    //        dataGrid.CancelEdit();
-        //    //        dataGrid.CancelEdit();
-        //    //        flagfix = true;
-        //    //    }
-        //    //    else return;
-        //    //}
+            else if (e.Column.Header.ToString() == "Серия и № сертификата")
+            {
+                SClass? a = e.Row.Item as SClass;
+                string content = (e.EditingEventArgs.Source as TextBlock).Text;
+                if (string.IsNullOrEmpty(content))
+                {
+                    a.Sernumb = "№ " + a.IdReg;
+                }
+                else return;
+            }
 
-        //    //else if (e.Column.Header.ToString() == "Серия и № сертификата" && flagfix)
-        //    //{
-        //    //    SClass? a = e.Row.Item as SClass;
-        //    //    string content = (e.EditingEventArgs.Source as TextBlock).Text;
-        //    //    if (string.IsNullOrEmpty(content))
-        //    //    {
-        //    //        a.Sernumb = "№ " + a.IdReg;
-        //    //        flagfix = false;
-        //    //        dataGrid.CancelEdit();
-        //    //        dataGrid.CancelEdit();
-        //    //        flagfix = true;
-        //    //        dataGrid.Items.Refresh();
-        //    //    }
-              
-        //    //    else return;
-        //    //}
+            else if (e.Column.Header.ToString() == "Дата выдачи")
+            {
+                SClass? a = e.Row.Item as SClass;
+                if (a.DateGetSert.ToString() == "" || a.DateGetSert == null)
+                {
+                    DateTime dateTime = DateTime.Now;
+                    a.DateGetSert = dateTime;
+                }
+                else return;
+            }
 
-        //    //else if (e.Column.Header.ToString() == "Дата выдачи")
-        //    //{
-        //    //    SClass? a = e.Row.Item as SClass;
-        //    //    if (a.DateGetSert.ToString() == "" || a.DateGetSert == null)
-        //    //    {
-        //    //        DateTime dateTime = DateTime.Now;
-        //    //        a.DateGetSert = dateTime;
-        //    //    }
-        //    //    else return;
-        //    //}
+            else if (e.Column.Header.ToString() == "Дата и номер решения")
+            {
+                SClass? a = e.Row.Item as SClass;
+                if (a.DateAndNumbSolutionSert == "" || a.DateAndNumbSolutionSert == null || string.IsNullOrWhiteSpace(a.DateAndNumbSolutionSert))
+                    a.DateAndNumbSolutionSert = "№ " + a.IdReg + "-СГ от " + Convert.ToDateTime(a.DateGetSert).ToString("d");
+                else return;
+            }
 
-        //    //else if (e.Column.Header.ToString() == "Дата и номер решения")
-        //    //{
-        //    //    SClass? a = e.Row.Item as SClass;
-        //    //    if (a.DateAndNumbSolutionSert == "" || a.DateAndNumbSolutionSert == null || string.IsNullOrWhiteSpace(a.DateAndNumbSolutionSert))
-        //    //        a.DateAndNumbSolutionSert = "№ " + a.IdReg + "-СГ от " + Convert.ToDateTime(a.DateGetSert).ToString("d");
-        //    //    else return;
-        //    //}
-
-        //    //else if (e.Column.Header.ToString() == "Дата отправки почтой")
-        //    //{
-        //    //    SClass? a = e.Row.Item as SClass;
-             
-        //    //    DateTime dateTime = DateTime.Now;
-        //    //    a.MailingDate = dateTime;
-        //    //    //string? content = (e.EditingEventArgs.Source as TextBlock).Text;
-        //    //    //if (string.IsNullOrEmpty(content) || string.IsNullOrWhiteSpace(content))
-        //    //    //{
-        //    //    //    DateTime dateTime = DateTime.Now;
-        //    //    //    a.MailingDate = dateTime;
-        //    //    //}   
-        //    //    //else return;
-        //    //}
-        //}
+            else if (e.Column.Header.ToString() == "Дата отправки почтой")
+            {
+                SClass? a = e.Row.Item as SClass;
+                string? content = (e.EditingEventArgs.Source as TextBlock).Text;
+                if (string.IsNullOrEmpty(content))
+                {
+                    DateTime dateTime = DateTime.Now;
+                    a.MailingDate = dateTime;
+                }
+                else return;
+            }
+        }
 
         //Статистические данные()
         private void Button_Click_2(object sender, RoutedEventArgs e)
@@ -1522,6 +1507,7 @@ namespace exel_for_mfc
         }
 
         #endregion
+
     }
 }
         

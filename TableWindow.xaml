@@ -84,7 +84,7 @@
                   AutoGenerateColumns="False"
                   CanUserAddRows="True"
                   CellEditEnding="dataGrid_CellEditEnding" 
-                  Margin="3,44,3,52" AllowDrop="False" RowBackground="White">
+                  Margin="3,44,3,52" AllowDrop="False" RowBackground="White" BeginningEdit="TestBeginningEdit">
                 <DataGrid.Columns>
                     <DataGridTextColumn Binding="{Binding IdReg, UpdateSourceTrigger=PropertyChanged}" IsReadOnly="True" Header="№п/п"/>
                     <DataGridTextColumn Binding="{Binding Family, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Header="Фамилия"/>
