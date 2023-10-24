@@ -29,32 +29,34 @@ namespace exel_for_mfc
 {
     public partial class AdminWindow : Window
     {
+        private int temp = 0;
         public AdminWindow()
         {
             InitializeComponent();
+            nam.Content = "Поставить все галочки";
             StartAdminWin();
         }
         #region Редактирование таблиц
-        private void StartAdminWin()
+        private async void StartAdminWin()
         {
             using ExDbContext db = new();
 
-            var AreaDataGrid = db.Areas.FromSqlRaw("SELECT * FROM Area").ToList();
+            var AreaDataGrid = await db.Areas.FromSqlRaw("SELECT * FROM Area").ToListAsync();
             AreaX.ItemsSource = AreaDataGrid.ToList();
 
-            var LocalDataGrid = db.Localities.FromSqlRaw("SELECT * FROM Locality").ToList();
+            var LocalDataGrid = await db.Localities.FromSqlRaw("SELECT * FROM Locality").ToListAsync();
             LocalX.ItemsSource = LocalDataGrid.ToList();
 
-            var PayDataGrid = db.PayAmounts.FromSqlRaw("SELECT * FROM PayAmount").ToList();
+            var PayDataGrid = await db.PayAmounts.FromSqlRaw("SELECT * FROM PayAmount").ToListAsync();
             PayX.ItemsSource = PayDataGrid.ToList();
 
-            var PrivelDataGrid = db.Privileges.FromSqlRaw("SELECT * FROM Privileges").ToList();
+            var PrivelDataGrid = await db.Privileges.FromSqlRaw("SELECT * FROM Privileges").ToListAsync();
             PrivelX.ItemsSource = PrivelDataGrid.ToList();
 
-            var SolDataGrid = db.SolutionTypes.FromSqlRaw("SELECT * FROM SolutionType").ToList();
+            var SolDataGrid = await db.SolutionTypes.FromSqlRaw("SELECT * FROM SolutionType").ToListAsync();
             SolutionX.ItemsSource = SolDataGrid.ToList();
 
-            var SolDataGridForAdmin = db.SolutionTypes.FromSqlRaw("SELECT * FROM SolutionType").Take(2).ToList();
+            var SolDataGridForAdmin = await db.SolutionTypes.FromSqlRaw("SELECT * FROM SolutionType").Take(2).ToListAsync();
             AdminsX.ItemsSource = SolDataGridForAdmin.ToList();
 
         }
@@ -831,6 +833,38 @@ namespace exel_for_mfc
             await db.Database.ExecuteSqlRawAsync("UPDATE SolutionType SET hidingSol={0} WHERE id={1}", 0, (SolutionX.SelectedItem as SolutionType)?.Id);
         }
         #endregion
+
+
+        //Поставить все галочки
+        private async void Button_Click_1(object sender, RoutedEventArgs e)
+        {
+            if(temp == 0)
+            {
+                nam.Content = "Убрать все галочки";
+                using ExDbContext db = new();
+                await db.Database.ExecuteSqlRawAsync("UPDATE SolutionType SET hidingSol={0}", 1);
+                await db.Database.ExecuteSqlRawAsync("UPDATE PayAmount SET hidingPay={0}", 1);
+                await db.Database.ExecuteSqlRawAsync("UPDATE Privileges SET hidingPriv={0}", 1);
+                await db.Database.ExecuteSqlRawAsync("UPDATE Locality SET hidingLocal={0}", 1);
+                await db.Database.ExecuteSqlRawAsync("UPDATE Area SET hidingArea={0}", 1);
+                StartAdminWin();
+                temp = 1;
+            }
+
+            else if (temp == 1)
+            {
+                nam.Content = "Поставить все галочки";
+                temp = 0;
+                using ExDbContext db = new();
+                await db.Database.ExecuteSqlRawAsync("UPDATE SolutionType SET hidingSol={0}", 0);
+                await db.Database.ExecuteSqlRawAsync("UPDATE PayAmount SET hidingPay={0}", 0);
+                await db.Database.ExecuteSqlRawAsync("UPDATE Privileges SET hidingPriv={0}", 0);
+                await db.Database.ExecuteSqlRawAsync("UPDATE Locality SET hidingLocal={0}", 0);
+                await db.Database.ExecuteSqlRawAsync("UPDATE Area SET hidingArea={0}", 0);
+                StartAdminWin();
+            }
+
+        }
     }
 }
 
