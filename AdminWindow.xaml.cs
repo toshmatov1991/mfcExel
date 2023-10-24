@@ -224,6 +224,7 @@ namespace exel_for_mfc
         private async void Button_Click(object sender, RoutedEventArgs e)
         {
             await GoIntegration();
+            StartAdminWin();
         }
 
         //Хочу в ТГУ
@@ -643,6 +644,7 @@ namespace exel_for_mfc
                 {
                     Area area = new();
                     area.AreaName = str;
+                    area.HidingArea = 1;
                     db.Areas.Add(area);
                     db.SaveChanges();
                     // И ветнуть id нового
@@ -670,6 +672,7 @@ namespace exel_for_mfc
                 {
                     Locality loc = new();
                     loc.LocalName = str;
+                    loc.HidingLocal = 1;
                     db.Localities.Add(loc);
                     db.SaveChanges();
                     // И ветнуть id нового
@@ -696,6 +699,7 @@ namespace exel_for_mfc
                 {
                     Privilege privilege = new();
                     privilege.PrivilegesName = str;
+                    privilege.HidingPriv = 1;
                     db.Privileges.Add(privilege);
                     db.SaveChanges();
                     // И ветнуть id нового
@@ -723,6 +727,7 @@ namespace exel_for_mfc
                 {
                     SolutionType solution = new();
                     solution.SolutionName = str;
+                    solution.HidingSol = 1;
                     db.SolutionTypes.Add(solution);
                     db.SaveChanges();
                     // И ветнуть id нового
@@ -749,6 +754,7 @@ namespace exel_for_mfc
                 {
                     PayAmount pays = new();
                     pays.Pay = Convert.ToDecimal(str);
+                    pays.HidingPay = 1;
                     db.PayAmounts.Add(pays);
                     db.SaveChanges();
                     // И ветнуть id нового
@@ -867,18 +873,3 @@ namespace exel_for_mfc
         }
     }
 }
-
-
-    
-
-
-
-
-
-
-
-
-
-
-            
-                
