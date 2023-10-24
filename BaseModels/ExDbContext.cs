@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using DocumentFormat.OpenXml.Spreadsheet;
+using exel_for_mfc;
 using Microsoft.EntityFrameworkCore;
 
 namespace exel_for_mfc;
@@ -11,7 +13,7 @@ public partial class ExDbContext : DbContext
     }
 
     public ExDbContext(DbContextOptions<ExDbContext> options)
-        : base(options)
+    : base(options)
     {
     }
 
@@ -98,6 +100,16 @@ public partial class ExDbContext : DbContext
             entity.Property(e => e.Pay).HasColumnType("decimal(18, 0)");
 
             entity.Property(e => e.HidingPay);
+
+            entity.Property(e => e.Mkr).HasMaxLength(30);
+
+            entity.Property(e => e.Ulica).HasMaxLength(30);
+
+            entity.Property(e => e.Numbedom).HasMaxLength(30);
+
+            entity.Property(e => e.Stroenie).HasMaxLength(30);
+
+            entity.Property(e => e.Kvartira).HasMaxLength(30);
 
         });
 

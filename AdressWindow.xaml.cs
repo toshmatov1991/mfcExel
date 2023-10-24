@@ -23,6 +23,11 @@ namespace exel_for_mfc
             name.Focus();
         }
 
+
+
+
+
+
         //Добавить адрес
         private void Button_Click(object sender, RoutedEventArgs e)
         {

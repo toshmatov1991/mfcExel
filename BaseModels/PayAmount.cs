@@ -11,5 +11,15 @@ public partial class PayAmount
 
     public int? HidingPay { get; set; }
 
+    public string? Mkr { get; set; }
+
+    public string? Ulica { get; set; }
+
+    public string? Numbedom { get; set; }
+
+    public string? Stroenie { get; set; }
+
+    public string? Kvartira { get; set; }
+
     public virtual ICollection<Registry> Registries { get; set; } = new List<Registry>();
 }
