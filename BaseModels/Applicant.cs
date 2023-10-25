@@ -8,23 +8,18 @@ public partial class Applicant
 {
     public int Id { get; set; }
 
-    [ConcurrencyCheck]
     public string? Firstname { get; set; }
 
-    [ConcurrencyCheck]
     public string? Middlename { get; set; }
 
-    [ConcurrencyCheck]
     public string? Lastname { get; set; }
 
     public int? AreaFk { get; set; }
 
     public int? LocalityFk { get; set; }
 
-    [ConcurrencyCheck]
     public string? Adress { get; set; }
 
-    [ConcurrencyCheck]
     public string? Snils { get; set; }
 
     public int? PrivilegesFk { get; set; }

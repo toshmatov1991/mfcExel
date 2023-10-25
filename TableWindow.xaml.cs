@@ -902,7 +902,7 @@ namespace exel_for_mfc
                                         else
                                         {
                                             using ExDbContext db = new();
-                                            var GetNameOfArea = await db.Areas.Where(u => u.Id == Convert.ToInt32(cell.CellValue.Text) + 1).FirstOrDefaultAsync();
+                                            var GetNameOfArea = await db.Areas.Where(u => u.Id == Convert.ToInt32(cell.CellValue.Text)).FirstOrDefaultAsync();
                                             cell.CellValue = new CellValue(GetNameOfArea.AreaName);
                                             newRow.AppendChild(cell);
                                         }
@@ -923,7 +923,7 @@ namespace exel_for_mfc
                                         else
                                         {
                                             using ExDbContext db = new();
-                                            var GetNameOfLocal = await db.Localities.Where(u => u.Id == Convert.ToInt32(cell.CellValue.Text) + 1).FirstOrDefaultAsync();
+                                            var GetNameOfLocal = await db.Localities.Where(u => u.Id == Convert.ToInt32(cell.CellValue.Text)).FirstOrDefaultAsync();
                                             cell.CellValue = new CellValue(GetNameOfLocal.LocalName);
                                             newRow.AppendChild(cell);
                                         }
@@ -943,7 +943,7 @@ namespace exel_for_mfc
                                         else
                                         {
                                             using ExDbContext db = new();
-                                            var GetNameOfLocal = await db.Privileges.Where(u => u.Id == Convert.ToInt32(cell.CellValue.Text) + 1).FirstOrDefaultAsync();
+                                            var GetNameOfLocal = await db.Privileges.Where(u => u.Id == Convert.ToInt32(cell.CellValue.Text)).FirstOrDefaultAsync();
                                             cell.CellValue = new CellValue(GetNameOfLocal.PrivilegesName);
                                             newRow.AppendChild(cell);
                                         }
@@ -961,7 +961,7 @@ namespace exel_for_mfc
                                         else
                                         {
                                             using ExDbContext db = new();
-                                            var GetNameOfLocal = await db.PayAmounts.Where(u => u.Id == Convert.ToInt32(cell.CellValue.Text) + 1).FirstOrDefaultAsync();
+                                            var GetNameOfLocal = await db.PayAmounts.Where(u => u.Id == Convert.ToInt32(cell.CellValue.Text)).FirstOrDefaultAsync();
                                             cell.CellValue = new CellValue((decimal)GetNameOfLocal.Pay);
                                             newRow.AppendChild(cell);
                                         }
@@ -979,7 +979,7 @@ namespace exel_for_mfc
                                         else
                                         {
                                             using ExDbContext db = new();
-                                            var GetNameOfLocal = await db.SolutionTypes.Where(u => u.Id == Convert.ToInt32(cell.CellValue.Text) + 1).FirstOrDefaultAsync();
+                                            var GetNameOfLocal = await db.SolutionTypes.Where(u => u.Id == Convert.ToInt32(cell.CellValue.Text)).FirstOrDefaultAsync();
                                             cell.CellValue = new CellValue(GetNameOfLocal.SolutionName);
                                             newRow.AppendChild(cell);
                                         }

@@ -7,6 +7,27 @@
         mc:Ignorable="d" Icon="Resources\logomfc.png" WindowStartupLocation="CenterScreen"
         Title="Отчет" Height="700" Width="1200">
     <Grid>
-        
+        <DataGrid x:Name="dataReport"
+                  Grid.ColumnSpan="8"
+                  Grid.RowSpan="11"
+                  CanUserSortColumns="False"
+                  CanUserDeleteRows="False"
+                  AutoGenerateColumns="False"
+                  CanUserAddRows="True" 
+                  Margin="3,44,3,52"
+                  AllowDrop="False"
+                  RowBackground="White">
+            <DataGrid.Columns>
+                <DataGridTextColumn Binding="{Binding IdReg, UpdateSourceTrigger=PropertyChanged}" IsReadOnly="True" Header="№п/п"/>
+                <DataGridTextColumn Binding="{Binding Family, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Header="Фамилия"/>
+                <DataGridTextColumn Binding="{Binding Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Header="Имя"/>
+                <DataGridTextColumn Binding="{Binding Lastname, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Header="Отчество"/>
+                <DataGridTextColumn Binding="{Binding Snils, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Header="Снилс"/>
+                <DataGridTextColumn Binding="{Binding Adress, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Header="Адрес"/>
+                <DataGridTextColumn Binding="{Binding Sernumb, UpdateSourceTrigger=PropertyChanged}" Header="Серия и № сертификата"/>
+                <DataGridTextColumn Binding="{Binding DateAndNumbSolutionSert, UpdateSourceTrigger=PropertyChanged}" Header="Дата и номер решения"/>
+                <DataGridTextColumn Binding="{Binding Trek, UpdateSourceTrigger=PropertyChanged}" Header="Трек"/>
+            </DataGrid.Columns>
+       </DataGrid>
     </Grid>
 </Window>
