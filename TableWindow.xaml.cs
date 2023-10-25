@@ -571,61 +571,45 @@ namespace exel_for_mfc
         #endregion
         #region Поиск()
         //Поиск(Нормально)
-        private void Button_Click_3(object sender, RoutedEventArgs e)
+        private async void Button_Click_3(object sender, RoutedEventArgs e)
         {
-            GoSerchNoPainHohuVTgu();
-            switch (filterSearch.Text)
+            await Task.Run(() =>
             {
-                case "По всем полям":
-                    dataGrid.ItemsSource = MyList.Where(u => $"{u.IdReg}{u.Family}{u.Name}{u.Lastname}{u.Snils}{u.Adress}{u.Sernumb}".Replace(" ", "").ToLower().Contains(SearchTable.Text.Replace(" ", "").ToLower())).ToList();
-
-                    break;
-
-                case "Фамилия":
-                    dataGrid.ItemsSource = MyList.Where(u => u.Family != null && u.Family.Replace(" ", "").ToLower().Contains(SearchTable.Text.Replace(" ", "").ToLower())).ToList();
-                    break;
-
-                case "Имя":
-                    dataGrid.ItemsSource = MyList.Where(u => u.Name != null && u.Name.Replace(" ", "").ToLower().Contains(SearchTable.Text.Replace(" ", "").ToLower())).ToList();
-                    break;
-
-                case "Отчество":
-                    dataGrid.ItemsSource = MyList.Where(u => u.Lastname != null && u.Lastname.Replace(" ", "").ToLower().Contains(SearchTable.Text.Replace(" ", "").ToLower())).ToList();
-                    break;
-
-                case "ФИО":
-                    dataGrid.ItemsSource = MyList.Where(u => $"{u.Family}{u.Name}{u.Lastname}".Replace(" ", "").ToLower().Contains(SearchTable.Text.Replace(" ", "").ToLower())).ToList();
-                    break;
-
-                case "Снилс":
-                    dataGrid.ItemsSource = MyList.Where(u => u.Snils != null
-                                            && u.Snils.Replace(" ", "").Replace("-", "").Contains(SearchTable.Text.Replace(" ", "").Replace("-", ""))).ToList();
-                    break;
-
-                case "Адрес":
-                    dataGrid.ItemsSource = MyList.Where(u => u.Adress != null
-                                                  && u.Adress.Replace(" ", "").ToLower().Contains(SearchTable.Text.Replace(" ", "").ToLower())).ToList();
-                    break;
-
-                case "Серия и номер сертификата":
-                    dataGrid.ItemsSource = MyList.Where(u => u.Sernumb != null && u.Sernumb.Replace(" ", "").ToLower().Contains(SearchTable.Text.Replace(" ", "").ToLower())).ToList();
-                    break;
-
-                case "По ID":
-                    dataGrid.ItemsSource = MyList.Where(u => u.IdReg.ToString() != null && u.IdReg.ToString().Replace(" ", "") == SearchTable.Text.Replace(" ", "")).ToList();
-                    break;
-
-                default:
+                Dispatcher.Invoke(() =>
+                {
+                    GoSerchNoPainHohuVTgu();
+                    MyList = filterSearch.Text switch
+                    {
+                        "По всем полям" => MyList.Where(u => $"{u.IdReg}{u.Family}{u.Name}{u.Lastname}{u.Snils}{u.Adress}{u.Sernumb}".Replace(" ", "").ToLower().Contains(SearchTable.Text.Replace(" ", "").ToLower())).ToList(),
+                        "Фамилия" => MyList.Where(u => u.Family != null && u.Family.Replace(" ", "").ToLower().Contains(SearchTable.Text.Replace(" ", "").ToLower())).ToList(),
+                        "Имя" => MyList.Where(u => u.Name != null && u.Name.Replace(" ", "").ToLower().Contains(SearchTable.Text.Replace(" ", "").ToLower())).ToList(),
+                        "Отчество" => MyList.Where(u => u.Lastname != null && u.Lastname.Replace(" ", "").ToLower().Contains(SearchTable.Text.Replace(" ", "").ToLower())).ToList(),
+                        "ФИО" => MyList.Where(u => $"{u.Family}{u.Name}{u.Lastname}".Replace(" ", "").ToLower().Contains(SearchTable.Text.Replace(" ", "").ToLower())).ToList(),
+                        "Снилс" => MyList.Where(u => u.Snils != null && u.Snils.Replace(" ", "").Replace("-", "").Contains(SearchTable.Text.Replace(" ", "").Replace("-", ""))).ToList(),
+                        "Адрес" => MyList.Where(u => u.Adress != null && u.Adress.Replace(" ", "").ToLower().Contains(SearchTable.Text.Replace(" ", "").ToLower())).ToList(),
+                        "Серия и номер сертификата" => MyList.Where(u => u.Sernumb != null && u.Sernumb.Replace(" ", "").ToLower().Contains(SearchTable.Text.Replace(" ", "").ToLower())).ToList(),
+                        "По ID" => MyList.Where(u => u.IdReg.ToString() != null && u.IdReg.ToString().Replace(" ", "") == SearchTable.Text.Replace(" ", "")).ToList(),
+                        _ => MyList.ToList(),
+                    };
                     dataGrid.ItemsSource = MyList.ToList();
-                    break;
-            }
+                });
+            });
         }
 
         //Событие срабатывает когда поле очищается, и возвращает весь список в таблицу(нормально)
-        private void ClearSearc(object sender, KeyEventArgs e)
+        private async void ClearSearc(object sender, KeyEventArgs e)
         {
-            if (string.IsNullOrEmpty(SearchTable.Text) || string.IsNullOrWhiteSpace(SearchTable.Text))
-                dataGrid.ItemsSource = MyList;
+            await Task.Run(() =>
+            {
+                Dispatcher.Invoke(() =>
+                {
+                    if (string.IsNullOrEmpty(SearchTable.Text) || string.IsNullOrWhiteSpace(SearchTable.Text))
+                    {
+                        GoSerchNoPainHohuVTgu();
+                        dataGrid.ItemsSource = MyList;
+                    }
+                });
+            });     
         }
 
         //Задача поиска(нормально)
@@ -1356,11 +1340,11 @@ namespace exel_for_mfc
             
         #endregion  
         #region Обработка возможных исключений и другие мелочи
-        private void AreaExeption(object sender, MouseButtonEventArgs e)
+        private void GoStartWindow(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            return;
+            MainWindow mainWindow = new();
+            mainWindow.Show();
         }
-
         private void Button_Click_1(object sender, RoutedEventArgs e)
         {
             Start();
@@ -1452,7 +1436,7 @@ namespace exel_for_mfc
                 if (a.DateGetSert.ToString() == "" || a.DateGetSert == null)
                 {
                     DateTime dateTime = DateTime.Now;
-                    a.DateGetSert = dateTime;
+                    a.DateGetSert = Convert.ToDateTime(dateTime.ToString("d", new CultureInfo("ru-RU")));
                 }
                 else return;
             }
@@ -1461,7 +1445,7 @@ namespace exel_for_mfc
             {
                 SClass? a = e.Row.Item as SClass;
                 if (a.DateAndNumbSolutionSert == "" || a.DateAndNumbSolutionSert == null || string.IsNullOrWhiteSpace(a.DateAndNumbSolutionSert))
-                    a.DateAndNumbSolutionSert = "№ " + a.IdReg + "-СГ от " + Convert.ToDateTime(a.DateGetSert).ToString("d");
+                    a.DateAndNumbSolutionSert = "№ " + a.IdReg + "-СГ от " + Convert.ToDateTime(a.DateGetSert).ToString("d", new CultureInfo("ru-RU"));
                 else return;
             }
 
@@ -1471,7 +1455,7 @@ namespace exel_for_mfc
                 if (a.MailingDate.ToString() == "" || a.MailingDate == null)
                 {
                     DateTime dateTime = DateTime.Now;
-                    a.MailingDate = dateTime;
+                    a.MailingDate = Convert.ToDateTime(dateTime.ToString("d", new CultureInfo("ru-RU")));
                 }
                 else return;
             }
@@ -1493,10 +1477,6 @@ namespace exel_for_mfc
 
         #endregion
 
-        private void GoStartWindow(object sender, System.ComponentModel.CancelEventArgs e)
-        {
-            MainWindow mainWindow = new();
-            mainWindow.Show();
-        }
+     
     }
 }
