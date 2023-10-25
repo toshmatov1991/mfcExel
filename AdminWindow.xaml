@@ -60,7 +60,7 @@
                 <DataGridTemplateColumn Header="Показать/Скрыть" Width="110">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <CheckBox IsChecked="{Binding HidingLocal, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Checked="CheckLocal" Unloaded="UnCheckLocal"/>
+                            <CheckBox IsChecked="{Binding HidingLocal, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Checked="CheckLocal" Unchecked="UnCheckLocal"/>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
@@ -84,7 +84,7 @@
                 <DataGridTemplateColumn Header="Показать/Скрыть" Width="110">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <CheckBox IsChecked="{Binding HidingPriv, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Checked="ChPriv" Unloaded="UnchPriv"/>
+                            <CheckBox IsChecked="{Binding HidingPriv, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Checked="ChPriv" Unchecked="UnchPriv"/>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
