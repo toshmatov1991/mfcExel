@@ -108,7 +108,7 @@
                 <DataGridTemplateColumn Header="Показать/Скрыть">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <CheckBox IsChecked="{Binding HidingPay, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Checked="ChPay" Unloaded="UnChPay"/>
+                            <CheckBox IsChecked="{Binding HidingPay, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Checked="ChPay" Unchecked="UnChPay"/>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>

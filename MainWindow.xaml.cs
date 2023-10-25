@@ -19,11 +19,11 @@ namespace exel_for_mfc
             //reportWindow.Show();
             TableWindow taWindow = new();
             taWindow.Show();
-           //AdminWindow admin = new();
-           //admin.Show();
+           AdminWindow admin = new();
+           admin.Show();
             //AdressWindow adressWindow = new();
             //adressWindow.Show();
-            //Close();
+            Close();
         }
 
         private async void Button_Click(object sender, RoutedEventArgs e)

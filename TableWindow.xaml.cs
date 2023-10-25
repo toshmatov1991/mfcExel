@@ -855,8 +855,6 @@ namespace exel_for_mfc
                                 worksheetPart.Worksheet.InsertAt(lstColumns, 0);
 
 
-
-
                             Sheets sheets = workbookPart.Workbook.AppendChild(new Sheets());
                             Sheet sheet = new() { Id = workbookPart.GetIdOfPart(worksheetPart), SheetId = 1, Name = "Sheet1" };
 
@@ -1364,13 +1362,14 @@ namespace exel_for_mfc
         #endregion  
         #region Обработка возможных исключений и другие мелочи
         private void AreaExeption(object sender, MouseButtonEventArgs e)
-            {
-                return;
-            }
-            private void Button_Click_1(object sender, RoutedEventArgs e)
-            {
-                Start();
-            }
+        {
+            return;
+        }
+
+        private void Button_Click_1(object sender, RoutedEventArgs e)
+        {
+            Start();
+        }
 
 
         //Очистить фильтр
