@@ -1437,7 +1437,6 @@ namespace exel_for_mfc
                     AdressWindow adres = new(ref temp1);
                     adres.ShowDialog();
                     a.Adress = temp1.TrimEnd(',');
-                    string g = a.Adress;
                 }
                 else return;
             }
