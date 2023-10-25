@@ -105,10 +105,6 @@ public partial class ExDbContext : DbContext
 
             entity.Property(e => e.Ulica).HasMaxLength(30);
 
-            entity.Property(e => e.Numbedom).HasMaxLength(30);
-
-            entity.Property(e => e.Stroenie).HasMaxLength(30);
-
             entity.Property(e => e.Kvartira).HasMaxLength(30);
 
         });

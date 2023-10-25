@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace exel_for_mfc;
 
@@ -14,10 +15,6 @@ public partial class PayAmount
     public string? Mkr { get; set; }
 
     public string? Ulica { get; set; }
-
-    public string? Numbedom { get; set; }
-
-    public string? Stroenie { get; set; }
 
     public string? Kvartira { get; set; }
 

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace exel_for_mfc;
 
@@ -9,14 +10,17 @@ public partial class Registry
 
     public int? ApplicantFk { get; set; }
 
+    [ConcurrencyCheck]
     public string? SerialAndNumberSert { get; set; }
 
+    [ConcurrencyCheck]
     public DateTime? DateGetSert { get; set; }
 
     public int? PayAmountFk { get; set; }
 
     public int? SolutionFk { get; set; }
 
+    [ConcurrencyCheck]
     public string? DateAndNumbSolutionSert { get; set; }
 
     public string? Comment { get; set; }

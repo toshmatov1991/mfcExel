@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:exel_for_mfc"
         mc:Ignorable="d" ResizeMode="NoResize" Icon="Resources\logomfc.png" WindowStartupLocation="CenterScreen"
-        Title="Заполнение адреса" Height="380" Width="750">
+        Title="Заполнение адреса" Height="380" Width="950">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition/>
@@ -20,18 +20,14 @@
             <RowDefinition/>
             <RowDefinition/>
         </Grid.RowDefinitions>
-        <ComboBox Width="70"
-                  x:Name="ulOrDom"
+        <ComboBox
+                  x:Name="mkrX"
                   FontSize="20"
                   HorizontalContentAlignment="Center"
                   SelectedIndex="0"
                   VerticalAlignment="Top"
                   Grid.Row="1"
-                  Grid.ColumnSpan="2"
-                  Height="35">
-            <TextBlock>ул.</TextBlock>
-            <TextBlock>пер.</TextBlock>
-        </ComboBox>
+                  Height="35" Margin="28,46,84,0"/>
 
         <TextBox 
             x:Name="name"
@@ -40,34 +36,30 @@
             HorizontalContentAlignment="Left"
             VerticalAlignment="Top"
             VerticalContentAlignment="Center"
-            HorizontalAlignment="Center"
-            Width="225"
-            Grid.Column="1"
+            HorizontalAlignment="Left"
+            Width="224"
             Grid.Row="1"
             Grid.ColumnSpan="2"
-            Height="35"/>
+            Height="35" Margin="121,45,0,0"/>
 
-        <ComboBox 
-            x:Name="dom"
-            SelectedIndex="0"
+        <ComboBox x:Name="dom"
+                  SelectedIndex="0"
                   FontSize="20"
                   HorizontalContentAlignment="Center"
                   VerticalAlignment="Top"
-                  Grid.Column="2"
-                  Grid.ColumnSpan="2"
-                  Height="35"
-                  Grid.RowSpan="2" Margin="112,85,120,0">
-            <TextBlock>д.</TextBlock>
-        </ComboBox>
+                  Grid.Column="1"
+                  Height="35" 
+                  Margin="155,45,180,0"
+                  Grid.Row="1" Grid.ColumnSpan="2" RenderTransformOrigin="0.367,0.472"/>
 
         <TextBlock 
             Background="LawnGreen"
             Text="Номер дома"
             Width="90"
             FontStyle="Italic"
-            HorizontalAlignment="Center"
+            HorizontalAlignment="Left"
             VerticalAlignment="Top"
-            FontSize="16" Grid.Column="3" Margin="0,64,0,0"/>
+            FontSize="16" Grid.Column="2" Grid.Row="1" Margin="10,24,0,0"/>
 
 
         <TextBox  x:Name="numberDom"
@@ -77,30 +69,29 @@
             HorizontalContentAlignment="Center"
             VerticalAlignment="Top"
             Grid.Row="1"
-            Grid.Column="3"
-            Height="35"/>
+            Grid.Column="2"
+            Height="35" Margin="10,45,90,0"/>
 
         <TextBox 
             x:Name="numCorpus"
             Background="AliceBlue"
-                 Width="130"
+                 Width="102"
                   FontSize="20"
                   HorizontalContentAlignment="Center"
                   VerticalAlignment="Top"
                  HorizontalAlignment="Left"
-                  Grid.Column="4"
-                  Height="35" Margin="0,90,0,0" Grid.Row="1" Grid.RowSpan="2"/>
+                  Grid.Column="3"
+                  Height="35" Margin="12,45,0,0" Grid.Row="1"/>
 
         <TextBox 
             x:Name="Stroenie"
             Background="DeepSkyBlue"
-                 Width="130"
+                 Width="102"
                   FontSize="20"
                   HorizontalContentAlignment="Center"
                   VerticalAlignment="Top"
                  HorizontalAlignment="Left"
-                  Grid.Column="4"
-                  Height="38" Margin="0,81,0,0" Grid.RowSpan="2"/>
+                  Height="35" Margin="100,45,0,0" Grid.Row="1" RenderTransformOrigin="3.446,-1.197" Grid.Column="2" Grid.ColumnSpan="2"/>
 
         <TextBox  
             x:Name="kvartira"
@@ -110,46 +101,44 @@
                   HorizontalContentAlignment="Center"
                   VerticalAlignment="Bottom"
                  HorizontalAlignment="Left"
-                  Grid.Row="2"
-                  Grid.Column="4"
-                  Height="35" RenderTransformOrigin="0.496,1.429" Margin="0,0,0,59" Grid.RowSpan="2"/>
+                  Grid.Row="1"
+                  Grid.Column="3"
+                  Height="35" RenderTransformOrigin="0.496,1.429" Margin="168,0,0,10" Grid.ColumnSpan="2"/>
         <TextBlock
             Background="LightSteelBlue"
             Width="162"
             FontStyle="Italic"
             HorizontalAlignment="Left"
             VerticalAlignment="Top"
-            FontSize="16" Grid.Column="1" Margin="63,63,0,0" Grid.ColumnSpan="2"><Run Language="ru-ru" Text="Наименование улицы"/></TextBlock>
+            FontSize="16" Margin="154,24,0,0" Grid.ColumnSpan="2" Grid.Row="1"><Run Language="ru-ru" Text="Наименование улицы"/></TextBlock>
         <TextBlock
-            Width="158"
+            Width="102"
+            FontStyle="Italic"
+            HorizontalAlignment="Left"
+            FontSize="16" Background="AliceBlue" Grid.Column="3" Margin="12,24,0,46" Text="№Корпуса" Grid.Row="1"/>
+        <TextBlock
+            Width="102"
             FontStyle="Italic"
             HorizontalAlignment="Left"
             VerticalAlignment="Top"
-            FontSize="16" Background="AliceBlue" Grid.Column="3" Margin="132,39,0,0" Grid.ColumnSpan="2" Grid.Row="1"><Run Language="ru-ru" Text="       "/><Run Text="№Корпуса"/><LineBreak/><Run Language="ru-ru" Text="      "/><Run Text="(при наличии)"/></TextBlock>
-        <TextBlock
-            Width="158"
-            FontStyle="Italic"
-            HorizontalAlignment="Left"
-            VerticalAlignment="Top"
-            FontSize="16" Grid.Column="3" Background="DeepSkyBlue" Margin="141,30,0,0" Grid.ColumnSpan="2" Height="44"><Run Text="       "/><Run Language="ru-ru" Text="Строение"/><LineBreak/><Run Text="      "/><Run Text="(при наличии)"/></TextBlock>
+            FontSize="16" Background="DeepSkyBlue" Margin="100,24,0,0" Height="21" Grid.ColumnSpan="2" Grid.Column="2" Grid.Row="1" Text=" Строение"/>
         <TextBlock Background="Goldenrod"
-            Width="140"
+            Width="130"
             FontStyle="Italic"
             HorizontalAlignment="Left"
             VerticalAlignment="Top"
-            FontSize="16" Grid.Column="4" Margin="0,54,0,0" Grid.Row="2"><Run Language="ru-ru" Text="Номер квартиры"/></TextBlock>
+            FontSize="16" Grid.Column="3" Margin="168,24,0,0" Grid.Row="1" Grid.ColumnSpan="2"><Run Language="ru-ru" Text="Номер квартиры"/></TextBlock>
         <Button Grid.Column="1"
                 Content="Добавить" 
                 HorizontalAlignment="Left"
-                Margin="63,37,0,0" 
+                Margin="154,46,0,0" 
                 Grid.Row="2" 
                 VerticalAlignment="Top" 
                 Grid.ColumnSpan="2"
                 Height="69" 
-                Width="187" 
-                Grid.RowSpan="2"
+                Width="187"
                 FontSize="27"
-                Background="LightYellow" Click="Button_Click"/>
+                Background="GhostWhite" Click="Button_Click" Grid.RowSpan="2"/>
         <TextBlock
             Background="DarkKhaki"
             Width="697"
@@ -157,5 +146,40 @@
             HorizontalAlignment="Left"
             VerticalAlignment="Top"
             FontSize="16" Margin="10,1,0,0" Grid.ColumnSpan="5" Height="27"><Run Language="ru-ru" Text="Заполняйте только те поля которые есть в адресе, остальное можно оставить пустым."/></TextBlock>
+        <ComboBox Background="AliceBlue" 
+            HorizontalAlignment="Left"
+                  Margin="28,55,0,0" 
+                  VerticalAlignment="Top"
+                  Width="78"
+                  RenderTransformOrigin="-0.042,-0.591"
+                  x:Name="Xmkr"
+                  SelectedIndex="0" Height="35"/>
+        <TextBox 
+            x:Name="name_Copy"
+            Background="AliceBlue"
+            FontSize="19"
+            HorizontalContentAlignment="Left"
+            VerticalAlignment="Top"
+            VerticalContentAlignment="Center"
+            HorizontalAlignment="Left"
+            Width="224"
+            Grid.ColumnSpan="2"
+            Height="35" Margin="121,55,0,0" RenderTransformOrigin="0.411,0.458"/>
+        <TextBlock
+            Background="AliceBlue"
+            Width="214"
+            FontStyle="Italic"
+            HorizontalAlignment="Left"
+            VerticalAlignment="Top"
+            FontSize="16" Margin="126,33,0,0" Grid.ColumnSpan="2"><Run Text="Наименование"/><Run Text=" мкр  и"/><Run Language="ru-ru" Text=" "/><Run Text="прочее"/></TextBlock>
+        <ComboBox Grid.Column="3" 
+                  HorizontalAlignment="Left"
+                  Margin="114,46,0,0"
+                  SelectedIndex="0"
+                  Grid.Row="1"
+                  VerticalAlignment="Top"
+                  Width="54"
+                  Height="34"
+                  x:Name="kv"/>
     </Grid>
 </Window>
