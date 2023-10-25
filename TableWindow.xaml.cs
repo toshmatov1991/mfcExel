@@ -1436,7 +1436,8 @@ namespace exel_for_mfc
                     //Здесь заполняю Адрес, если пустая строка
                     AdressWindow adres = new(ref temp1);
                     adres.ShowDialog();
-                    a.Adress = temp1;
+                    a.Adress = temp1.TrimEnd(',');
+                    string g = a.Adress;
                 }
                 else return;
             }

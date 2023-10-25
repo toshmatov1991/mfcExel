@@ -53,25 +53,14 @@ namespace exel_for_mfc
              * kv - тип квартиры 
              * kvartira - номер квартиры
              */
-
-
-            if (string.IsNullOrEmpty(nameMKR.Text) || string.IsNullOrWhiteSpace(nameMKR.Text) 
-                || string.IsNullOrEmpty(name.Text) || string.IsNullOrWhiteSpace(name.Text))
-            {
-                MessageBox.Show("Вы пропустили обязательные поля для заполнения!", "Название улицы или Название микрорайона");
-            }
-
-            else
-            {
-                TableWindow.temp1 += string.IsNullOrEmpty(nameMKR.Text.Trim()) ? null : $"{Xmkr.Text} {nameMKR.Text}, ";
-                TableWindow.temp1 += string.IsNullOrEmpty(name.Text) ? null : $"{ulicaX.Text} {name.Text}, ";
-                TableWindow.temp1 += string.IsNullOrEmpty(numberDom.Text) ? null : $"{dom.Text} {numberDom.Text}, ";
-                TableWindow.temp1 += string.IsNullOrEmpty(Stroenie.Text) ? null : $"/{Stroenie.Text}, ";
-                TableWindow.temp1 += string.IsNullOrEmpty(numCorpus.Text) ? null : $"корп. {numCorpus.Text}, ";
-                TableWindow.temp1 += string.IsNullOrEmpty(kvartira.Text) ? null : $"{kv.Text} {kvartira.Text}";
-                TableWindow.temp1.TrimEnd(','); 
+                TableWindow.temp1 += string.IsNullOrEmpty(nameMKR.Text.Trim()) ? null : $"{Xmkr.Text} {nameMKR.Text},";
+                TableWindow.temp1 += string.IsNullOrEmpty(name.Text) ? null : $" {ulicaX.Text} {name.Text},";
+                TableWindow.temp1 += string.IsNullOrEmpty(numberDom.Text) ? null : $" {dom.Text} {numberDom.Text},";
+                TableWindow.temp1 += string.IsNullOrEmpty(Stroenie.Text) ? null : $"/{Stroenie.Text},";
+                TableWindow.temp1 += string.IsNullOrEmpty(numCorpus.Text) ? null : $" корп. {numCorpus.Text},";
+                TableWindow.temp1 += string.IsNullOrEmpty(kvartira.Text) ? null : $" {kv.Text} {kvartira.Text}";
                 Close();
-            }
+            
         }
 
 
