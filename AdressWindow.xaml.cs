@@ -56,7 +56,7 @@ namespace exel_for_mfc
                 TableWindow.temp1 += string.IsNullOrEmpty(nameMKR.Text.Trim()) ? null : $"{Xmkr.Text} {nameMKR.Text},";
                 TableWindow.temp1 += string.IsNullOrEmpty(name.Text) ? null : $" {ulicaX.Text} {name.Text},";
                 TableWindow.temp1 += string.IsNullOrEmpty(numberDom.Text) ? null : $" {dom.Text} {numberDom.Text},";
-                TableWindow.temp1 += string.IsNullOrEmpty(Stroenie.Text) ? null : $"/{Stroenie.Text},";
+                TableWindow.temp1 += string.IsNullOrEmpty(Stroenie.Text) ? null : $"стр. {Stroenie.Text},";
                 TableWindow.temp1 += string.IsNullOrEmpty(numCorpus.Text) ? null : $" корп. {numCorpus.Text},";
                 TableWindow.temp1 += string.IsNullOrEmpty(kvartira.Text) ? null : $" {kv.Text} {kvartira.Text}";
                 Close();

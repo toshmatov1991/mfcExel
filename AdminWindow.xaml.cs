@@ -59,6 +59,10 @@ namespace exel_for_mfc
             var SolDataGridForAdmin = await db.SolutionTypes.FromSqlRaw("SELECT * FROM SolutionType").Take(2).ToListAsync();
             AdminsX.ItemsSource = SolDataGridForAdmin.ToList();
 
+            PayC.ItemsSource = PayDataGrid.ToList();
+
+
+
         }
 
         private async void AreaCell(object sender, DataGridCellEditEndingEventArgs e)
@@ -152,7 +156,7 @@ namespace exel_for_mfc
             if (a.Id != 0)
             {
                 //Обновление таблицы Выплаты
-                await db.Database.ExecuteSqlRawAsync("UPDATE PayAmount SET PrivilegesName = {0} WHERE Id = {1}", a.Pay, a.Id);
+                await db.Database.ExecuteSqlRawAsync("UPDATE PayAmount SET Pay = {0} WHERE Id = {1}", a.Pay, a.Id);
             }
 
             else if (a.Id == 0)
@@ -195,7 +199,6 @@ namespace exel_for_mfc
                 else return;
             }
         }
-
         private async void AdminCell(object sender, DataGridCellEditEndingEventArgs e)
         {
             //Считывание строки
@@ -259,7 +262,7 @@ namespace exel_for_mfc
                 {
                     using FileStream fs = new(of.FileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
                     using SpreadsheetDocument doc = SpreadsheetDocument.Open(fs, false);
-                    WorkbookPart workbookPart = doc.WorkbookPart;
+                    WorkbookPart? workbookPart = doc.WorkbookPart;
                     SharedStringTablePart sstpart = workbookPart.GetPartsOfType<SharedStringTablePart>().First();
                     SharedStringTable sst = sstpart.SharedStringTable;
 
@@ -870,6 +873,72 @@ namespace exel_for_mfc
                 StartAdminWin();
             }
 
+        }
+
+        //Редактирование адреса
+        private async void CellAdress(object sender, DataGridCellEditEndingEventArgs e)
+        {
+            //Считывание строки
+            PayAmount? a = e.Row.Item as PayAmount;
+
+            using ExDbContext db = new();
+
+            if (a.Id != 0 && e.Column.Header.ToString() == "Микро/Типы")
+            {
+                //Обновление таблицы Выплаты
+                await db.Database.ExecuteSqlRawAsync("UPDATE PayAmount SET mkr = {0} WHERE Id = {1}", a.Mkr, a.Id);
+            }
+
+            else if (a.Id != 0 && e.Column.Header.ToString() == "Улица/Типы")
+            {
+                //Обновление таблицы Выплаты
+                await db.Database.ExecuteSqlRawAsync("UPDATE PayAmount SET ulica = {0} WHERE Id = {1}", a.Ulica, a.Id);
+            }
+
+            else if (a.Id != 0 && e.Column.Header.ToString() == "Квартира/типы")
+            {
+                //Обновление таблицы Выплаты
+                await db.Database.ExecuteSqlRawAsync("UPDATE PayAmount SET kvartira = {0} WHERE Id = {1}", a.Kvartira, a.Id);
+            }
+
+            else if (a.Id == 0 && e.Column.Header.ToString() == "Микро/Типы")
+            {
+                // Добавление записи
+                if (a.Pay != null)
+                {
+                    //Добавить новую запись в таблицу Выплаты
+                    await db.Database.ExecuteSqlInterpolatedAsync($"INSERT INTO PayAmount(mkr) VALUES({a.Mkr})");
+                    await Task.Delay(50);
+                    StartAdminWin();
+                }
+                else return;
+            }
+
+            else if (a.Id == 0 && e.Column.Header.ToString() == "Улица/Типы")
+            {
+                // Добавление записи
+                if (a.Pay != null)
+                {
+                    //Добавить новую запись в таблицу Выплаты
+                    await db.Database.ExecuteSqlInterpolatedAsync($"INSERT INTO PayAmount(ulica) VALUES({a.Ulica})");
+                    await Task.Delay(50);
+                    StartAdminWin();
+                }
+                else return;
+            }
+
+            else if (a.Id == 0 && e.Column.Header.ToString() == "Квартира/типы")
+            {
+                // Добавление записи
+                if (a.Pay != null)
+                {
+                    //Добавить новую запись в таблицу Выплаты
+                    await db.Database.ExecuteSqlInterpolatedAsync($"INSERT INTO PayAmount(kvartira) VALUES({a.Kvartira})");
+                    await Task.Delay(50);
+                    StartAdminWin();
+                }
+                else return;
+            }
         }
     }
 }

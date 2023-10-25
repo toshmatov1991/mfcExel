@@ -23,7 +23,7 @@
                   CanUserAddRows="True" 
                   HorizontalAlignment="Left"
                   VerticalAlignment="Top"
-                  Height="410"
+                  Height="350"
                   Width="331"
                   Grid.RowSpan="2" 
                   CellEditEnding="AreaCell"
@@ -72,7 +72,7 @@
                   Grid.Column="2"
                   HorizontalAlignment="Right"
                   VerticalAlignment="Top"
-                  Height="333"
+                  Height="200"
                   AutoGenerateColumns="False"
                   CanUserAddRows="True"
                   Grid.ColumnSpan="2" 
@@ -162,15 +162,16 @@
             Foreground="Black"
             HorizontalAlignment="Left"
             VerticalAlignment="Top"
-            FontSize="25"
-            Grid.Column="3"
-            Grid.Row="1" 
+            FontSize="25" 
             Click="Button_Click" 
-            Height="109" Width="201"/>
+            Height="54"
+            Width="166" 
+            Margin="10,38,0,0"
+            Grid.Row="1"/>
         <Button x:Name="nam"
-                Grid.Column="2" 
-                HorizontalAlignment="Center" 
-                Margin="137,97,0,0"
+                Grid.Column="3" 
+                HorizontalAlignment="Left" 
+                Margin="10,109,0,0"
                 Grid.Row="1"
                 VerticalAlignment="Top"
                 Height="45"
@@ -178,5 +179,23 @@
                 Foreground="Black"
                 FontWeight="Bold"
                 Width="123" Click="Button_Click_1"/>
+        <DataGrid x:Name="PayC"
+            Grid.Column="2"
+            HorizontalAlignment="Right"
+            VerticalAlignment="Top"
+            Height="199"
+            AutoGenerateColumns="False"
+            CanUserAddRows="True"
+            Grid.ColumnSpan="2" 
+            Margin="0,225,12,0"
+            Grid.RowSpan="2"
+                  Width="360" CellEditEnding="CellAdress">
+            <DataGrid.Columns>
+                <DataGridTextColumn Binding="{Binding Id, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" IsReadOnly="True" Header="Id" Width="35"/>
+                <DataGridTextColumn Binding="{Binding Mkr, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" IsReadOnly="False" Header="Микро/Типы" Width="120"/>
+                <DataGridTextColumn Binding="{Binding Ulica, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" Header="Улица/Типы" Width="120"/>
+                <DataGridTextColumn Binding="{Binding Kvartira, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" Header="Квартира/типы" Width="120"/>
+            </DataGrid.Columns>
+        </DataGrid>
     </Grid>
 </Window>
