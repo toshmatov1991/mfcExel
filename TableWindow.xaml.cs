@@ -1497,6 +1497,12 @@ namespace exel_for_mfc
         }
 
         #endregion
+
+        private void GoStartWindow(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            MainWindow mainWindow = new();
+            mainWindow.Show();
+        }
     }
 }
         

@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:exel_for_mfc"
         mc:Ignorable="d" Icon="Resources\logomfc.png" WindowStartupLocation="CenterScreen"
-        Title="Главное окно" Height="700" Width="1300">
+        Title="Главное окно" Height="700" Width="1300" Closing="GoStartWindow">
     <Border Padding="3">
         <Grid Background="LightSkyBlue">
             <Grid.ColumnDefinitions>
