@@ -388,7 +388,7 @@
                     Margin="89,7,0,8"/>
 
             <!-- Очистить фильтры к таблице -->
-            <Button Content="Очистить фильтр"
+            <Button Content="Очистить&#xD;&#xA;Обновить фильтр&#xD;&#xA;"
                     Grid.Column="5"
                     Grid.Row="12"
                     HorizontalAlignment="Left"
