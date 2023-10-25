@@ -14,13 +14,8 @@ using Newtonsoft.Json;
 using Microsoft.Win32;
 using System.Globalization;
 using exel_for_mfc.FilterDB;
-using DocumentFormat.OpenXml.Vml.Office;
 using LinqKit;
 using LinqKit.Core;
-using DocumentFormat.OpenXml.InkML;
-using System.Xml;
-using Microsoft.IdentityModel.Tokens;
-using DocumentFormat.OpenXml.Office2010.PowerPoint;
 
 namespace exel_for_mfc
 {
@@ -1505,4 +1500,3 @@ namespace exel_for_mfc
         }
     }
 }
-        

@@ -11,7 +11,6 @@
   <ItemGroup>
     <None Remove="FilterDB\fdb.db" />
     <None Remove="Resources\123.jpg" />
-    <None Remove="Resources\It.gif" />
     <None Remove="Resources\logomfc.png" />
   </ItemGroup>
 
@@ -20,9 +19,6 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Resources\123.jpg">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\It.gif">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Resources\logomfc.png">
@@ -36,7 +32,6 @@
     <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="7.0.12" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="7.0.12" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
-    <PackageReference Include="WpfAnimatedGif" Version="2.0.2" />
   </ItemGroup>
 
   <ItemGroup>

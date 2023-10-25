@@ -19,13 +19,14 @@ namespace exel_for_mfc
             //reportWindow.Show();
           //  TableWindow taWindow = new();
           //  taWindow.Show();
-          // AdminWindow admin = new();
-          // admin.Show();
+         // AdminWindow admin = new();
+         // admin.Show();
             //AdressWindow adressWindow = new();
             //adressWindow.Show();
             //Close();
         }
 
+        //Войти
         private async void Button_Click(object sender, RoutedEventArgs e)
         {
             //При нажатии на кнопку Войти
@@ -89,8 +90,6 @@ namespace exel_for_mfc
             return Convert.ToBase64String(hash);
         }
 
-
-
         //Метод хорошего старта
         private void Start()
         {
@@ -102,14 +101,11 @@ namespace exel_for_mfc
             login_text.Focus();
         }
 
-
-
         //Методы подсвечивают рамки красным при неправильном вводе
         private void Pa(object sender, MouseEventArgs e)
         {
             password_text.BorderBrush = Brushes.Black;
         }
-
         private void Bo(object sender, MouseEventArgs e)
         {
             login_text.BorderBrush = Brushes.Black;

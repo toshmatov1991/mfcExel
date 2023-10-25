@@ -1,16 +1,9 @@
-﻿using DocumentFormat.OpenXml;
-using DocumentFormat.OpenXml.Packaging;
+﻿using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Spreadsheet;
-using DocumentFormat.OpenXml.Wordprocessing;
-using exel_for_mfc;
-using exel_for_mfc.FilterDB;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Win32;
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using System.Data;
-using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
@@ -18,12 +11,6 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 
 namespace exel_for_mfc
 {
@@ -60,11 +47,7 @@ namespace exel_for_mfc
             AdminsX.ItemsSource = SolDataGridForAdmin.ToList();
 
             PayC.ItemsSource = PayDataGrid.ToList();
-
-
-
         }
-
         private async void AreaCell(object sender, DataGridCellEditEndingEventArgs e)
         {
             //Считывание строки
@@ -91,7 +74,6 @@ namespace exel_for_mfc
                 else return;
             }
         }
-
         private async void LocalCell(object sender, DataGridCellEditEndingEventArgs e)
         {
             //Считывание строки
@@ -118,7 +100,6 @@ namespace exel_for_mfc
                 else return;
             }
         }
-
         private async void LgotaCell(object sender, DataGridCellEditEndingEventArgs e)
         {
             //Считывание строки
@@ -145,7 +126,6 @@ namespace exel_for_mfc
                 else return;
             }
         }
-
         private async void PayCell(object sender, DataGridCellEditEndingEventArgs e)
         {
             //Считывание строки
@@ -172,7 +152,6 @@ namespace exel_for_mfc
                 else return;
             }
         }
-
         private async void SolutionCell(object sender, DataGridCellEditEndingEventArgs e)
         {
             //Считывание строки
@@ -813,7 +792,6 @@ namespace exel_for_mfc
             await db.Database.ExecuteSqlRawAsync("UPDATE Privileges SET hidingPriv={0} WHERE id={1}", 0, (PrivelX.SelectedItem as Privilege)?.Id);
         }
 
-
         //Чек Пай
         private async void ChPay(object sender, RoutedEventArgs e)
         {
@@ -842,12 +820,11 @@ namespace exel_for_mfc
             await db.Database.ExecuteSqlRawAsync("UPDATE SolutionType SET hidingSol={0} WHERE id={1}", 0, (SolutionX.SelectedItem as SolutionType)?.Id);
         }
         #endregion
-
-
+        #region Разное
         //Поставить все галочки
         private async void Button_Click_1(object sender, RoutedEventArgs e)
         {
-            if(temp == 0)
+            if (temp == 0)
             {
                 nam.Content = "Убрать все галочки";
                 using ExDbContext db = new();
@@ -940,11 +917,11 @@ namespace exel_for_mfc
                 else return;
             }
         }
-
         private void GoStartWindow(object sender, System.ComponentModel.CancelEventArgs e)
         {
             MainWindow mainWindow = new();
             mainWindow.Show();
         }
+        #endregion
     }
 }

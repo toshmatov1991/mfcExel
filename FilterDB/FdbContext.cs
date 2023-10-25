@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
+﻿using System.IO;
 using Microsoft.EntityFrameworkCore;
 
 namespace exel_for_mfc.FilterDB;
@@ -15,7 +13,6 @@ public partial class FdbContext : DbContext
         : base(options)
     {
     }
-
     public virtual DbSet<AreaF> AreaFs { get; set; }
 
     public virtual DbSet<LocalF> Localves { get; set; }
@@ -88,7 +85,5 @@ public partial class FdbContext : DbContext
         var r = "Data Source=" + Directory.GetParent(c).FullName + @"\FilterDB\fdb.db";
         return r;
     }
-
-
     partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
 }

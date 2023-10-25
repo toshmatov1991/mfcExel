@@ -76,8 +76,6 @@
                        Grid.Row="5"
                        Grid.ColumnSpan="2"
                        x:Name="solCount" Width="462"/>
-
-
         </Grid>
     </Border>
 </Window>

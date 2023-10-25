@@ -1,12 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.Tokens;
-using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Input;
+
 
 namespace exel_for_mfc
 {
@@ -26,6 +21,7 @@ namespace exel_for_mfc
             StartAdress();
         }
 
+        //Заполнение ComboboxesAdress
         private async void StartAdress()
         {
             using ExDbContext db = new();
@@ -34,25 +30,9 @@ namespace exel_for_mfc
             kv.ItemsSource = await db.PayAmounts.Where(u => u.Kvartira != null).Select(s => s.Kvartira).ToListAsync();
         }
 
-
-
-
         //Добавить адрес
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            /*
-             * Xmkr - Выбор типа Микрорайона
-             * nameMKR - Наименование микрорайона
-             * ulicaX - тип улицы
-             * name - наименование улицы
-             * dom - тип дома
-             * numberDom - номер дома
-             * ------------------
-             * Stroenie - строение
-             * numCorpus - корпус
-             * kv - тип квартиры 
-             * kvartira - номер квартиры
-             */
                 TableWindow.temp1 += string.IsNullOrEmpty(nameMKR.Text.Trim()) ? null : $"{Xmkr.Text} {nameMKR.Text},";
                 TableWindow.temp1 += string.IsNullOrEmpty(name.Text) ? null : $" {ulicaX.Text} {name.Text},";
                 TableWindow.temp1 += string.IsNullOrEmpty(numberDom.Text) ? null : $" {dom.Text} {numberDom.Text},";
@@ -62,8 +42,6 @@ namespace exel_for_mfc
                 Close();
             
         }
-
-
 
         //Очистить поля
         private void Button_Click_1(object sender, RoutedEventArgs e)

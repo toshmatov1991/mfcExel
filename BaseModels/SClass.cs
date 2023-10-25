@@ -1,14 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace exel_for_mfc
 {
     public partial class SClass
     {
-
         public int IdReg { get; set; }
         public string? Family { get; set; }
         public string? Name { get; set; }
