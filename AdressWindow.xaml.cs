@@ -29,14 +29,9 @@ namespace exel_for_mfc
         private async void StartAdress()
         {
             using ExDbContext db = new();
-            var _mkr = await db.PayAmounts.Where(u => u.Mkr != null).Select(s => s.Mkr).ToListAsync();
-            var _ulica = await db.PayAmounts.Where(u => u.Ulica != null).Select(s => s.Ulica).ToListAsync();
-            var _kvartira = await db.PayAmounts.Where(u => u.Kvartira != null).Select(s => s.Kvartira).ToListAsync();
-
-            Xmkr.ItemsSource = _mkr;
-
-
-
+            Xmkr.ItemsSource = await db.PayAmounts.Where(u => u.Mkr != null).Select(s => s.Mkr).ToListAsync();
+            ulicaX.ItemsSource = await db.PayAmounts.Where(u => u.Ulica != null).Select(s => s.Ulica).ToListAsync();
+            kv.ItemsSource = await db.PayAmounts.Where(u => u.Kvartira != null).Select(s => s.Kvartira).ToListAsync();
         }
 
 
@@ -46,39 +41,50 @@ namespace exel_for_mfc
         private void Button_Click(object sender, RoutedEventArgs e)
         {
             /*
-             * ulOrDom - Улица или Дом
-             name - Улица название
-            dom - дом
-            numberDom - номер дома
-            numCorpus - номер корпуса
-            Stroenie - строение
-            kvartira - квартира
-            // */
+             * Xmkr - Выбор типа Микрорайона
+             * nameMKR - Наименование микрорайона
+             * ulicaX - тип улицы
+             * name - наименование улицы
+             * dom - тип дома
+             * numberDom - номер дома
+             * ------------------
+             * Stroenie - строение
+             * numCorpus - корпус
+             * kv - тип квартиры 
+             * kvartira - номер квартиры
+             */
 
-            //if (string.IsNullOrEmpty(name.Text) 
-            //    || string.IsNullOrWhiteSpace(name.Text)
-            //    && string.IsNullOrEmpty(numberDom.Text)
-            //    && string.IsNullOrWhiteSpace(numberDom.Text)
-            //    || string.IsNullOrEmpty(name.Text) 
-            //    || string.IsNullOrEmpty(numberDom.Text))
-            //{
-            //    MessageBox.Show("Вы пропустили обязательные поля для заполнения!", "Название улицы или номер дома");
-            //}
 
-            //else
-            //{
-            //    if (string.IsNullOrEmpty(Stroenie.Text) && string.IsNullOrEmpty(numCorpus.Text))
-            //        TableWindow.temp1 = $"{ulOrDom.Text} {name.Text}, {dom.Text} {numberDom.Text}, кв.{kvartira.Text}";
-            //    if (string.IsNullOrEmpty(Stroenie.Text) && string.IsNullOrEmpty(numCorpus.Text) && string.IsNullOrEmpty(kvartira.Text))
-            //        TableWindow.temp1 = $"{ulOrDom.Text} {name.Text}, {dom.Text} {numberDom.Text}";
-            //    if (!string.IsNullOrEmpty(Stroenie.Text))
-            //        TableWindow.temp1 = $"{ulOrDom.Text} {name.Text}, {dom.Text} {numberDom.Text}{"/" + Stroenie.Text}, кв.{kvartira.Text}";
-            //    if (!string.IsNullOrEmpty(numCorpus.Text))
-            //        TableWindow.temp1 = $"{ulOrDom.Text} {name.Text}, {dom.Text} {numberDom.Text} {"корп." + numCorpus.Text}, кв.{kvartira.Text}";
-            //    if (!string.IsNullOrEmpty(numCorpus.Text) && !string.IsNullOrEmpty(Stroenie.Text))
-            //        TableWindow.temp1 = $"{ulOrDom.Text} {name.Text}, {dom.Text} {numberDom.Text}{"/" + Stroenie.Text}, {"корп." + numCorpus.Text}, кв.{kvartira.Text}";
-            //    Close();
-            //}
+            if (string.IsNullOrEmpty(nameMKR.Text) || string.IsNullOrWhiteSpace(nameMKR.Text) 
+                || string.IsNullOrEmpty(name.Text) || string.IsNullOrWhiteSpace(name.Text))
+            {
+                MessageBox.Show("Вы пропустили обязательные поля для заполнения!", "Название улицы или Название микрорайона");
+            }
+
+            else
+            {
+                TableWindow.temp1 += string.IsNullOrEmpty(nameMKR.Text.Trim()) ? null : $"{Xmkr.Text} {nameMKR.Text}, ";
+                TableWindow.temp1 += string.IsNullOrEmpty(name.Text) ? null : $"{ulicaX.Text} {name.Text}, ";
+                TableWindow.temp1 += string.IsNullOrEmpty(numberDom.Text) ? null : $"{dom.Text} {numberDom.Text}, ";
+                TableWindow.temp1 += string.IsNullOrEmpty(Stroenie.Text) ? null : $"/{Stroenie.Text}, ";
+                TableWindow.temp1 += string.IsNullOrEmpty(numCorpus.Text) ? null : $"корп. {numCorpus.Text}, ";
+                TableWindow.temp1 += string.IsNullOrEmpty(kvartira.Text) ? null : $"{kv.Text} {kvartira.Text}";
+                Close();
+            }
+        }
+
+
+
+        //Очистить поля
+        private void Button_Click_1(object sender, RoutedEventArgs e)
+        {
+            nameMKR.Clear();
+            name.Clear();
+            numberDom.Clear();
+            Stroenie.Clear();
+            numCorpus.Clear();
+            kvartira.Clear();
+            name.Focus();
         }
     }
 }

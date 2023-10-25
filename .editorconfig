@@ -1,16 +1,4 @@
 ﻿[*.cs]
 
-# CS8602: Разыменование вероятной пустой ссылки.
-dotnet_diagnostic.CS8602.severity = none
-
-# IDE0058: Значение выражения никогда не используется
-dotnet_diagnostic.IDE0058.severity = none
-
-# CS8604: Возможно, аргумент-ссылка, допускающий значение NULL.
-dotnet_diagnostic.CS8604.severity = none
-
-# CS8600: Преобразование литерала, допускающего значение NULL или возможного значения NULL в тип, не допускающий значение NULL.
-dotnet_diagnostic.CS8600.severity = none
-
-# CS8629: Тип значения, допускающего NULL, может быть NULL.
-dotnet_diagnostic.CS8629.severity = none
+# CS8601: Возможно, назначение-ссылка, допускающее значение NULL.
+dotnet_diagnostic.CS8601.severity = none
