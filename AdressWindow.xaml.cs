@@ -69,6 +69,7 @@ namespace exel_for_mfc
                 TableWindow.temp1 += string.IsNullOrEmpty(Stroenie.Text) ? null : $"/{Stroenie.Text}, ";
                 TableWindow.temp1 += string.IsNullOrEmpty(numCorpus.Text) ? null : $"корп. {numCorpus.Text}, ";
                 TableWindow.temp1 += string.IsNullOrEmpty(kvartira.Text) ? null : $"{kv.Text} {kvartira.Text}";
+                TableWindow.temp1.TrimEnd(','); 
                 Close();
             }
         }

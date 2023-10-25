@@ -17,12 +17,12 @@ namespace exel_for_mfc
             Start();
             //ReportWindow reportWindow = new();
             //reportWindow.Show();
-            // TableWindow taWindow = new();
-            // taWindow.Show();
+             TableWindow taWindow = new();
+             taWindow.Show();
             //AdminWindow admin = new();
             //admin.Show();
-            AdressWindow adressWindow = new();
-            adressWindow.Show();
+            //AdressWindow adressWindow = new();
+            //adressWindow.Show();
             Close();
         }
 
