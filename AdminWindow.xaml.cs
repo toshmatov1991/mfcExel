@@ -649,7 +649,7 @@ namespace exel_for_mfc
                 var equalLoc = db.Localities.AsNoTracking().Where(u => u.LocalName == str).FirstOrDefault();
                 if (equalLoc != null)
                     idLocal = equalLoc.Id;
-
+                 
                 else if (equalLoc == null)
                 {
                     Locality loc = new();

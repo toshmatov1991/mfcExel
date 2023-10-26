@@ -16,6 +16,7 @@ using System.Globalization;
 using exel_for_mfc.FilterDB;
 using LinqKit;
 using LinqKit.Core;
+using System.Threading;
 
 namespace exel_for_mfc
 {
@@ -772,15 +773,13 @@ namespace exel_for_mfc
                     }
                 }
             }
-            #endregion
+        #endregion
         #region Выгрузка в Excel()
-            //Сохранить таблицу в Excel
-            static async Task SaveDataInExel()
-            {
+        //Сохранить таблицу в Excel
+        static async void SaveDataInExel()
+        {
                 try
                 {
-                    await Task.Run(async () =>
-                    {
                         SaveFileDialog dialog = new();
                         dialog.Filter = "Execl files (*.xlsx)|*.xlsx";
 
@@ -1027,7 +1026,7 @@ namespace exel_for_mfc
                                 _ => "",
                             };
                         }
-                    });
+                    
                 }
                 catch (Exception ex)
                 {
@@ -1038,9 +1037,9 @@ namespace exel_for_mfc
             }
 
             //Выгрузить в Excel
-            private async void Button_Click(object sender, RoutedEventArgs e)
+            private void Button_Click(object sender, RoutedEventArgs e)
             {
-                await SaveDataInExel();
+                new Thread(() =>{ SaveDataInExel(); }) { IsBackground = true}.Start();
             }
             #endregion
         #region Фильтрация()
