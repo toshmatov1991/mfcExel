@@ -97,7 +97,7 @@ namespace exel_for_mfc
                 if (upApp == 0)
                     MessageBox.Show("Произошла ошибка при обновлении таблицы(Заявитель)\nПовторите попытку");
                 //Обновление таблицы Регистр
-                var upReg = await db.Database.ExecuteSqlRawAsync("UPDATE Registry SET SerialAndNumberSert = {0}, DateGetSert = {1}, DateAndNumbSolutionSert = {2}, Comment = {3}, Trek = {4}, MailingDate = {5} WHERE Id = {6}", a.Sernumb, a.DateGetSert, a.DateAndNumbSolutionSert, a.Comment, a.Trek, a.MailingDate, a.IdReg);
+                var upReg = await db.Database.ExecuteSqlRawAsync("UPDATE Registry SET SerialAndNumberSert = {0}, DateGetSert = {1}, DateAndNumbSolutionSert = {2}, Comment = {3}, Trek = {4}, MailingDate = {5} WHERE Id = {6}", a.Sernumb, a.DateGetSert == null ? null : Convert.ToDateTime(a.DateGetSert).ToString("d"), a.DateAndNumbSolutionSert, a.Comment, a.Trek, a.MailingDate == null ? null : Convert.ToDateTime(a.MailingDate).ToString("d"), a.IdReg);
                 if (upReg == 0)
                     MessageBox.Show("Произошла ошибка при обновлении таблицы(Регистр)\nПовторите попытку");
             }
@@ -860,7 +860,7 @@ namespace exel_for_mfc
                             //Данные заносятся здесь
                             foreach (DataRow dsrow in table.Rows)
                             {
-                                Row newRow = new Row();
+                                Row newRow = new();
 
                                 foreach (string col in columns)
                                 {
@@ -1043,6 +1043,9 @@ namespace exel_for_mfc
                 await SaveDataInExel();
             }
             #endregion
+
+
+
         #region Фильтрация()
         //Заполнение таблиц Фильтров
         public async void FilterStart()
@@ -1446,17 +1449,6 @@ namespace exel_for_mfc
                 SClass? a = e.Row.Item as SClass;
                 if (a.DateAndNumbSolutionSert == "" || a.DateAndNumbSolutionSert == null || string.IsNullOrWhiteSpace(a.DateAndNumbSolutionSert))
                     a.DateAndNumbSolutionSert = "№ " + a.IdReg + "-СГ от " + Convert.ToDateTime(a.DateGetSert).ToString("d", new CultureInfo("ru-RU"));
-                else return;
-            }
-
-            else if (e.Column.Header.ToString() == "Дата отправки почтой")
-            {
-                SClass? a = e.Row.Item as SClass;
-                if (a.MailingDate.ToString() == "" || a.MailingDate == null)
-                {
-                    DateTime dateTime = DateTime.Now;
-                    a.MailingDate = Convert.ToDateTime(dateTime.ToString("d", new CultureInfo("ru-RU")));
-                }
                 else return;
             }
         }

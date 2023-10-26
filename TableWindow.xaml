@@ -178,7 +178,7 @@
                         </DataGridTemplateColumn.CellTemplate>
                         <DataGridTemplateColumn.CellEditingTemplate>
                             <DataTemplate>
-                                <DatePicker SelectedDate="{Binding MailingDate, UpdateSourceTrigger=PropertyChanged}" />
+                                <DatePicker SelectedDate="{Binding MailingDate, StringFormat=dd.MM.yyyy, UpdateSourceTrigger=PropertyChanged}" />
                             </DataTemplate>
                         </DataGridTemplateColumn.CellEditingTemplate>
                     </DataGridTemplateColumn>
