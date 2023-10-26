@@ -24,7 +24,7 @@ public partial class FdbContext : DbContext
     public virtual DbSet<SolF> Solves { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        => optionsBuilder.UseSqlite(PacHt());
+        => optionsBuilder.UseSqlite(PacHt()); 
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
