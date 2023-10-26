@@ -569,7 +569,7 @@ namespace exel_for_mfc
                                         if (cell.CellValue != null)
                                         {
                                             double s3 = double.Parse(cell.CellValue.Text);
-                                            reg.DateGetSert = DateTime.FromOADate(s3);
+                                            reg.MailingDate = DateTime.FromOADate(s3);
                                         }
 
                                         //NULL

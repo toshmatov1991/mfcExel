@@ -133,8 +133,7 @@
                     <DataGridTemplateColumn Header="Дата выдачи" Width="120">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
-                                <TextBlock Text="{Binding DateGetSert,
-                                                 StringFormat=dd.MM.yyyy}" />
+                                <TextBlock Text="{Binding DateGetSert, StringFormat=dd.MM.yyyy}" />
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                         <DataGridTemplateColumn.CellEditingTemplate>
@@ -172,8 +171,7 @@
                     <DataGridTemplateColumn Header="Дата отправки почтой" CanUserSort="True">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
-                                <TextBlock Text="{Binding MailingDate,
-                                                 StringFormat=dd.MM.yyyy}" />
+                                <TextBlock Text="{Binding MailingDate, StringFormat=dd.MM.yyyy}" />
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                         <DataGridTemplateColumn.CellEditingTemplate>

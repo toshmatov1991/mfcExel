@@ -97,7 +97,7 @@ namespace exel_for_mfc
                 if (upApp == 0)
                     MessageBox.Show("Произошла ошибка при обновлении таблицы(Заявитель)\nПовторите попытку");
                 //Обновление таблицы Регистр
-                var upReg = await db.Database.ExecuteSqlRawAsync("UPDATE Registry SET SerialAndNumberSert = {0}, DateGetSert = {1}, DateAndNumbSolutionSert = {2}, Comment = {3}, Trek = {4}, MailingDate = {5} WHERE Id = {6}", a.Sernumb, a.DateGetSert == null ? null : Convert.ToDateTime(a.DateGetSert).ToString("d"), a.DateAndNumbSolutionSert, a.Comment, a.Trek, a.MailingDate == null ? null : Convert.ToDateTime(a.MailingDate).ToString("d"), a.IdReg);
+                var upReg = await db.Database.ExecuteSqlRawAsync("UPDATE Registry SET SerialAndNumberSert = {0}, DateGetSert = {1}, DateAndNumbSolutionSert = {2}, Comment = {3}, Trek = {4}, MailingDate = {5} WHERE Id = {6}", a.Sernumb, a.DateGetSert, a.DateAndNumbSolutionSert, a.Comment, a.Trek, a.MailingDate == null ? null : Convert.ToDateTime(a.MailingDate).ToString("d", new CultureInfo("ru-Ru")), a.IdReg);
                 if (upReg == 0)
                     MessageBox.Show("Произошла ошибка при обновлении таблицы(Регистр)\nПовторите попытку");
             }
@@ -975,7 +975,7 @@ namespace exel_for_mfc
                                         else
                                         {
                                             cell.DataType = CellValues.String;
-                                            cell.CellValue = new CellValue(Convert.ToDateTime(dsrow[col].ToString()).ToString("d"));//Тут значение Id
+                                            cell.CellValue = new CellValue(Convert.ToDateTime(dsrow[col].ToString()).ToString("d", new CultureInfo("ru-Ru")));//Тут значение Id
 
                                             newRow.AppendChild(cell);
                                         }
@@ -1043,9 +1043,6 @@ namespace exel_for_mfc
                 await SaveDataInExel();
             }
             #endregion
-
-
-
         #region Фильтрация()
         //Заполнение таблиц Фильтров
         public async void FilterStart()
