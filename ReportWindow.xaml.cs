@@ -19,6 +19,8 @@ namespace exel_for_mfc
         public ReportWindow()
         {
             InitializeComponent();
+            //var report = new StiReport();
+            //report.DesignWithWpf();
         }
 
 
