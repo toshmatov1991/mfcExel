@@ -917,11 +917,6 @@ namespace exel_for_mfc
                 else return;
             }
         }
-        private void GoStartWindow(object sender, System.ComponentModel.CancelEventArgs e)
-        {
-            MainWindow mainWindow = new();
-            mainWindow.Show();
-        }
         #endregion
     }
 }

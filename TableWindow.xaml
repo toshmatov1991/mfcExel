@@ -4,7 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d" Icon="Resources\logomfc.png" WindowStartupLocation="CenterScreen"
-        Title="Главное окно" Height="700" Width="1300" Closing="GoStartWindow">
+        Title="Главное окно" Height="700" Width="1300">
     <Border Padding="3">
         <Grid Background="LightSkyBlue">
             <Grid.ColumnDefinitions>

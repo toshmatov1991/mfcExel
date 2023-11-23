@@ -1339,11 +1339,6 @@ namespace exel_for_mfc
             
         #endregion  
         #region Обработка возможных исключений и другие мелочи
-        private void GoStartWindow(object sender, System.ComponentModel.CancelEventArgs e)
-        {
-            MainWindow mainWindow = new();
-            mainWindow.Show();
-        }
         private void Button_Click_1(object sender, RoutedEventArgs e)
         {
             Start();

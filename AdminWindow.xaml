@@ -5,7 +5,7 @@
         xmlns:gif="http://wpfanimatedgif.codeplex.com"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d" Icon="Resources\logomfc.png" WindowStartupLocation="CenterScreen"
-        Title="Администрирование" Height="700" Width="1200" Closing="GoStartWindow">
+        Title="Администрирование" Height="700" Width="1200">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition/>
