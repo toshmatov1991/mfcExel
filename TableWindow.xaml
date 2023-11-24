@@ -35,23 +35,33 @@
             
             <!--Меню-->
             <Menu Height="35" 
-                  Width="300" 
+                  Width="400" 
                   VerticalAlignment="Top" 
                   Background="LightSteelBlue"
-                  Grid.ColumnSpan="2"
-                  HorizontalAlignment="Left">
-                <MenuItem Header="File">
-                    <MenuItem Header="New Project" ></MenuItem>
-                    <MenuItem Header="Open Project" >
-                        <MenuItem Header="WinForms"></MenuItem>
-                        <MenuItem Header="WPF" ></MenuItem>
-                    </MenuItem>
+                  Grid.ColumnSpan="3"
+                  HorizontalAlignment="Left"
+                  VerticalContentAlignment="Center"
+                  FontSize="19">
+                <MenuItem Header="Таблица">
                     <Separator />
-                    <MenuItem Header="Exit" ></MenuItem>
+                    <MenuItem Header="Обновить таблицу" Click="UpdateTable" ></MenuItem>
+                    <Separator />
+                    <Separator />
+                    <Separator />
+                    <MenuItem Header="Выгрузить в Excel" Click="UnloadInExcel"></MenuItem>
+                    <Separator />
                 </MenuItem>
-                <MenuItem Header="Edit" ></MenuItem>
+                <MenuItem Width="35"></MenuItem>
+                <MenuItem Header="Отчет" >
+                    <Separator />
+                    <MenuItem Header="Сформировать отчет" Click="GenerateReport"/>
+                    <Separator />
+                </MenuItem>
+                <MenuItem Width="35"></MenuItem>
                 <MenuItem Header="Статистика" >
+                    <Separator />
                     <MenuItem Header="Показать статистику" Click="ShowStatistika"/>
+                    <Separator />
                 </MenuItem>
             </Menu>
             
@@ -238,25 +248,6 @@
                     </DataTemplate>
                 </DataGrid.RowDetailsTemplate>
             </DataGrid>
-
-            <Button Background="Yellow" 
-                Grid.Column="7"
-                Grid.Row="10"
-                Content="Обновить таблицу"
-                Height="42" 
-                    HorizontalAlignment="Left"
-                VerticalAlignment="Center" 
-                Click="Button_Click_1" Margin="50,0,0,0" RenderTransformOrigin="0.521,0.202" />
-
-            <Button Content="Выгрузить в Excel"
-                Grid.Column="7"
-                Grid.Row="11"
-                    VerticalAlignment="Center"
-                HorizontalAlignment="Left"
-                Background="LightGreen"
-                Height="42"
-                Width="106"
-                Click="Button_Click" Margin="50,0,0,0"/>
 
             <!--  Фильтрация  -->
             <!-- Район -->
@@ -448,16 +439,6 @@
                 TextWrapping="Wrap" 
                 VerticalAlignment="Bottom"
                 Grid.ColumnSpan="2"><Run Language="ru-ru" Text="До"/></TextBlock>
-            <Button Content="Отчет"
-                Grid.Column="6"
-                Grid.Row="12"
-                HorizontalAlignment="Left"
-                Margin="80,6,0,0"
-                Width="106"
-                    FontSize="18"
-                    Foreground="WhiteSmoke"
-                Background="Crimson"
-                Grid.ColumnSpan="2" Click="Button_Click_6" Height="42" VerticalAlignment="Top"/>
 
 
 

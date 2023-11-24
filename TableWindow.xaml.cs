@@ -1047,13 +1047,9 @@ namespace exel_for_mfc
                     MessageBox.Show(ex.Message);
                 }
 
-            }
+        }
 
-            //Выгрузить в Excel
-            private void Button_Click(object sender, RoutedEventArgs e)
-            {
-                new Thread(() =>{ SaveDataInExel(); }) { IsBackground = true}.Start();
-            }
+         
             #endregion
         #region Фильтрация()
         //Заполнение таблиц Фильтров
@@ -1352,12 +1348,6 @@ namespace exel_for_mfc
             
         #endregion  
         #region Обработка возможных исключений и другие мелочи
-        private void Button_Click_1(object sender, RoutedEventArgs e)
-        {
-            Start();
-        }
-
-
         //Очистить фильтр
         private void Button_Click_5(object sender, RoutedEventArgs e)
         {
@@ -1457,14 +1447,6 @@ namespace exel_for_mfc
             }
         }
 
-        //Отчет
-        private void Button_Click_6(object sender, RoutedEventArgs e)
-        {
-           
-            //ReportWindow reportWindow = new();
-            //reportWindow.ShowDialog();
-        }
-
         //Событие при клике левой кнопкой мыши, открываются детали выбранной строки
         private void RowDetailsVisible(object sender, MouseButtonEventArgs e)
         {
@@ -1482,15 +1464,38 @@ namespace exel_for_mfc
         }
 
 
-
-        #endregion
-
-
         //Статистические данные()
         private void ShowStatistika(object sender, RoutedEventArgs e)
         {
             StaticWindow staticWindow = new();
             staticWindow.ShowDialog();
         }
+
+
+        //Сформировать отчет
+        private void GenerateReport(object sender, RoutedEventArgs e)
+        {
+            MessageBox.Show("Сформировать отчет");
+            //ReportWindow reportWindow = new();
+            //reportWindow.ShowDialog();
+        }
+
+        //Обновить таблицу
+        private void UpdateTable(object sender, RoutedEventArgs e)
+        {
+            Start();
+        }
+
+
+        //Выгрузить в Excel
+        private void UnloadInExcel(object sender, RoutedEventArgs e)
+        {
+            new Thread(() => { SaveDataInExel(); }) { IsBackground = true }.Start();
+        }
+
+
+        #endregion
+
+
     }
 }
