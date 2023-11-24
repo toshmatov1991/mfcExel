@@ -1467,10 +1467,30 @@ namespace exel_for_mfc
         //Отчет
         private void Button_Click_6(object sender, RoutedEventArgs e)
         {
-            ReportWindow reportWindow = new();
-            reportWindow.ShowDialog();
+           
+            //ReportWindow reportWindow = new();
+            //reportWindow.ShowDialog();
         }
 
+        //Событие при клике левой кнопкой мыши, открываются детали выбранной строки
+        private void RowDetailsVisible(object sender, MouseButtonEventArgs e)
+        {
+            dataGrid.RowDetailsVisibilityMode = DataGridRowDetailsVisibilityMode.VisibleWhenSelected;
+        }
+
+        //Событие при нажатии Esc, сбрасываются выделенные строки
+        private void RowDetailsCollabse(object sender, KeyEventArgs e)
+        {
+            if(e.Key == Key.Escape)
+            {
+                dataGrid.Items.Refresh();
+                dataGrid.RowDetailsVisibilityMode = DataGridRowDetailsVisibilityMode.Collapsed;
+            }
+        }
+
+
         #endregion
+
+
     }
 }

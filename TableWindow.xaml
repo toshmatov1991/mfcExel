@@ -91,7 +91,8 @@
                       Margin="3,44,3,52" 
                       AllowDrop="False" 
                       RowBackground="White" 
-                      BeginningEdit="TestBeginningEdit">
+                      RowDetailsVisibilityMode ="VisibleWhenSelected"
+                      BeginningEdit="TestBeginningEdit" MouseLeftButtonUp="RowDetailsVisible" KeyUp="RowDetailsCollabse">
                 <DataGrid.Columns>
                     <DataGridTextColumn Binding="{Binding IdReg, UpdateSourceTrigger=PropertyChanged}" IsReadOnly="True" Header="№п/п"/>
                     <DataGridTextColumn Binding="{Binding Family, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Header="Фамилия"/>
@@ -122,7 +123,7 @@
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
                     <DataGridTextColumn Binding="{Binding Adress, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Header="Адрес"/>
-                    
+
                     <DataGridTemplateColumn Header="Льгота" CanUserSort="True" SortMemberPath="Lgota">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
@@ -135,9 +136,9 @@
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
-                   
+
                     <DataGridTextColumn Binding="{Binding Sernumb, UpdateSourceTrigger=PropertyChanged}" Header="С/№ сертиф."/>
-                    
+
                     <DataGridTemplateColumn Header="Дата выдачи">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
@@ -150,7 +151,7 @@
                             </DataTemplate>
                         </DataGridTemplateColumn.CellEditingTemplate>
                     </DataGridTemplateColumn>
-                   
+
                     <DataGridTemplateColumn Header="Тип решения" CanUserSort="True" SortMemberPath="Solution">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
@@ -163,9 +164,9 @@
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
-                   
+
                     <DataGridTextColumn Binding="{Binding DateAndNumbSolutionSert, UpdateSourceTrigger=PropertyChanged}" Header="Дата/№ решения"/>
-                   
+
                     <DataGridTemplateColumn Header="Номинал" CanUserSort="True" SortMemberPath="Pay">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
@@ -436,14 +437,12 @@
                 Grid.Column="6"
                 Grid.Row="12"
                 HorizontalAlignment="Left"
-                VerticalAlignment="Top"
                 Margin="80,6,0,0"
-                Height="42"
                 Width="106"
                     FontSize="18"
                     Foreground="WhiteSmoke"
                 Background="Crimson"
-                Grid.ColumnSpan="2" Click="Button_Click_6"/>
+                Grid.ColumnSpan="2" Click="Button_Click_6" Height="42" VerticalAlignment="Top"/>
 
 
 
