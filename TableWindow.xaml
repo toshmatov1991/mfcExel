@@ -440,8 +440,6 @@
                 VerticalAlignment="Bottom"
                 Grid.ColumnSpan="2"><Run Language="ru-ru" Text="До"/></TextBlock>
 
-
-
         </Grid>
     </Border>
 </Window>
