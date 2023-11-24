@@ -32,6 +32,32 @@
                 <RowDefinition/>
                 <RowDefinition/>
             </Grid.RowDefinitions>
+            
+            <!--Меню-->
+            <Menu Height="35" 
+                  Width="300" 
+                  VerticalAlignment="Top" 
+                  Background="LightSteelBlue"
+                  Grid.ColumnSpan="2"
+                  HorizontalAlignment="Left">
+                <MenuItem Header="File">
+                    <MenuItem Header="New Project" ></MenuItem>
+                    <MenuItem Header="Open Project" >
+                        <MenuItem Header="WinForms"></MenuItem>
+                        <MenuItem Header="WPF" ></MenuItem>
+                    </MenuItem>
+                    <Separator />
+                    <MenuItem Header="Exit" ></MenuItem>
+                </MenuItem>
+                <MenuItem Header="Edit" ></MenuItem>
+                <MenuItem Header="Статистика" >
+                    <MenuItem Header="Показать статистику" Click="ShowStatistika"/>
+                </MenuItem>
+            </Menu>
+            
+            
+            
+            
             <TextBlock Text="Фильтры поиска"
                    FontStyle="Italic"
                    Grid.Column="3"
@@ -406,17 +432,6 @@
                     HorizontalAlignment="Left"
                     Background="Aqua"
                     Width="116" Margin="89,8,0,7" Click="Button_Click_5" Grid.ColumnSpan="2"/>
-
-
-            <Button Content="Статистика"
-                    Grid.Column="7"
-                    Grid.Row="12"
-                    HorizontalAlignment="Left"
-                    VerticalAlignment="Top"
-                    Margin="50,6,0,0"
-                    Height="42"
-                    Width="106"
-                    Background="BlanchedAlmond" Click="Button_Click_2"/>
             <TextBlock 
                 Grid.Column="5" 
                 HorizontalAlignment="Left"

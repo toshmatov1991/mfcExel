@@ -1457,13 +1457,6 @@ namespace exel_for_mfc
             }
         }
 
-        //Статистические данные()
-        private void Button_Click_2(object sender, RoutedEventArgs e)
-        {
-            StaticWindow staticWindow = new();
-            staticWindow.ShowDialog();
-        }
-
         //Отчет
         private void Button_Click_6(object sender, RoutedEventArgs e)
         {
@@ -1489,8 +1482,15 @@ namespace exel_for_mfc
         }
 
 
+
         #endregion
 
 
+        //Статистические данные()
+        private void ShowStatistika(object sender, RoutedEventArgs e)
+        {
+            StaticWindow staticWindow = new();
+            staticWindow.ShowDialog();
+        }
     }
 }
