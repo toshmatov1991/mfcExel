@@ -70,11 +70,11 @@ namespace exel_for_mfc
 
                
 
-                AreaCombobox = db.Areas.FromSqlRaw("SELECT * FROM Area").Where(u => u.HidingArea == 1).ToList();
-                LocalCombobox = db.Localities.FromSqlRaw("SELECT * FROM Locality").Where(u => u.HidingLocal == 1).ToList();
-                PayCombobox = db.PayAmounts.FromSqlRaw("SELECT * FROM PayAmount").Where(u => u.HidingPay == 1).ToList();
-                PrivelCombobox = db.Privileges.FromSqlRaw("SELECT * FROM Privileges").Where(u => u.HidingPriv == 1).ToList();
-                SolCombobox = db.SolutionTypes.FromSqlRaw("SELECT * FROM SolutionType").Where(u => u.HidingSol == 1).ToList();
+                AreaCombobox = db.Areas.FromSqlRaw("SELECT * FROM Area").Where(u => u.HidingArea == 1).OrderBy(f => f.AreaName).ToList();
+                LocalCombobox = db.Localities.FromSqlRaw("SELECT * FROM Locality").Where(u => u.HidingLocal == 1).OrderBy(f => f.LocalName).ToList();
+                PayCombobox = db.PayAmounts.FromSqlRaw("SELECT * FROM PayAmount").Where(u => u.HidingPay == 1).OrderBy(f => f.Pay).ToList();
+                PrivelCombobox = db.Privileges.FromSqlRaw("SELECT * FROM Privileges").Where(u => u.HidingPriv == 1).OrderBy(f => f.PrivilegesName).ToList();
+                SolCombobox = db.SolutionTypes.FromSqlRaw("SELECT * FROM SolutionType").Where(u => u.HidingSol == 1).OrderBy(f => f.SolutionName).ToList();
 
                 dataGrid.ItemsSource = MyList;
             };
@@ -722,26 +722,39 @@ namespace exel_for_mfc
                 {
                     try
                     {
-                        //Надо еще проверить является ли это существующей строкой или это новое
-                        decimal dec = ReturnChislo((sender as ComboBox).Text.Replace(" ", ""));
                         using ExDbContext db = new();
-                        var GetId = await db.PayAmounts.AsNoTracking().Where(u => u.Pay == dec).FirstOrDefaultAsync();
-                        if (GetId != null)
-                            await db.Database.ExecuteSqlRawAsync("UPDATE Registry SET PayAmount_FK = {0} WHERE Id = {1}", GetId.Id, (dataGrid.SelectedItem as SClass)?.IdReg);
-                        else
-                            MessageBox.Show("Произошла ошибка при обновлении данных");
-
-                        static decimal ReturnChislo(string str)
+                        //Надо еще проверить является ли это существующей строкой или это новое
+                        if ((sender as ComboBox).Text == null || (sender as ComboBox).Text == "")
                         {
-                            string temp = "";
-                            for (int i = 0; i < str.Length; i++)
-                            {
-                                if (char.IsDigit(str[i]))
-                                    temp += str[i];
-                            }
-                            return Convert.ToDecimal(temp);
-                        }
 
+                            var GetIdNull = await db.PayAmounts.AsNoTracking().Where(u => u.Pay == null).FirstOrDefaultAsync();
+                            if (GetIdNull != null)
+                                await db.Database.ExecuteSqlRawAsync("UPDATE Registry SET PayAmount_FK = {0} WHERE Id = {1}", GetIdNull.Id, (dataGrid.SelectedItem as SClass)?.IdReg);
+                            else
+                                MessageBox.Show("Произошла ошибка при обновлении данных");
+                        }
+                        else
+                        {
+
+                             decimal dec = ReturnChislo((sender as ComboBox).Text.Replace(" ", ""));
+
+                             var GetId = await db.PayAmounts.AsNoTracking().Where(u => u.Pay == dec).FirstOrDefaultAsync();
+                             if (GetId != null)
+                                 await db.Database.ExecuteSqlRawAsync("UPDATE Registry SET PayAmount_FK = {0} WHERE Id = {1}", GetId.Id, (dataGrid.SelectedItem as SClass)?.IdReg);
+                             else
+                                 MessageBox.Show("Произошла ошибка при обновлении данных");
+
+                             static decimal ReturnChislo(string str)
+                             {
+                                 string temp = "";
+                                 for (int i = 0; i < str.Length; i++)
+                                 {
+                                     if (char.IsDigit(str[i]))
+                                         temp += str[i];
+                                 }
+                                 return Convert.ToDecimal(temp);
+                             }
+                        }
                     }
                     catch (Exception ex)
                     {
@@ -1459,7 +1472,5 @@ namespace exel_for_mfc
         }
 
         #endregion
-
-     
     }
 }

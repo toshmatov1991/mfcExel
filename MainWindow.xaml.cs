@@ -19,7 +19,8 @@ namespace exel_for_mfc
            //reportWindow.Show();
            TableWindow taWindow = new();
            taWindow.Show();
-        
+            //AdminWindow adminWindow = new AdminWindow();
+            //adminWindow.Show();
             //AdressWindow adressWindow = new();
             //adressWindow.Show();
             Close();
