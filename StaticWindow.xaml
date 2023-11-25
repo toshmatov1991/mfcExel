@@ -4,8 +4,11 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
          ResizeMode="NoResize"
-        mc:Ignorable="d"  Icon="Resources\logomfc.png" WindowStartupLocation="CenterScreen"
-        Title="Статистические данные" Height="450" Width="700">
+        mc:Ignorable="d" 
+        Icon="Resources\logomfc.png"
+        WindowStartupLocation="CenterScreen"
+        Title="Статистические данные"
+        Height="450" Width="700">
     <Window.Resources>
         <StreamGeometry x:Key="Geometry">M12,24 L36,0 L36,48 Z</StreamGeometry>
         <Style x:Key="FocusVisual">

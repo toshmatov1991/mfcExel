@@ -44,7 +44,8 @@ namespace exel_for_mfc
                           join p in db.PayAmounts.Where(u => u.Pay != null) on r.PayAmountFk equals p.Id
                           select new
                           {
-                              p.Pay
+                              p.Pay,
+                              r.DateGetSert
                           };
 
             decimal? allSummPays = 0;
@@ -74,6 +75,7 @@ namespace exel_for_mfc
         {
             yearCodeBehind++;
             YearXaml.Text = yearCodeBehind.ToString();
+            StartapStatic();
         }
 
         //Кнопка влево
@@ -81,6 +83,7 @@ namespace exel_for_mfc
         {
             yearCodeBehind--;
             YearXaml.Text = yearCodeBehind.ToString();
+            StartapStatic();
         }
 
     }
