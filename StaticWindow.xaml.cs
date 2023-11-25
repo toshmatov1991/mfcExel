@@ -25,23 +25,20 @@ namespace exel_for_mfc
 
 
             //Общее количество сертификатов
-
-            Sert.Text += db.Registries
-                .Where(u => u.SerialAndNumberSert != null || string.IsNullOrEmpty(u.SerialAndNumberSert))
-                .Count().ToString();
+            var getCountSert = db.Registries.Where(u => u.SerialAndNumberSert != null && u.DateGetSert.Value.Year == yearCodeBehind.Year).Count();
+            Sert.Text = "Сертификаты(общее количество за выбранный год): " + getCountSert.ToString();
 
             //Размер выплат
             var getNamePays = db.PayAmounts.Where(u => u.Pay != null).ToList();
             List<PayClass> names = new();
             foreach (var item in getNamePays)
             {
-                names.Add(new PayClass(item.Id, item.Pay, db.Registries.Where(u => u.PayAmountFk == item.Id).Count()));
+                names.Add(new PayClass(item.Id, item.Pay, db.Registries.Where(u => u.PayAmountFk == item.Id && u.DateGetSert.Value.Year == yearCodeBehind.Year).Count()));
             }
             payFilter.ItemsSource = names.ToList();
 
             //Общее количество выплат
-            var AllPays = from r in db.Registries.Where(u => u.PayAmountFk != null 
-                                                        )
+            var AllPays = from r in db.Registries.Where(u => u.PayAmountFk != null && u.DateGetSert.Value.Year == yearCodeBehind.Year)
                           join p in db.PayAmounts.Where(u => u.Pay != null) on r.PayAmountFk equals p.Id
                           select new
                           {
@@ -51,24 +48,20 @@ namespace exel_for_mfc
 
             decimal? allSummPays = 0;
 
-
-
-
             foreach (var item in AllPays)
             {
                 allSummPays += item.Pay;
             }
 
-
-
             payCount.Text = "Общая сумма выплат за год: " + allSummPays.ToString() + " рублей";
+
 
             //Решения
             var getNameSoul = db.SolutionTypes.Where(u => u.SolutionName != "").ToList();
             List<SolutionClass> names1 = new();
             foreach (var item in getNameSoul)
             {
-                names1.Add(new SolutionClass(item.Id, item.SolutionName, db.Registries.Where(u => u.SolutionFk == item.Id).Count()));
+                names1.Add(new SolutionClass(item.Id, item.SolutionName, db.Registries.Where(u => u.SolutionFk == item.Id && u.DateGetSert.Value.Year == yearCodeBehind.Year).Count()));
             }
             solFilter.ItemsSource = names1.ToList();
 
@@ -79,7 +72,7 @@ namespace exel_for_mfc
         {
             yearCodeBehind = yearCodeBehind.AddYears(1);
             YearXaml.Text = yearCodeBehind.Year.ToString();
-            //StartapStatic();
+            StartapStatic();
         }
 
         //Кнопка влево
@@ -87,7 +80,7 @@ namespace exel_for_mfc
         {
             yearCodeBehind = yearCodeBehind.AddYears(-1);
             YearXaml.Text = yearCodeBehind.Year.ToString();
-            //StartapStatic();
+            StartapStatic();
         }
 
     }

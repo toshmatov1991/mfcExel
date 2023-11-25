@@ -76,12 +76,11 @@
                 <RowDefinition/>
                 <RowDefinition/>
             </Grid.RowDefinitions>
-            <TextBlock Text="Сертификаты(общее количество): "
-                       HorizontalAlignment="Left"
+            <TextBlock HorizontalAlignment="Left"
                        VerticalAlignment="Center"
                        FontSize="19"
                        Grid.ColumnSpan="2"
-                       x:Name="Sert" Width="462"/>
+                       x:Name="Sert" Width="668"/>
 
             <!-- Выплата -->
             <DataGrid x:Name="payFilter"
