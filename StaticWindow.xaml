@@ -135,6 +135,15 @@
                        Grid.ColumnSpan="2"
                        Height="30"
                        x:Name="YearXaml"/>
+            <TextBlock HorizontalAlignment="Right" 
+                       Margin="0,27,0,0" 
+                       Grid.Row="6" 
+                       TextWrapping="Wrap"
+                       VerticalAlignment="Top"
+                       Width="327"
+                       Height="23"
+                       FontStyle="Italic"
+                       x:Name="TotalAmountForAllTime" Grid.Column="1"/>
         </Grid>
     </Border>
 </Window>

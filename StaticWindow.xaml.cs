@@ -21,6 +21,25 @@ namespace exel_for_mfc
         {
             using ExDbContext db = new();
 
+            //Общее количество выплат
+            var AllTimePays = from r in db.Registries.Where(u => u.PayAmountFk != null)
+                          join p in db.PayAmounts.Where(u => u.Pay != null) on r.PayAmountFk equals p.Id
+                          select new
+                          {
+                              p.Pay,
+                          };
+
+            decimal? allTimeSummPays = 0;
+
+            foreach (var item in AllTimePays)
+            {
+                allTimeSummPays += item.Pay;
+            }
+
+
+            TotalAmountForAllTime.Text = "Общая сумма выплат за все время: " + allTimeSummPays.ToString();
+
+
             YearXaml.Text = yearCodeBehind.Year.ToString();
 
 
