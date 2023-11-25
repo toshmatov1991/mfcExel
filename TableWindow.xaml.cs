@@ -593,7 +593,6 @@ namespace exel_for_mfc
             {
                 Dispatcher.Invoke(() =>
                 {
-                    GoSerchNoPainHohuVTgu();
                     MyList = filterSearch.Text switch
                     {
                         "По всем полям" => MyList.Where(u => $"{u.IdReg}{u.Family}{u.Name}{u.Lastname}{u.Snils}{u.Adress}{u.Sernumb}".Replace(" ", "").ToLower().Contains(SearchTable.Text.Replace(" ", "").ToLower())).ToList(),
@@ -612,50 +611,50 @@ namespace exel_for_mfc
             });
         }
 
-        //Событие срабатывает когда поле очищается, и возвращает весь список в таблицу(нормально)
-        private async void ClearSearc(object sender, KeyEventArgs e)
-        {
-            await Task.Run(() =>
-            {
-                Dispatcher.Invoke(() =>
-                {
-                    if (string.IsNullOrEmpty(SearchTable.Text) || string.IsNullOrWhiteSpace(SearchTable.Text))
-                    {
-                        GoSerchNoPainHohuVTgu();
-                        dataGrid.ItemsSource = MyList;
-                    }
-                });
-            });     
-        }
+        ////Событие срабатывает когда поле очищается, и возвращает весь список в таблицу(нормально)
+        //private async void ClearSearc(object sender, KeyEventArgs e)
+        //{
+        //    await Task.Run(() =>
+        //    {
+        //        Dispatcher.Invoke(() =>
+        //        {
+        //            if (string.IsNullOrEmpty(SearchTable.Text) || string.IsNullOrWhiteSpace(SearchTable.Text))
+        //            {
+        //                GoSerchNoPainHohuVTgu();
+        //                dataGrid.ItemsSource = MyList;
+        //            }
+        //        });
+        //    });     
+        //}
 
-        //Задача поиска(нормально)
-        static void GoSerchNoPainHohuVTgu()
-        {
-            using ExDbContext db = new();
-            MyList = (from reg in db.Registries
-                      join appl in db.Applicants on reg.ApplicantFk equals appl.Id
-                      select new SClass
-                      {
-                          IdReg = reg.Id,
-                          Family = appl.Firstname,
-                          Name = appl.Middlename,
-                          Lastname = appl.Lastname,
-                          Snils = appl.Snils,
-                          Area = appl.AreaFk,
-                          Local = appl.LocalityFk,
-                          Adress = appl.Adress,
-                          Lgota = appl.PrivilegesFk,
-                          Pay = reg.PayAmountFk,
-                          Sernumb = reg.SerialAndNumberSert,
-                          DateGetSert = reg.DateGetSert,
-                          Solution = reg.SolutionFk,
-                          DateAndNumbSolutionSert = reg.DateAndNumbSolutionSert,
-                          Comment = reg.Comment,
-                          Trek = reg.Trek,
-                          MailingDate = reg.MailingDate,
-                          IdApplicant = appl.Id
-                      }).ToList();
-        }
+        ////Задача поиска(нормально)
+        //static void GoSerchNoPainHohuVTgu()
+        //{
+        //    using ExDbContext db = new();
+        //    MyList = (from reg in db.Registries
+        //              join appl in db.Applicants on reg.ApplicantFk equals appl.Id
+        //              select new SClass
+        //              {
+        //                  IdReg = reg.Id,
+        //                  Family = appl.Firstname,
+        //                  Name = appl.Middlename,
+        //                  Lastname = appl.Lastname,
+        //                  Snils = appl.Snils,
+        //                  Area = appl.AreaFk,
+        //                  Local = appl.LocalityFk,
+        //                  Adress = appl.Adress,
+        //                  Lgota = appl.PrivilegesFk,
+        //                  Pay = reg.PayAmountFk,
+        //                  Sernumb = reg.SerialAndNumberSert,
+        //                  DateGetSert = reg.DateGetSert,
+        //                  Solution = reg.SolutionFk,
+        //                  DateAndNumbSolutionSert = reg.DateAndNumbSolutionSert,
+        //                  Comment = reg.Comment,
+        //                  Trek = reg.Trek,
+        //                  MailingDate = reg.MailingDate,
+        //                  IdApplicant = appl.Id
+        //              }).ToList();
+        //}
         #endregion
         #region События изменения значений ComboBox()
         private async void AreaComboEvent(object sender, EventArgs e)
@@ -1520,13 +1519,7 @@ namespace exel_for_mfc
         }
 
         #endregion
-
         #region Поиск по фильтрам
-
-
-
-        #endregion
-
         //Событие поиска по району
         private async void AreaSearch(object sender, KeyEventArgs e)
         {
@@ -1543,7 +1536,7 @@ namespace exel_for_mfc
         private async void LocalSearch(object sender, KeyEventArgs e)
         {
             using FdbContext db1 = new();
-            
+
             if (string.IsNullOrEmpty(LocalSearchXaml.Text) || string.IsNullOrWhiteSpace(LocalSearchXaml.Text))
             {
                 locFilter.ItemsSource = await db1.Localves.OrderBy(u => u.Name).ToListAsync();
@@ -1552,5 +1545,6 @@ namespace exel_for_mfc
             else
                 locFilter.ItemsSource = await db1.Localves.Where(a => a.Name.Contains(LocalSearchXaml.Text)).ToListAsync();
         }
+        #endregion
     }
 }

@@ -104,8 +104,8 @@
                  x:Name="SearchTable"
                  Grid.ColumnSpan="2"
                      Height="24"
-                     Margin="0,0,103,0"
-                     KeyUp="ClearSearc"/>
+                     Margin="0,0,103,0"/>
+            
             <Button Content="Искать" 
                 Grid.Column="7"
                 VerticalAlignment="Top"
