@@ -17,6 +17,7 @@ using exel_for_mfc.FilterDB;
 using LinqKit;
 using LinqKit.Core;
 using System.Threading;
+using System.Windows.Controls.Primitives;
 
 namespace exel_for_mfc
 {
@@ -539,6 +540,18 @@ namespace exel_for_mfc
 
                     Start();
 
+                    dataGrid.ItemContainerGenerator.StatusChanged += new EventHandler(ItemContainerGenerator_StatusChanged);
+
+                    void ItemContainerGenerator_StatusChanged(object sender, EventArgs e)
+                    {
+                        if (dataGrid.ItemContainerGenerator.Status == GeneratorStatus.ContainersGenerated)
+                        {
+                            dataGrid.SelectedIndex = MyList.Count - 1;
+                        }
+                    }
+
+
+
                 }
             }
             #endregion
@@ -601,7 +614,7 @@ namespace exel_for_mfc
                         "Отчество" => MyList.Where(u => u.Lastname != null && u.Lastname.Replace(" ", "").ToLower().Contains(SearchTable.Text.Replace(" ", "").ToLower())).ToList(),
                         "ФИО" => MyList.Where(u => $"{u.Family}{u.Name}{u.Lastname}".Replace(" ", "").ToLower().Contains(SearchTable.Text.Replace(" ", "").ToLower())).ToList(),
                         "Снилс" => MyList.Where(u => u.Snils != null && u.Snils.Replace(" ", "").Replace("-", "").Contains(SearchTable.Text.Replace(" ", "").Replace("-", ""))).ToList(),
-                        "Адрес" => MyList.Where(u => u.Adress != null && u.Adress.Replace(" ", "").ToLower().Contains(SearchTable.Text.Replace(" ", "").ToLower())).ToList(),
+                        "Адрес" => MyList.Where(u => u.Adress != null && u.Adress.Replace(" ", "").Replace(",","").Replace(".", "").ToLower().Contains(SearchTable.Text.Replace(" ", "").Replace(",", "").Replace(".", "").ToLower())).ToList(),
                         "Серия и номер сертификата" => MyList.Where(u => u.Sernumb != null && u.Sernumb.Replace(" ", "").ToLower().Contains(SearchTable.Text.Replace(" ", "").ToLower())).ToList(),
                         "По ID" => MyList.Where(u => u.IdReg.ToString() != null && u.IdReg.ToString().Replace(" ", "") == SearchTable.Text.Replace(" ", "")).ToList(),
                         _ => MyList.ToList(),
@@ -1508,7 +1521,11 @@ namespace exel_for_mfc
         //Обновить таблицу
         private void UpdateTable(object sender, RoutedEventArgs e)
         {
-            Start();
+            MessageBoxResult result = MessageBox.Show("Обновление таблицы сбросит все фильтры и поиск, продолжить?", "Внимание!:)", MessageBoxButton.YesNo, MessageBoxImage.Question);
+            if (result == MessageBoxResult.Yes)
+                Start();
+            else if (result == MessageBoxResult.No)
+                return;
         }
 
 
