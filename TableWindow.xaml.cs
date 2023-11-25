@@ -34,8 +34,35 @@ namespace exel_for_mfc
         public TableWindow()
         {
             InitializeComponent();
+            CheckAndAddNullInTables();
             Start();
             FilterStart();
+        }
+
+        //Метод на всякий случай проверяет наличие пустых значений в таблицах-служанках, и если нету их, то добавляет
+        private static async void CheckAndAddNullInTables()
+        {
+            ExDbContext db = new();
+            var checkArea = await db.Areas.Where(u => u.AreaName == "").FirstOrDefaultAsync();
+            var checkLocal = await db.Localities.Where(u => u.LocalName == "").FirstOrDefaultAsync();
+            var checkPay = await db.PayAmounts.Where(u => u.Pay  == null).FirstOrDefaultAsync();
+            var checkPriv = await db.Privileges.Where(u => u.PrivilegesName == "").FirstOrDefaultAsync();
+            var checkSol = await db.SolutionTypes.Where(u => u.SolutionName == "").FirstOrDefaultAsync();
+
+            if(checkArea == null)
+                await db.Database.ExecuteSqlInterpolatedAsync($"INSERT INTO Area(AreaName) VALUES({""})");
+
+            if(checkLocal == null)
+                await db.Database.ExecuteSqlInterpolatedAsync($"INSERT INTO Locality(LocalName) VALUES({""})");
+            
+            if(checkPay == null)
+                await db.Database.ExecuteSqlInterpolatedAsync($"INSERT INTO PayAmount(Pay) VALUES({null})");
+            
+            if(checkPriv == null)
+                await db.Database.ExecuteSqlInterpolatedAsync($"INSERT INTO Privileges(PrivilegesName) VALUES({""})");
+            
+            if(checkSol == null)
+                await db.Database.ExecuteSqlInterpolatedAsync($"INSERT INTO SolutionType(SolutionName) VALUES({""})");   
         }
 
         //Запрос для заполнения таблицы
@@ -516,18 +543,6 @@ namespace exel_for_mfc
             }
             #endregion
 
-            //Возвращаю только Цифры в Снилсе
-            static string ReturnSnils(string? t)
-            {
-                string temp = "";
-                for (int i = 0; i < t.Length; i++)
-                {
-                    if (char.IsDigit(t[i]))
-                        temp += t[i];
-                }
-                return temp;
-            }
-
             //Возвращю тип решения (строку)
             static string ReturnStr(int? t)
             {
@@ -538,7 +553,7 @@ namespace exel_for_mfc
                 else if (t == 3)
                     return "Аннулир.";
                 else if (t == 4)
-                    return "Без рассмотрения";
+                    return "Без/Рассм.";
                 else return "";
 
             }

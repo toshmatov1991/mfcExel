@@ -1,5 +1,8 @@
-﻿using exel_for_mfc.SupportClass;
+﻿using DocumentFormat.OpenXml.Drawing;
+using exel_for_mfc.SupportClass;
+using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Windows;
 
@@ -7,6 +10,7 @@ namespace exel_for_mfc
 {
     public partial class StaticWindow : Window
     {
+        private int yearCodeBehind = DateTime.Now.Year;
         public StaticWindow()
         {
             InitializeComponent();
@@ -17,6 +21,9 @@ namespace exel_for_mfc
         {
             using ExDbContext db = new();
 
+            YearXaml.Text = DateTime.Now.Year.ToString();
+
+
             //Общее количество сертификатов
 
             Sert.Text += db.Registries
@@ -24,7 +31,7 @@ namespace exel_for_mfc
                 .Count().ToString();
 
             //Размер выплат
-            var getNamePays = db.PayAmounts.ToList();
+            var getNamePays = db.PayAmounts.Where(u => u.Pay != null).ToList();
             List<PayClass> names = new();
             foreach (var item in getNamePays)
             {
@@ -33,10 +40,26 @@ namespace exel_for_mfc
             payFilter.ItemsSource = names.ToList();
 
             //Общее количество выплат
-            payCount.Text += db.Registries.Where(u => u.PayAmountFk != null).Count().ToString();
+            var AllPays = from r in db.Registries.Where(u => u.PayAmountFk != null)
+                          join p in db.PayAmounts.Where(u => u.Pay != null) on r.PayAmountFk equals p.Id
+                          select new
+                          {
+                              p.Pay
+                          };
+
+            decimal? allSummPays = 0;
+
+            foreach (var item in AllPays)
+            {
+                allSummPays += item.Pay;
+            }
+
+
+
+            payCount.Text = "Общая сумма выплат за год: " + allSummPays.ToString() + " рублей";
 
             //Решения
-            var getNameSoul = db.SolutionTypes.ToList();
+            var getNameSoul = db.SolutionTypes.Where(u => u.SolutionName != "").ToList();
             List<SolutionClass> names1 = new();
             foreach (var item in getNameSoul)
             {
@@ -44,8 +67,21 @@ namespace exel_for_mfc
             }
             solFilter.ItemsSource = names1.ToList();
 
-            //Общее количество Решений
-            solCount.Text += db.Registries.Where(u => u.SolutionFk != null).Count().ToString();
         }
+
+        //Кнопка вправо
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            yearCodeBehind++;
+            YearXaml.Text = yearCodeBehind.ToString();
+        }
+
+        //Кнопка влево
+        private void Button_Click_1(object sender, RoutedEventArgs e)
+        {
+            yearCodeBehind--;
+            YearXaml.Text = yearCodeBehind.ToString();
+        }
+
     }
 }
