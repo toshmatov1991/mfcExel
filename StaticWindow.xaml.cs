@@ -10,7 +10,7 @@ namespace exel_for_mfc
 {
     public partial class StaticWindow : Window
     {
-        private int yearCodeBehind = DateTime.Now.Year;
+        public DateTime yearCodeBehind = DateTime.Today;
         public StaticWindow()
         {
             InitializeComponent();
@@ -21,7 +21,7 @@ namespace exel_for_mfc
         {
             using ExDbContext db = new();
 
-            YearXaml.Text = DateTime.Now.Year.ToString();
+            YearXaml.Text = yearCodeBehind.Year.ToString();
 
 
             //Общее количество сертификатов
@@ -40,7 +40,8 @@ namespace exel_for_mfc
             payFilter.ItemsSource = names.ToList();
 
             //Общее количество выплат
-            var AllPays = from r in db.Registries.Where(u => u.PayAmountFk != null)
+            var AllPays = from r in db.Registries.Where(u => u.PayAmountFk != null 
+                                                        )
                           join p in db.PayAmounts.Where(u => u.Pay != null) on r.PayAmountFk equals p.Id
                           select new
                           {
@@ -49,6 +50,9 @@ namespace exel_for_mfc
                           };
 
             decimal? allSummPays = 0;
+
+
+
 
             foreach (var item in AllPays)
             {
@@ -73,17 +77,17 @@ namespace exel_for_mfc
         //Кнопка вправо
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            yearCodeBehind++;
-            YearXaml.Text = yearCodeBehind.ToString();
-            StartapStatic();
+            yearCodeBehind = yearCodeBehind.AddYears(1);
+            YearXaml.Text = yearCodeBehind.Year.ToString();
+            //StartapStatic();
         }
 
         //Кнопка влево
         private void Button_Click_1(object sender, RoutedEventArgs e)
         {
-            yearCodeBehind--;
-            YearXaml.Text = yearCodeBehind.ToString();
-            StartapStatic();
+            yearCodeBehind = yearCodeBehind.AddYears(-1);
+            YearXaml.Text = yearCodeBehind.Year.ToString();
+            //StartapStatic();
         }
 
     }
