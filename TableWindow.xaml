@@ -32,7 +32,7 @@
                 <RowDefinition/>
                 <RowDefinition/>
             </Grid.RowDefinitions>
-            
+
             <!--Меню-->
             <Menu Height="35" 
                   Width="400" 
@@ -64,10 +64,10 @@
                     <Separator />
                 </MenuItem>
             </Menu>
-            
-            
-            
-            
+
+
+
+
             <TextBlock Text="Фильтры поиска"
                    FontStyle="Italic"
                    Grid.Column="3"
@@ -118,13 +118,13 @@
                       Grid.ColumnSpan="8"
                       RowHeight="30"
                       VerticalContentAlignment="Center"
-                      Grid.RowSpan="11"
+                      Grid.RowSpan="10"
                       CanUserSortColumns="False"
                       CanUserDeleteRows="False"
                       AutoGenerateColumns="False"
                       CanUserAddRows="True"
                       CellEditEnding="dataGrid_CellEditEnding" 
-                      Margin="3,44,3,52" 
+                      Margin="3,44,3,27" 
                       AllowDrop="False" 
                       RowBackground="White" 
                       RowDetailsVisibilityMode ="VisibleWhenSelected"
@@ -439,6 +439,25 @@
                 TextWrapping="Wrap" 
                 VerticalAlignment="Bottom"
                 Grid.ColumnSpan="2"><Run Language="ru-ru" Text="До"/></TextBlock>
+            
+            <TextBox x:Name="AreaSearchXaml" 
+                     HorizontalAlignment="Left"
+                     Margin="4,30,0,0"
+                     Grid.Row="9"
+                     VerticalAlignment="Top"
+                     Width="158"
+                     Grid.ColumnSpan="2"
+                     KeyUp="AreaSearch"/>
+            
+            <TextBox x:Name="LocalSearchXaml"
+                     HorizontalAlignment="Left" 
+                     Margin="25,30,0,0"
+                     VerticalAlignment="Top"
+                     Width="158"
+                     Grid.Row="9"
+                     Grid.Column="1"
+                     Grid.ColumnSpan="2" 
+                     KeyUp="LocalSearch"/>
 
         </Grid>
     </Border>

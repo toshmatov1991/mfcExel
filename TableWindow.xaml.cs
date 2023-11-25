@@ -1518,8 +1518,39 @@ namespace exel_for_mfc
         {
             new Thread(() => { SaveDataInExel(); }) { IsBackground = true }.Start();
         }
+
         #endregion
 
+        #region Поиск по фильтрам
 
+
+
+        #endregion
+
+        //Событие поиска по району
+        private async void AreaSearch(object sender, KeyEventArgs e)
+        {
+            using FdbContext db = new();
+            if (string.IsNullOrEmpty(AreaSearchXaml.Text) || string.IsNullOrWhiteSpace(AreaSearchXaml.Text))
+            {
+                areaFilter.ItemsSource = await db.AreaFs.OrderBy(u => u.Name).ToListAsync();
+            }
+            else
+                areaFilter.ItemsSource = await db.AreaFs.Where(a => a.Name.Contains(AreaSearchXaml.Text)).ToListAsync();
+        }
+
+        //Событие поиска по населенному пункту
+        private async void LocalSearch(object sender, KeyEventArgs e)
+        {
+            using FdbContext db1 = new();
+            
+            if (string.IsNullOrEmpty(LocalSearchXaml.Text) || string.IsNullOrWhiteSpace(LocalSearchXaml.Text))
+            {
+                locFilter.ItemsSource = await db1.Localves.OrderBy(u => u.Name).ToListAsync();
+            }
+
+            else
+                locFilter.ItemsSource = await db1.Localves.Where(a => a.Name.Contains(LocalSearchXaml.Text)).ToListAsync();
+        }
     }
 }
