@@ -105,7 +105,7 @@
                  Grid.ColumnSpan="2"
                      Height="24"
                      Margin="0,0,103,0"/>
-            
+
             <Button Content="Искать" 
                 Grid.Column="7"
                 VerticalAlignment="Top"
@@ -122,7 +122,7 @@
                       CanUserSortColumns="False"
                       CanUserDeleteRows="False"
                       AutoGenerateColumns="False"
-                      CanUserAddRows="True"
+                      CanUserAddRows="False"
                       CellEditEnding="dataGrid_CellEditEnding" 
                       Margin="3,44,3,27" 
                       AllowDrop="False" 
@@ -439,7 +439,7 @@
                 TextWrapping="Wrap" 
                 VerticalAlignment="Bottom"
                 Grid.ColumnSpan="2"><Run Language="ru-ru" Text="До"/></TextBlock>
-            
+
             <TextBox x:Name="AreaSearchXaml" 
                      HorizontalAlignment="Left"
                      Margin="4,30,0,0"
@@ -448,7 +448,7 @@
                      Width="158"
                      Grid.ColumnSpan="2"
                      KeyUp="AreaSearch"/>
-            
+
             <TextBox x:Name="LocalSearchXaml"
                      HorizontalAlignment="Left" 
                      Margin="25,30,0,0"
@@ -458,6 +458,15 @@
                      Grid.Column="1"
                      Grid.ColumnSpan="2" 
                      KeyUp="LocalSearch"/>
+            <Button Grid.Column="3"
+                    Content="Добавить строку" 
+                    HorizontalAlignment="Center"
+                    Margin="0,29,0,0" 
+                    Grid.Row="9"
+                    VerticalAlignment="Top"
+                    Grid.ColumnSpan="2"
+                    Width="106"
+                    Background="Aquamarine" Click="Button_Click"/>
 
         </Grid>
     </Border>

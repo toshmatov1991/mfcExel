@@ -18,6 +18,7 @@ using LinqKit;
 using LinqKit.Core;
 using System.Threading;
 using System.Windows.Controls.Primitives;
+using System.Windows.Media;
 
 namespace exel_for_mfc
 {
@@ -538,19 +539,95 @@ namespace exel_for_mfc
                         }
                     }
 
+                    
+
+
                     Start();
+                    dataGrid.CanUserAddRows = false;
+                    dataGrid.RowDetailsVisibilityMode = DataGridRowDetailsVisibilityMode.Collapsed;
+                    dataGrid.SelectionUnit = DataGridSelectionUnit.Cell;
+                    /* select the second cell (index = 1) of the fourth row (index = 3) */
+                    SelectCellByIndex(dataGrid, MyList.Count - 1, 8);
 
-                    dataGrid.ItemContainerGenerator.StatusChanged += new EventHandler(ItemContainerGenerator_StatusChanged);
 
-                    void ItemContainerGenerator_StatusChanged(object sender, EventArgs e)
+
+                    static void SelectCellByIndex(DataGrid dataGrid, int rowIndex, int columnIndex)
                     {
-                        if (dataGrid.ItemContainerGenerator.Status == GeneratorStatus.ContainersGenerated)
+                        if (!dataGrid.SelectionUnit.Equals(DataGridSelectionUnit.Cell))
+                            throw new ArgumentException("The SelectionUnit of the DataGrid must be set to Cell.");
+
+                        if (rowIndex < 0 || rowIndex > (dataGrid.Items.Count - 1))
+                            throw new ArgumentException(string.Format("{0} is an invalid row index.", rowIndex));
+
+                        if (columnIndex < 0 || columnIndex > (dataGrid.Columns.Count - 1))
+                            throw new ArgumentException(string.Format("{0} is an invalid column index.", columnIndex));
+
+                        dataGrid.SelectedCells.Clear();
+
+                        object item = dataGrid.Items[rowIndex]; //=Product X
+                        DataGridRow row = dataGrid.ItemContainerGenerator.ContainerFromIndex(rowIndex) as DataGridRow;
+                        if (row == null)
                         {
-                            dataGrid.SelectedIndex = MyList.Count - 1;
+                            dataGrid.ScrollIntoView(item);
+                            row = dataGrid.ItemContainerGenerator.ContainerFromIndex(rowIndex) as DataGridRow;
+                        }
+                        if (row != null)
+                        {
+                            DataGridCell cell = GetCell(dataGrid, row, columnIndex);
+                            if (cell != null)
+                            {
+                                DataGridCellInfo dataGridCellInfo = new DataGridCellInfo(cell);
+                                dataGrid.SelectedCells.Add(dataGridCellInfo);
+                                cell.Focus();
+                            }
                         }
                     }
 
+                    static DataGridCell GetCell(DataGrid dataGrid, DataGridRow rowContainer, int column)
+                    {
+                        if (rowContainer != null)
+                        {
+                            DataGridCellsPresenter presenter = FindVisualChild<DataGridCellsPresenter>(rowContainer);
+                            if (presenter == null)
+                            {
+                                /* if the row has been virtualized away, call its ApplyTemplate() method 
+                                 * to build its visual tree in order for the DataGridCellsPresenter
+                                 * and the DataGridCells to be created */
+                                rowContainer.ApplyTemplate();
+                                presenter = FindVisualChild<DataGridCellsPresenter>(rowContainer);
+                            }
+                            if (presenter != null)
+                            {
+                                DataGridCell cell = presenter.ItemContainerGenerator.ContainerFromIndex(column) as DataGridCell;
+                                if (cell == null)
+                                {
+                                    /* bring the column into view
+                                     * in case it has been virtualized away */
+                                    dataGrid.ScrollIntoView(rowContainer, dataGrid.Columns[column]);
+                                    cell = presenter.ItemContainerGenerator.ContainerFromIndex(column) as DataGridCell;
+                                }
+                                return cell;
+                            }
+                        }
+                        return null;
+                    }
 
+                    static T FindVisualChild<T>(DependencyObject obj) where T : DependencyObject
+                    {
+                        for (int i = 0; i < VisualTreeHelper.GetChildrenCount(obj); i++)
+                        {
+                            DependencyObject child = VisualTreeHelper.GetChild(obj, i);
+                            if (child != null && child is T)
+                                return (T)child;
+                            else
+                            {
+                                T childOfChild = FindVisualChild<T>(child);
+                                if (childOfChild != null)
+                                    return childOfChild;
+                            }
+                        }
+                        return null;
+                    }
 
                 }
             }
@@ -1513,7 +1590,7 @@ namespace exel_for_mfc
         //Сформировать отчет
         private void GenerateReport(object sender, RoutedEventArgs e)
         {
-            MessageBox.Show("Сформировать отчет");
+           
             //ReportWindow reportWindow = new();
             //reportWindow.ShowDialog();
         }
@@ -1563,5 +1640,11 @@ namespace exel_for_mfc
                 locFilter.ItemsSource = await db1.Localves.Where(a => a.Name.Contains(LocalSearchXaml.Text)).ToListAsync();
         }
         #endregion
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            dataGrid.CanUserAddRows = true;
+            Start();
+        }
     }
 }
