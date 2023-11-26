@@ -21,6 +21,7 @@ namespace exel_for_mfc
         public string? Comment { get; set; }
         public string? Trek { get; set; }
         public DateTime? MailingDate { get; set; }
+        public DateTime? DateOfTheApp { get; set; }
         public int? IdApplicant { get; set; }
     }
 }

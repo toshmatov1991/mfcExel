@@ -42,7 +42,7 @@ namespace exel_for_mfc
         }
 
 
-        //Добавление новой пустой строки
+        //Добавление новой пустой строки()
         private async void Button_Click(object sender, RoutedEventArgs e)
         {
             dataGrid.CanUserAddRows = true;
@@ -69,9 +69,6 @@ namespace exel_for_mfc
             }
 
         }
-
-
-
 
         //Метод на всякий случай проверяет наличие пустых значений в таблицах-служанках, и если нету их, то добавляет
         private static async void CheckAndAddNullInTables()
@@ -125,7 +122,8 @@ namespace exel_for_mfc
                               Comment = reg.Comment,
                               Trek = reg.Trek,
                               MailingDate = reg.MailingDate,
-                              IdApplicant = appl.Id
+                              IdApplicant = appl.Id,
+                              DateOfTheApp = reg.dateOfTheApp
                           }).ToList();
 
                
@@ -707,6 +705,22 @@ namespace exel_for_mfc
                 }
             }
         }
+
+        //Обновление даты обращения()
+        private async void UpdateDateOfApp(object sender, SelectionChangedEventArgs e)
+        {
+            try
+            {
+                using ExDbContext db = new();
+                await db.Database.ExecuteSqlRawAsync("UPDATE Registry SET dateOfTheApp = {0} WHERE Id = {1}", Convert.ToDateTime(e.Source.ToString(), new CultureInfo("ru-RU")), (dataGrid.SelectedItem as SClass)?.IdReg);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Произошла ошибка при обновлении Даты Обращения\nПовторите попытку");
+            }
+            
+        }
+
         #endregion
         #region Поиск()
         //Поиск(Нормально)
@@ -1672,6 +1686,7 @@ namespace exel_for_mfc
             else
                 locFilter.ItemsSource = await db1.Localves.Where(a => a.Name.Contains(LocalSearchXaml.Text)).ToListAsync();
         }
+
         #endregion
 
       

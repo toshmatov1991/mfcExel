@@ -238,10 +238,14 @@
                 <!-- Отображение комментария при выделении строки -->
                 <DataGrid.RowDetailsTemplate>
                     <DataTemplate>
-                        <StackPanel Orientation="Horizontal" Height="20" VerticalAlignment="Center">
+                        <StackPanel Orientation="Horizontal" Height="27" VerticalAlignment="Center">
+                            <TextBlock Text="Д/об:   " FontWeight="Bold" VerticalAlignment="Center" Background="BlanchedAlmond"/>
+                            <DatePicker SelectedDate="{Binding DateOfTheApp, StringFormat=dd.MM.yyyy, UpdateSourceTrigger=PropertyChanged}" Background="BlanchedAlmond" VerticalContentAlignment="Center" SelectedDateChanged="UpdateDateOfApp" />
+                            <TextBlock Text="      "/>
+                            <TextBlock Text=" Коммент: " FontWeight="Bold" Background="LightGoldenrodYellow" VerticalAlignment="Center"/>
                             <TextBox Text="{Binding Path=Comment, UpdateSourceTrigger=PropertyChanged}"
                                  TextChanged="CommentUpdate" 
-                                 Background="LightGreen"
+                                 Background="LightGoldenrodYellow"
                                  VerticalContentAlignment="Center"
                                  FontWeight="DemiBold"
                                  Width="300"
@@ -386,7 +390,6 @@
                 </DataGrid.Columns>
             </DataGrid>
 
-
             <DatePicker x:Name="dateStart"
                         IsDropDownOpen="False"
                         SelectedDateFormat="Short"
@@ -426,6 +429,7 @@
                     HorizontalAlignment="Left"
                     Background="Aqua"
                     Width="116" Margin="89,8,0,7" Click="Button_Click_5" Grid.ColumnSpan="2"/>
+            
             <TextBlock 
                 Grid.Column="5" 
                 HorizontalAlignment="Left"
@@ -461,6 +465,7 @@
                      Grid.Column="1"
                      Grid.ColumnSpan="2" 
                      KeyUp="LocalSearch"/>
+            
             <Button Grid.Column="3"
                     Content="Добавить строку" 
                     HorizontalAlignment="Center"
