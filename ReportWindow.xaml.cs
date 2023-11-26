@@ -19,12 +19,12 @@ namespace exel_for_mfc
         public ReportWindow()
         {
             InitializeComponent();
-            //var report = new StiReport();
-            //report.DesignWithWpf();
         }
 
+        //Генерация шаблона для отчета
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
 
-
-
+        }
     }
 }
