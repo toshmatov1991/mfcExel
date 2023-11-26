@@ -128,7 +128,10 @@
                       AllowDrop="False" 
                       RowBackground="White" 
                       RowDetailsVisibilityMode ="VisibleWhenSelected"
-                      BeginningEdit="TestBeginningEdit" MouseLeftButtonUp="RowDetailsVisible" KeyUp="RowDetailsCollabse">
+                      BeginningEdit="TestBeginningEdit"
+                      MouseLeftButtonUp="RowDetailsVisible" 
+                      KeyUp="RowDetailsCollabse"
+                      MouseDown="RowDetailsVisible">
                 <DataGrid.Columns>
                     <DataGridTextColumn Binding="{Binding IdReg, UpdateSourceTrigger=PropertyChanged}" IsReadOnly="True" Header="№п/п"/>
                     <DataGridTextColumn Binding="{Binding Family, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Header="Фамилия"/>

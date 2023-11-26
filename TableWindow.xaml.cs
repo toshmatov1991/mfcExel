@@ -74,7 +74,6 @@ namespace exel_for_mfc
             {
                 MyList = (from reg in db.Registries
                           join appl in db.Applicants on reg.ApplicantFk equals appl.Id
-                          join areaa in db.Areas on appl.AreaFk equals areaa.Id
                           select new SClass
                           {
                               IdReg = reg.Id,
@@ -134,6 +133,7 @@ namespace exel_for_mfc
             #endregion
 
             #region Добавление записи и проверки всякие)
+            //Если равен последней записи
             else if (a.IdReg == 0)
             {
                 // Добавление записи
@@ -548,6 +548,7 @@ namespace exel_for_mfc
                     dataGrid.SelectionUnit = DataGridSelectionUnit.Cell;
                     /* select the second cell (index = 1) of the fourth row (index = 3) */
                     SelectCellByIndex(dataGrid, MyList.Count - 1, 8);
+                    dataGrid.RowDetailsVisibilityMode = DataGridRowDetailsVisibilityMode.VisibleWhenSelected;
 
 
 
@@ -1641,10 +1642,31 @@ namespace exel_for_mfc
         }
         #endregion
 
-        private void Button_Click(object sender, RoutedEventArgs e)
+        private async void Button_Click(object sender, RoutedEventArgs e)
         {
             dataGrid.CanUserAddRows = true;
-            Start();
+            try
+            {
+                ExDbContext db = new();
+                //Вставка пустой записи в таблицу Заявитель
+                var inApp = await db.Database.ExecuteSqlInterpolatedAsync($"INSERT INTO Applicant(Firstname, Middlename, Lastname, Area_FK, Locality_FK, Adress, Snils, Privileges_FK) VALUES({null}, {null}, {null}, {null}, {null}, {null}, {null}, {null})");
+
+
+                //Запрос на получение Id последнего заявителя в таблице Applicant
+                var getIdLastApp = await db.Applicants.AsNoTracking().OrderBy(u => u.Id).LastOrDefaultAsync();
+
+                //Вставка пустой записи в таблицу Регистр
+                var inReg = await db.Database.ExecuteSqlInterpolatedAsync($"INSERT INTO Registry(Applicant_FK, SerialAndNumberSert, DateGetSert, PayAmount_FK, Solution_FK, DateAndNumbSolutionSert, Comment, Trek, MailingDate) VALUES({getIdLastApp.Id}, {null}, {null}, {null}, {null}, {null}, {null}, {null}, {null})");
+
+                
+                Start();
+                dataGrid.CanUserAddRows = false;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+            
         }
     }
 }
