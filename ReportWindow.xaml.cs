@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Microsoft.Win32;
+using SpreadsheetLight;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -24,6 +26,32 @@ namespace exel_for_mfc
         //Генерация шаблона для отчета
         private void Button_Click(object sender, RoutedEventArgs e)
         {
+            SaveFileDialog saveFile = new()
+            {
+                DefaultExt = "xlsx"
+            };
+
+            if (saveFile.ShowDialog() == true)
+            {
+                CreateFile(saveFile.FileName);
+
+            }
+        }
+
+        private static void CreateFile(string str)
+        {
+            if(str != string.Empty)
+            {
+                using SLDocument doc = new();
+
+                doc.SetCellValue("A1", "Тимур");
+                doc.SaveAs(str);
+
+
+
+            }
+
+
 
         }
     }

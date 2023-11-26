@@ -14,9 +14,5 @@
                 Background="DarkBlue"
                 Foreground="White"
                 RenderTransformOrigin="-0.341,0.328" Height="44" Width="187" Click="Button_Click"/>
-
-
-
-
     </Grid>
 </Window>
