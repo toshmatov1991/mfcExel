@@ -19,6 +19,7 @@ using LinqKit.Core;
 using System.Threading;
 using System.Windows.Controls.Primitives;
 using System.Windows.Media;
+using DocumentFormat.OpenXml.Office2010.Drawing;
 
 namespace exel_for_mfc
 {
@@ -28,6 +29,8 @@ namespace exel_for_mfc
         public static string temp1 = "";
 
         private bool flag = true;
+
+        private int temper = 0;
         public static List<Area>? AreaCombobox { get; set; }
         public static List<Locality>? LocalCombobox { get; set; }
         public static List<PayAmount>? PayCombobox { get; set; }
@@ -145,7 +148,12 @@ namespace exel_for_mfc
         {
             //Считывание строки
             SClass? a = e.Row.Item as SClass;
-
+            if(temper != a.IdReg)
+            {
+                temper = a.IdReg;
+                flag = true;
+            }
+            
             #region Обновление записи()
             if (a.IdReg != 0)
             {
