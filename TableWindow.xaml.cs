@@ -26,6 +26,8 @@ namespace exel_for_mfc
     {
         #region База
         public static string temp1 = "";
+
+        private bool flag = true;
         public static List<Area>? AreaCombobox { get; set; }
         public static List<Locality>? LocalCombobox { get; set; }
         public static List<PayAmount>? PayCombobox { get; set; }
@@ -137,38 +139,19 @@ namespace exel_for_mfc
                 dataGrid.ItemsSource = MyList;
             };
         }
-      
+
         //Событие редактирования ячейки
         public async void dataGrid_CellEditEnding(object sender, DataGridCellEditEndingEventArgs e)
         {
             //Считывание строки
             SClass? a = e.Row.Item as SClass;
 
-            using ExDbContext db = new();
-
             #region Обновление записи()
             if (a.IdReg != 0)
             {
-                // Редактирование ячейки (Обновление строки) - Заявитель - Регистр
-
-                    //Обновление таблицы Заявитель
-                var upApp = await db.Database.ExecuteSqlRawAsync("UPDATE Applicant SET Firstname = {0}, Middlename = {1}, Lastname = {2}, Adress = {3}, Snils = {4} WHERE Id = {5}", a.Family, a.Name, a.Lastname, a.Adress, a.Snils, a.IdApplicant) ;
-                if (upApp == 0)
-                    MessageBox.Show("Произошла ошибка при обновлении таблицы(Заявитель)\nПовторите попытку");
-                //Обновление таблицы Регистр
-                var upReg = await db.Database.ExecuteSqlRawAsync("UPDATE Registry SET SerialAndNumberSert = {0}, DateGetSert = {1}, DateAndNumbSolutionSert = {2}, Comment = {3}, Trek = {4}, MailingDate = {5} WHERE Id = {6}", a.Sernumb, a.DateGetSert, a.DateAndNumbSolutionSert, a.Comment, a.Trek, a.MailingDate == null ? null : Convert.ToDateTime(a.MailingDate).ToString("d", new CultureInfo("ru-Ru")), a.IdReg);
-                if (upReg == 0)
-                    MessageBox.Show("Произошла ошибка при обновлении таблицы(Регистр)\nПовторите попытку");
-            }
-            #endregion
-
-            #region Добавление записи и проверки всякие)
-            //Если равен последней записи
-            else if (a.IdReg == 0)
-            {
                 // Добавление записи
                 // Сначала проверка на заполнение всех полей
-                if (   !string.IsNullOrEmpty(a.Family)
+                if (!string.IsNullOrEmpty(a.Family)
                     && !string.IsNullOrEmpty(a.Name)
                     && !string.IsNullOrEmpty(a.Lastname)
                     && !string.IsNullOrEmpty(a.Adress)
@@ -176,7 +159,7 @@ namespace exel_for_mfc
                     && a.Local != null
                     && !string.IsNullOrEmpty(a.Snils))
                 {
-
+                    using ExDbContext db = new();
                     //Проверка-запрос ФИО Адрес Снилс
                     var myQuery = await db.Applicants.FromSqlRaw("SELECT * FROM Applicant WHERE Firstname LIKE {0} AND Middlename LIKE {1} AND Lastname LIKE {2} AND Adress LIKE {3} AND Snils LIKE {4}", a.Family, a.Name, a.Lastname, a.Adress, a.Snils).AsNoTracking().FirstOrDefaultAsync();
 
@@ -189,9 +172,8 @@ namespace exel_for_mfc
                     //Проверка-запрос ФИО
                     var myQueryFIO = await db.Applicants.FromSqlRaw("SELECT * FROM Applicant WHERE Firstname LIKE {0} AND Middlename LIKE {1} AND Lastname LIKE {2}", a.Family, a.Name, a.Lastname).AsNoTracking().FirstOrDefaultAsync();
 
-
                     // 1) Если совпали все условия ФИО Адрес Снилс
-                    if (myQuery != null)
+                    if (myQuery != null && flag)
                     {
                         var myQuery1234 = from r in await db.Registries.AsNoTracking().ToListAsync()
                                           join ap in await db.Applicants.AsNoTracking().ToListAsync() on r.ApplicantFk equals ap.Id
@@ -223,59 +205,29 @@ namespace exel_for_mfc
                             }
 
                             //Информировать что такая запись найдена
-                            var result = MessageBox.Show($"{str}\n в таблице существуют записи данного заявителя\nДобавить новую запись в таблицу?", "Найдены совпадения!", MessageBoxButton.YesNo, MessageBoxImage.Information);
-
+                            var result = MessageBox.Show($"{str}\n в таблице существуют записи данного заявителя\nПродолжить обновление записи?", "Найдены совпадения!", MessageBoxButton.YesNo, MessageBoxImage.Information);
+                            flag = false;
                             if (result == MessageBoxResult.Yes)
                             {
-                                if (a.Lgota == null) //
-                                {
-                                    //Добавить новую запись в таблицу заявитель
-                                    var inApp = await db.Database.ExecuteSqlInterpolatedAsync($"INSERT INTO Applicant(Firstname, Middlename, Lastname, Area_FK, Locality_FK, Adress, Snils, Privileges_FK) VALUES({a.Family}, {a.Name}, {a.Lastname}, {a.Area}, {a.Local}, {a.Adress}, {a.Snils}, {null})");
-                                    if (inApp == 0)
-                                        MessageBox.Show("Произошла ошибка при вставке записи в таблицу Заявитель\nПовторите попытку");
-                                }
-
-                                else if (a.Area != null && a.Local != null && a.Lgota != null) //
-                                {
-                                    //Добавить новую запись в таблицу заявитель
-                                    var inApp = await db.Database.ExecuteSqlInterpolatedAsync($"INSERT INTO Applicant(Firstname, Middlename, Lastname, Area_FK, Locality_FK, Adress, Snils, Privileges_FK) VALUES({a.Family}, {a.Name}, {a.Lastname}, {a.Area}, {a.Local}, {a.Adress}, {a.Snils}, {a.Lgota})");
-                                    if (inApp == 0)
-                                        MessageBox.Show("Произошла ошибка при вставке записи в таблицу Заявитель\nПовторите попытку");
-                                }
-
-                                //Запрос на получение Id последнего заявителя в таблице Applicant
-                                var getIdLastApp = await db.Applicants.AsNoTracking().OrderBy(u => u.Id).LastOrDefaultAsync();
-                                if (getIdLastApp == null)
-                                    MessageBox.Show("Произошла ошибка :( (ошибка запроса last id applicant)\nПовторите попытку");
-
-                                else
-                                {
-                                    if (a.Pay == null || a.Solution == null || a.Pay == null && a.Solution == null)
-                                    {
-                                        //Добавить новую запись в таблицу Регистр
-                                        var inReg = await db.Database.ExecuteSqlInterpolatedAsync($"INSERT INTO Registry(Applicant_FK, SerialAndNumberSert, DateGetSert, PayAmount_FK, Solution_FK, DateAndNumbSolutionSert, Comment, Trek, MailingDate) VALUES({getIdLastApp.Id}, {a.Sernumb}, {a.DateGetSert}, {null}, {null}, {a.DateAndNumbSolutionSert}, {a.Comment}, {a.Trek}, {a.MailingDate})");
-                                        await Task.Delay(50);
-                                        if (inReg == 0)
-                                            MessageBox.Show("Произошла ошибка вставки записи в таблицу Регистр\nПовторите попытку");
-                                    }
-
-                                    else if (a.Pay != null && a.Solution != null)
-                                    {
-                                        //Добавить новую запись в таблицу Регистр
-                                        var inReg = await db.Database.ExecuteSqlInterpolatedAsync($"INSERT INTO Registry(Applicant_FK, SerialAndNumberSert, DateGetSert, PayAmount_FK, Solution_FK, DateAndNumbSolutionSert, Comment, Trek, MailingDate) VALUES({getIdLastApp.Id}, {a.Sernumb}, {a.DateGetSert}, {a.Pay} ,  {a.Solution}, {a.DateAndNumbSolutionSert}, {a.Comment}, {a.Trek}, {a.MailingDate})");
-                                        await Task.Delay(50);
-                                        if (inReg == 0)
-                                            MessageBox.Show("Произошла ошибка вставки записи в таблицу Регистр\nПовторите попытку");
-                                    }
-                                }
+                                //Обновление таблицы Заявитель
+                                var upApp = await db.Database.ExecuteSqlRawAsync("UPDATE Applicant SET Firstname = {0}, Middlename = {1}, Lastname = {2}, Adress = {3}, Snils = {4} WHERE Id = {5}", a.Family, a.Name, a.Lastname, a.Adress, a.Snils, a.IdApplicant);
+                                if (upApp == 0)
+                                    MessageBox.Show("Произошла ошибка при обновлении таблицы(Заявитель)\nПовторите попытку");
+                                //Обновление таблицы Регистр
+                                var upReg = await db.Database.ExecuteSqlRawAsync("UPDATE Registry SET SerialAndNumberSert = {0}, DateGetSert = {1}, DateAndNumbSolutionSert = {2}, Comment = {3}, Trek = {4}, MailingDate = {5}, dateOfTheApp = {6} WHERE Id = {7}", a.Sernumb, a.DateGetSert, a.DateAndNumbSolutionSert, a.Comment, a.Trek, a.MailingDate == null ? null : Convert.ToDateTime(a.MailingDate).ToString("d", new CultureInfo("ru-Ru")), a.DateOfTheApp == null ? null : Convert.ToDateTime(a.DateOfTheApp).ToString("d", new CultureInfo("ru-Ru")), a.IdReg);
+                                if (upReg == 0)
+                                    MessageBox.Show("Произошла ошибка при обновлении таблицы(Регистр)\nПовторите попытку");
+                                
                             }
                             else if (result == MessageBoxResult.No)
+                            {
                                 return;
+                            }
                         }
                     }
 
                     // 2) Если совпал снилс
-                    else if (myQuerySnils != null)
+                    else if (myQuerySnils != null && flag)
                     {
                         var myQuery1234 = from r in await db.Registries.AsNoTracking().ToListAsync()
                                           join ap in await db.Applicants.AsNoTracking().ToListAsync() on r.ApplicantFk equals ap.Id
@@ -303,61 +255,31 @@ namespace exel_for_mfc
                             }
 
                             //Информировать что такая запись найдена
-                            var result = MessageBox.Show($"{str}\n в таблице существуют записи данного заявителя\nДобавить новую запись в таблицу?", "Найдены совпадения!", MessageBoxButton.YesNo, MessageBoxImage.Information);
-
+                            var result = MessageBox.Show($"{str}\n в таблице существуют записи данного заявителя\nОбновить запись?", "Найдены совпадения!", MessageBoxButton.YesNo, MessageBoxImage.Information);
+                            flag = false;
                             if (result == MessageBoxResult.Yes)
                             {
-                                if (a.Lgota == null)
-                                {
-                                    //Добавить новую запись в таблицу заявитель
-                                    var inApp = await db.Database.ExecuteSqlInterpolatedAsync($"INSERT INTO Applicant(Firstname, Middlename, Lastname, Area_FK, Locality_FK, Adress, Snils, Privileges_FK) VALUES({a.Family}, {a.Name}, {a.Lastname}, {a.Area} ,  {a.Local}, {a.Adress}, {a.Snils}, {null})");
-                                    if (inApp == 0)
-                                        MessageBox.Show("Произошла ошибка при вставке записи в таблицу Заявитель\nПовторите попытку");
-
-                                }
-
-                                else if (a.Area != null && a.Local != null && a.Lgota != null)
-                                {
-                                    //Добавить новую запись в таблицу заявитель
-                                    var inApp = await db.Database.ExecuteSqlInterpolatedAsync($"INSERT INTO Applicant(Firstname, Middlename, Lastname, Area_FK, Locality_FK, Adress, Snils, Privileges_FK) VALUES({a.Family} ,  {a.Name} ,  {a.Lastname} ,  {a.Area} ,  {a.Local} ,  {a.Adress} ,  {a.Snils}, {a.Lgota})");
-                                    if (inApp == 0)
-                                        MessageBox.Show("Произошла ошибка при вставке записи в таблицу Заявитель\nПовторите попытку");
-                                }
-
-
-                                //Запрос на получение Id последнего заявителя в таблице Applicant
-                                var getIdLastApp = await db.Applicants.AsNoTracking().OrderBy(u => u.Id).LastOrDefaultAsync();
-                                if(getIdLastApp == null)
-                                    MessageBox.Show("Произошла ошибка при поиске last id applicant\nПовторите попытку");
-                                else
-                                {
-                                    //Добавить новую запись в таблицу Регистр
-                                    if (a.Pay == null || a.Solution == null || a.Pay == null && a.Solution == null)
-                                    {
-                                        //Добавить новую запись в таблицу Регистр
-                                        var inReg = await db.Database.ExecuteSqlInterpolatedAsync($"INSERT INTO Registry(Applicant_FK, SerialAndNumberSert, DateGetSert, PayAmount_FK, Solution_FK, DateAndNumbSolutionSert, Comment, Trek, MailingDate) VALUES({getIdLastApp.Id}, {a.Sernumb}, {a.DateGetSert}, {null}, {null}, {a.DateAndNumbSolutionSert}, {a.Comment}, {a.Trek}, {a.MailingDate})");
-                                        await Task.Delay(50);
-                                        if (inReg == 0)
-                                            MessageBox.Show("Произошла ошибка при вставке записи в таблицу Регистр\nПовторите попытку");
-                                    }
-
-                                    else if (a.Pay != null && a.Solution != null)
-                                    {
-                                        //Добавить новую запись в таблицу Регистр
-                                        var inReg = await db.Database.ExecuteSqlInterpolatedAsync($"INSERT INTO Registry(Applicant_FK, SerialAndNumberSert, DateGetSert, PayAmount_FK, Solution_FK, DateAndNumbSolutionSert, Comment, Trek, MailingDate) VALUES({getIdLastApp.Id}, {a.Sernumb}, {a.DateGetSert}, {a.Pay}, {a.Solution}, {a.DateAndNumbSolutionSert}, {a.Comment}, {a.Trek}, {a.MailingDate})");
-                                        await Task.Delay(50);
-                                        if (inReg == 0)
-                                            MessageBox.Show("Произошла ошибка при вставке записи в таблицу Регистр\nПовторите попытку");
-                                    }
-                                }
+                                //Обновление таблицы Заявитель
+                                var upApp = await db.Database.ExecuteSqlRawAsync("UPDATE Applicant SET Firstname = {0}, Middlename = {1}, Lastname = {2}, Adress = {3}, Snils = {4} WHERE Id = {5}", a.Family, a.Name, a.Lastname, a.Adress, a.Snils, a.IdApplicant);
+                                if (upApp == 0)
+                                    MessageBox.Show("Произошла ошибка при обновлении таблицы(Заявитель)\nПовторите попытку");
+                                //Обновление таблицы Регистр
+                                var upReg = await db.Database.ExecuteSqlRawAsync("UPDATE Registry SET SerialAndNumberSert = {0}, DateGetSert = {1}, DateAndNumbSolutionSert = {2}, Comment = {3}, Trek = {4}, MailingDate = {5}, dateOfTheApp = {6} WHERE Id = {7}", a.Sernumb, a.DateGetSert, a.DateAndNumbSolutionSert, a.Comment, a.Trek, a.MailingDate == null ? null : Convert.ToDateTime(a.MailingDate).ToString("d", new CultureInfo("ru-Ru")), a.DateOfTheApp == null ? null : Convert.ToDateTime(a.DateOfTheApp).ToString("d", new CultureInfo("ru-Ru")), a.IdReg);
+                                if (upReg == 0)
+                                    MessageBox.Show("Произошла ошибка при обновлении таблицы(Регистр)\nПовторите попытку");
+                                
                             }
+
                             else if (result == MessageBoxResult.No)
+                            {
                                 return;
+                            }
+
                         }
                     }
 
                     // 3) Если совпал адрес
-                    else if (myQueryAdress != null)
+                    else if (myQueryAdress != null && flag)
                     {
                         var myQuery1234 = from r in await db.Registries.AsNoTracking().ToListAsync()
                                           join ap in await db.Applicants.AsNoTracking().ToListAsync() on r.ApplicantFk equals ap.Id
@@ -385,65 +307,33 @@ namespace exel_for_mfc
                             }
 
                             //Информировать что такая запись найдена
-                            var result = MessageBox.Show($"{str}\nв таблице существуют записи данного заявителя, по такому же Адресу\nДобавить новую запись в таблицу?", "Найдены совпадения!", MessageBoxButton.YesNo, MessageBoxImage.Information);
-
+                            var result = MessageBox.Show($"{str}\nв таблице существуют записи данного заявителя, по такому же Адресу\nОбновить запись?", "Найдены совпадения!", MessageBoxButton.YesNo, MessageBoxImage.Information);
+                            flag = false;
                             if (result == MessageBoxResult.Yes)
                             {
-                                if (a.Lgota == null)
-                                {
-                                    //Добавить новую запись в таблицу заявитель
-                                    var inApp = await db.Database.ExecuteSqlInterpolatedAsync($"INSERT INTO Applicant(Firstname, Middlename, Lastname, Area_FK, Locality_FK, Adress, Snils, Privileges_FK) VALUES({a.Family} ,  {a.Name} ,  {a.Lastname} ,  {a.Area} ,  {a.Local} ,  {a.Adress} ,  {a.Snils}, {null})");
-                                    if (inApp == 0)
-                                        MessageBox.Show("Произошла ошибка при вставке записи в таблицу Заявитель\nПовторите попытку");
-
-                                }
-
-                                else if (a.Area != null && a.Local != null && a.Lgota != null)
-                                {
-                                    //Добавить новую запись в таблицу заявитель
-                                    var inApp = await db.Database.ExecuteSqlInterpolatedAsync($"INSERT INTO Applicant(Firstname, Middlename, Lastname, Area_FK, Locality_FK, Adress, Snils, Privileges_FK) VALUES({a.Family} ,  {a.Name} ,  {a.Lastname} ,  {a.Area} ,  {a.Local} ,  {a.Adress} ,  {a.Snils}, {a.Lgota})");
-                                    if (inApp == 0)
-                                        MessageBox.Show("Произошла ошибка при вставке записи в таблицу Заявитель\nПовторите попытку");
-                                }
-
-
-                                //Запрос на получение Id последнего заявителя в таблице Applicant
-                                var getIdLastApp = await db.Applicants.AsNoTracking().OrderBy(u => u.Id).LastOrDefaultAsync();
-                                if (getIdLastApp == null)
-                                    MessageBox.Show("Произошла ошибка при поиске last id applicant\nПовторите попытку");
-                                else
-                                {
-                                    //Добавить новую запись в таблицу Регистр
-                                    if (a.Pay == null || a.Solution == null || a.Pay == null && a.Solution == null)
-                                    {
-                                        //Добавить новую запись в таблицу Регистр
-                                        var inReg = await db.Database.ExecuteSqlInterpolatedAsync($"INSERT INTO Registry(Applicant_FK, SerialAndNumberSert, DateGetSert, PayAmount_FK, Solution_FK, DateAndNumbSolutionSert, Comment, Trek, MailingDate) VALUES({getIdLastApp.Id}, {a.Sernumb}, {a.DateGetSert}, {null}, {null}, {a.DateAndNumbSolutionSert}, {a.Comment}, {a.Trek}, {a.MailingDate})");
-                                        await Task.Delay(50);
-                                        if (inReg == 0)
-                                            MessageBox.Show("Произошла ошибка при вставке записи в таблицу Регистр\nПовторите попытку");
-                                    }
-
-                                    else if (a.Pay != null && a.Solution != null)
-                                    {
-                                        //Добавить новую запись в таблицу Регистр
-                                        var inReg = await db.Database.ExecuteSqlInterpolatedAsync($"INSERT INTO Registry(Applicant_FK, SerialAndNumberSert, DateGetSert, PayAmount_FK, Solution_FK, DateAndNumbSolutionSert, Comment, Trek, MailingDate) VALUES({getIdLastApp.Id}, {a.Sernumb}, {a.DateGetSert}, {a.Pay}, {a.Solution}, {a.DateAndNumbSolutionSert}, {a.Comment}, {a.Trek}, {a.MailingDate})");
-                                        await Task.Delay(50);
-                                        if (inReg == 0)
-                                            MessageBox.Show("Произошла ошибка при вставке записи в таблицу Регистр\nПовторите попытку");
-                                    }
-                                }
+                                //Обновление таблицы Заявитель
+                                var upApp = await db.Database.ExecuteSqlRawAsync("UPDATE Applicant SET Firstname = {0}, Middlename = {1}, Lastname = {2}, Adress = {3}, Snils = {4} WHERE Id = {5}", a.Family, a.Name, a.Lastname, a.Adress, a.Snils, a.IdApplicant);
+                                if (upApp == 0)
+                                    MessageBox.Show("Произошла ошибка при обновлении таблицы(Заявитель)\nПовторите попытку");
+                                //Обновление таблицы Регистр
+                                var upReg = await db.Database.ExecuteSqlRawAsync("UPDATE Registry SET SerialAndNumberSert = {0}, DateGetSert = {1}, DateAndNumbSolutionSert = {2}, Comment = {3}, Trek = {4}, MailingDate = {5}, dateOfTheApp = {6} WHERE Id = {7}", a.Sernumb, a.DateGetSert, a.DateAndNumbSolutionSert, a.Comment, a.Trek, a.MailingDate == null ? null : Convert.ToDateTime(a.MailingDate).ToString("d", new CultureInfo("ru-Ru")), a.DateOfTheApp == null ? null : Convert.ToDateTime(a.DateOfTheApp).ToString("d", new CultureInfo("ru-Ru")), a.IdReg);
+                                if (upReg == 0)
+                                    MessageBox.Show("Произошла ошибка при обновлении таблицы(Регистр)\nПовторите попытку");
+                                
                             }
                             else if (result == MessageBoxResult.No)
+                            {
                                 return;
+                            }
                         }
                     }
 
                     // 4) Если совпало ФИО
-                    else if (myQueryFIO != null)
+                    else if (myQueryFIO != null && flag)
                     {
                         var myQuery1234 = from r in await db.Registries.AsNoTracking().ToListAsync()
                                           join ap in await db.Applicants.AsNoTracking().ToListAsync() on r.ApplicantFk equals ap.Id
-                                          where ap.Firstname == myQueryFIO.Firstname 
+                                          where ap.Firstname == myQueryFIO.Firstname
                                              && ap.Middlename == myQueryFIO.Middlename
                                              && ap.Lastname == myQueryFIO.Lastname
                                           select new
@@ -469,200 +359,46 @@ namespace exel_for_mfc
                             }
 
                             //Информировать что такая запись найдена
-                            var result = MessageBox.Show($"{str}\nв таблице существуют похожие записи, ФИО совпадает полностью!\nДобавить новую запись в таблицу?", "Найдены совпадения!", MessageBoxButton.YesNo, MessageBoxImage.Information);
-
+                            var result = MessageBox.Show($"{str}\nв таблице существуют похожие записи, ФИО совпадает полностью!\nОбновить запись?", "Найдены совпадения!", MessageBoxButton.YesNo, MessageBoxImage.Information);
+                            flag = false;
                             if (result == MessageBoxResult.Yes)
                             {
-                                if (a.Lgota == null)
-                                {
-                                    //Добавить новую запись в таблицу заявитель
-                                    var inApp = await db.Database.ExecuteSqlInterpolatedAsync($"INSERT INTO Applicant(Firstname, Middlename, Lastname, Area_FK, Locality_FK, Adress, Snils, Privileges_FK) VALUES({a.Family} ,  {a.Name} ,  {a.Lastname} ,  {a.Area} ,  {a.Local} ,  {a.Adress} ,  {a.Snils}, {null})");
-                                    if (inApp == 0)
-                                        MessageBox.Show("Произошла ошибка при вставке записи в таблицу Заявитель\nПовторите попытку");
-
-                                }
-
-                                else if (a.Area != null && a.Local != null && a.Lgota != null)
-                                {
-                                    //Добавить новую запись в таблицу заявитель
-                                    var inApp = await db.Database.ExecuteSqlInterpolatedAsync($"INSERT INTO Applicant(Firstname, Middlename, Lastname, Area_FK, Locality_FK, Adress, Snils, Privileges_FK) VALUES({a.Family}  ,   {a.Name}  ,   {a.Lastname}  ,   {a.Area}  ,   {a.Local}  ,   {a.Adress}  ,   {a.Snils}, {a.Lgota})");
-                                    if (inApp == 0)
-                                        MessageBox.Show("Произошла ошибка при вставке записи в таблицу Заявитель\nПовторите попытку");
-                                }
-
-
-                                //Запрос на получение Id последнего заявителя в таблице Applicant
-                                var getIdLastApp = await db.Applicants.AsNoTracking().OrderBy(u => u.Id).LastOrDefaultAsync();
-                                if (getIdLastApp == null)
-                                    MessageBox.Show("Произошла ошибка при поиске last id applicant\nПовторите попытку");
-                                else
-                                {
-                                    //Добавить новую запись в таблицу Регистр
-                                    if (a.Pay == null || a.Solution == null || a.Pay == null && a.Solution == null)
-                                    {
-                                        //Добавить новую запись в таблицу Регистр
-                                        var inReg = await db.Database.ExecuteSqlInterpolatedAsync($"INSERT INTO Registry(Applicant_FK, SerialAndNumberSert, DateGetSert, PayAmount_FK, Solution_FK, DateAndNumbSolutionSert, Comment, Trek, MailingDate) VALUES({getIdLastApp.Id}, {a.Sernumb}, {a.DateGetSert}, {null}, {null}, {a.DateAndNumbSolutionSert}, {a.Comment}, {a.Trek}, {a.MailingDate})");
-                                        await Task.Delay(50);
-                                        if (inReg == 0)
-                                            MessageBox.Show("Произошла ошибка при вставке записи в таблицу Регистр\nПовторите попытку");
-                                    }
-
-                                    else if (a.Pay != null && a.Solution != null)
-                                    {
-                                        //Добавить новую запись в таблицу Регистр
-                                        var inReg = await db.Database.ExecuteSqlInterpolatedAsync($"INSERT INTO Registry(Applicant_FK, SerialAndNumberSert, DateGetSert, PayAmount_FK, Solution_FK, DateAndNumbSolutionSert, Comment, Trek, MailingDate) VALUES({getIdLastApp.Id}, {a.Sernumb}, {a.DateGetSert}, {a.Pay}, {a.Solution}, {a.DateAndNumbSolutionSert}, {a.Comment}, {a.Trek}, {a.MailingDate})");
-                                        await Task.Delay(50);
-                                        if (inReg == 0)
-                                            MessageBox.Show("Произошла ошибка при вставке записи в таблицу Регистр\nПовторите попытку");
-                                    }
-                                }
+                                //Обновление таблицы Заявитель
+                                var upApp = await db.Database.ExecuteSqlRawAsync("UPDATE Applicant SET Firstname = {0}, Middlename = {1}, Lastname = {2}, Adress = {3}, Snils = {4} WHERE Id = {5}", a.Family, a.Name, a.Lastname, a.Adress, a.Snils, a.IdApplicant);
+                                if (upApp == 0)
+                                    MessageBox.Show("Произошла ошибка при обновлении таблицы(Заявитель)\nПовторите попытку");
+                                //Обновление таблицы Регистр
+                                var upReg = await db.Database.ExecuteSqlRawAsync("UPDATE Registry SET SerialAndNumberSert = {0}, DateGetSert = {1}, DateAndNumbSolutionSert = {2}, Comment = {3}, Trek = {4}, MailingDate = {5}, dateOfTheApp = {6} WHERE Id = {7}", a.Sernumb, a.DateGetSert, a.DateAndNumbSolutionSert, a.Comment, a.Trek, a.MailingDate == null ? null : Convert.ToDateTime(a.MailingDate).ToString("d", new CultureInfo("ru-Ru")), a.DateOfTheApp == null ? null : Convert.ToDateTime(a.DateOfTheApp).ToString("d", new CultureInfo("ru-Ru")), a.IdReg);
+                                if (upReg == 0)
+                                    MessageBox.Show("Произошла ошибка при обновлении таблицы(Регистр)\nПовторите попытку");
+                               
                             }
+
                             else if (result == MessageBoxResult.No)
+                            {
                                 return;
+                            }
                         }
                     }
 
                     // 5) Если нет такой записи, добавляем новую запись
-                    else if (myQuery == null && myQuerySnils == null)
+                    else
                     {
-                        if (a.Lgota == null)
-                        {
-                            //Добавить новую запись в таблицу заявитель
-                            var inApp = await db.Database.ExecuteSqlInterpolatedAsync($"INSERT INTO Applicant(Firstname, Middlename, Lastname, Area_FK, Locality_FK, Adress, Snils, Privileges_FK) VALUES({a.Family}  ,   {a.Name}  ,   {a.Lastname}  ,   {a.Area}  ,   {a.Local}  ,   {a.Adress}  ,   {a.Snils}, {null})");
-                            if (inApp == 0)
-                                MessageBox.Show("Произошла ошибка при вставке записи в таблицу Заявитель\nПовторите попытку");
-                        }
-
-                        else if (a.Area != null && a.Local != null && a.Lgota != null)
-                        {
-                            //Добавить новую запись в таблицу заявитель
-                            var inApp = await db.Database.ExecuteSqlInterpolatedAsync($"INSERT INTO Applicant(Firstname, Middlename, Lastname, Area_FK, Locality_FK, Adress, Snils, Privileges_FK) VALUES({a.Family}  ,   {a.Name}  ,   {a.Lastname}  ,   {a.Area}  ,   {a.Local}  ,   {a.Adress}  ,   {a.Snils}, {a.Lgota})");
-                            if (inApp == 0)
-                                MessageBox.Show("Произошла ошибка при вставке записи в таблицу Заявитель\nПовторите попытку");
-                        }
-
-
-                        //Запрос на получение Id последнего заявителя в таблице Applicant
-                        var getIdLastApp = await db.Applicants.AsNoTracking().OrderBy(u => u.Id).LastOrDefaultAsync();
-                        if (getIdLastApp == null)
-                            MessageBox.Show("Произошла ошибка при выборке last id applicant\nПовторите попытку");
-                        else
-                        {
-                            //Добавить новую запись в таблицу Регистр
-                            if (a.Pay == null || a.Solution == null || a.Pay == null && a.Solution == null)
-                            {
-                                //Добавить новую запись в таблицу Регистр
-                                var inReg = await db.Database.ExecuteSqlInterpolatedAsync($"INSERT INTO Registry(Applicant_FK, SerialAndNumberSert, DateGetSert, PayAmount_FK, Solution_FK, DateAndNumbSolutionSert, Comment, Trek, MailingDate) VALUES({getIdLastApp.Id}, {a.Sernumb}, {a.DateGetSert}, {null}, {null}, {a.DateAndNumbSolutionSert}, {a.Comment}, {a.Trek}, {a.MailingDate})");
-                                await Task.Delay(50);
-                                if (inReg == 0)
-                                    MessageBox.Show("Произошла ошибка при вставке записи в таблицу Регистр\nПовторите попытку");
-                            }
-
-                            else if (a.Pay != null && a.Solution != null)
-                            {
-                                //Добавить новую запись в таблицу Регистр
-                                var inReg = await db.Database.ExecuteSqlInterpolatedAsync($"INSERT INTO Registry(Applicant_FK, SerialAndNumberSert, DateGetSert, PayAmount_FK, Solution_FK, DateAndNumbSolutionSert, Comment, Trek, MailingDate) VALUES({getIdLastApp.Id}, {a.Sernumb}, {a.DateGetSert}, {a.Pay}, {a.Solution}, {a.DateAndNumbSolutionSert}, {a.Comment}, {a.Trek}, {a.MailingDate})");
-                                await Task.Delay(50);
-                                if (inReg == 0)
-                                    MessageBox.Show("Произошла ошибка при вставке записи в таблицу Регистр\nПовторите попытку");
-                            }
-                        }
+                        //Обновление таблицы Заявитель
+                        var upApp = await db.Database.ExecuteSqlRawAsync("UPDATE Applicant SET Firstname = {0}, Middlename = {1}, Lastname = {2}, Adress = {3}, Snils = {4} WHERE Id = {5}", a.Family, a.Name, a.Lastname, a.Adress, a.Snils, a.IdApplicant);
+                        if (upApp == 0)
+                            MessageBox.Show("Произошла ошибка при обновлении таблицы(Заявитель)\nПовторите попытку");
+                        //Обновление таблицы Регистр
+                        var upReg = await db.Database.ExecuteSqlRawAsync("UPDATE Registry SET SerialAndNumberSert = {0}, DateGetSert = {1}, DateAndNumbSolutionSert = {2}, Comment = {3}, Trek = {4}, MailingDate = {5}, dateOfTheApp = {6} WHERE Id = {7}", a.Sernumb, a.DateGetSert, a.DateAndNumbSolutionSert, a.Comment, a.Trek, a.MailingDate == null ? null : Convert.ToDateTime(a.MailingDate).ToString("d", new CultureInfo("ru-Ru")), a.DateOfTheApp == null ? null : Convert.ToDateTime(a.DateOfTheApp).ToString("d", new CultureInfo("ru-Ru")), a.IdReg);
+                        if (upReg == 0)
+                            MessageBox.Show("Произошла ошибка при обновлении таблицы(Регистр)\nПовторите попытку");
                     }
-
-                    
-
-
-                    Start();
-                    dataGrid.CanUserAddRows = false;
-                    dataGrid.RowDetailsVisibilityMode = DataGridRowDetailsVisibilityMode.Collapsed;
-                    dataGrid.SelectionUnit = DataGridSelectionUnit.Cell;
-                    /* select the second cell (index = 1) of the fourth row (index = 3) */
-                    SelectCellByIndex(dataGrid, MyList.Count - 1, 8);
-                    dataGrid.RowDetailsVisibilityMode = DataGridRowDetailsVisibilityMode.VisibleWhenSelected;
-
-
-
-                    static void SelectCellByIndex(DataGrid dataGrid, int rowIndex, int columnIndex)
-                    {
-                        if (!dataGrid.SelectionUnit.Equals(DataGridSelectionUnit.Cell))
-                            throw new ArgumentException("The SelectionUnit of the DataGrid must be set to Cell.");
-
-                        if (rowIndex < 0 || rowIndex > (dataGrid.Items.Count - 1))
-                            throw new ArgumentException(string.Format("{0} is an invalid row index.", rowIndex));
-
-                        if (columnIndex < 0 || columnIndex > (dataGrid.Columns.Count - 1))
-                            throw new ArgumentException(string.Format("{0} is an invalid column index.", columnIndex));
-
-                        dataGrid.SelectedCells.Clear();
-
-                        object item = dataGrid.Items[rowIndex]; //=Product X
-                        DataGridRow row = dataGrid.ItemContainerGenerator.ContainerFromIndex(rowIndex) as DataGridRow;
-                        if (row == null)
-                        {
-                            dataGrid.ScrollIntoView(item);
-                            row = dataGrid.ItemContainerGenerator.ContainerFromIndex(rowIndex) as DataGridRow;
-                        }
-                        if (row != null)
-                        {
-                            DataGridCell cell = GetCell(dataGrid, row, columnIndex);
-                            if (cell != null)
-                            {
-                                DataGridCellInfo dataGridCellInfo = new DataGridCellInfo(cell);
-                                dataGrid.SelectedCells.Add(dataGridCellInfo);
-                                cell.Focus();
-                            }
-                        }
-                    }
-
-                    static DataGridCell GetCell(DataGrid dataGrid, DataGridRow rowContainer, int column)
-                    {
-                        if (rowContainer != null)
-                        {
-                            DataGridCellsPresenter presenter = FindVisualChild<DataGridCellsPresenter>(rowContainer);
-                            if (presenter == null)
-                            {
-                                /* if the row has been virtualized away, call its ApplyTemplate() method 
-                                 * to build its visual tree in order for the DataGridCellsPresenter
-                                 * and the DataGridCells to be created */
-                                rowContainer.ApplyTemplate();
-                                presenter = FindVisualChild<DataGridCellsPresenter>(rowContainer);
-                            }
-                            if (presenter != null)
-                            {
-                                DataGridCell cell = presenter.ItemContainerGenerator.ContainerFromIndex(column) as DataGridCell;
-                                if (cell == null)
-                                {
-                                    /* bring the column into view
-                                     * in case it has been virtualized away */
-                                    dataGrid.ScrollIntoView(rowContainer, dataGrid.Columns[column]);
-                                    cell = presenter.ItemContainerGenerator.ContainerFromIndex(column) as DataGridCell;
-                                }
-                                return cell;
-                            }
-                        }
-                        return null;
-                    }
-
-                    static T FindVisualChild<T>(DependencyObject obj) where T : DependencyObject
-                    {
-                        for (int i = 0; i < VisualTreeHelper.GetChildrenCount(obj); i++)
-                        {
-                            DependencyObject child = VisualTreeHelper.GetChild(obj, i);
-                            if (child != null && child is T)
-                                return (T)child;
-                            else
-                            {
-                                T childOfChild = FindVisualChild<T>(child);
-                                if (childOfChild != null)
-                                    return childOfChild;
-                            }
-                        }
-                        return null;
-                    }
-
                 }
             }
-            #endregion
+        }       
+
+                 
+#endregion
 
             //Возвращю тип решения (строку)
             static string ReturnStr(int? t)
@@ -678,8 +414,7 @@ namespace exel_for_mfc
                 else return "";
 
             }
-        }
-
+        
         //Обновить коммент()
         private async void CommentUpdate(object sender, TextChangedEventArgs e)
         {
@@ -1637,9 +1372,8 @@ namespace exel_for_mfc
         //Сформировать отчет
         private void GenerateReport(object sender, RoutedEventArgs e)
         {
-           
-            //ReportWindow reportWindow = new();
-            //reportWindow.ShowDialog();
+            ReportWindow reportWindow = new();
+            reportWindow.ShowDialog();
         }
 
         //Обновить таблицу
@@ -1688,7 +1422,5 @@ namespace exel_for_mfc
         }
 
         #endregion
-
-      
     }
 }
