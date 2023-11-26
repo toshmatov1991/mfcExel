@@ -126,6 +126,7 @@ public partial class ExDbContext : DbContext
             entity.Property(e => e.DateAndNumbSolutionSert).HasMaxLength(100);
             entity.Property(e => e.DateGetSert).HasColumnType("date");
             entity.Property(e => e.MailingDate).HasColumnType("date");
+            entity.Property(e => e.dateOfTheApp).HasColumnType("date");
             entity.Property(e => e.PayAmountFk).HasColumnName("PayAmount_FK");
             entity.Property(e => e.SerialAndNumberSert).HasMaxLength(150);
             entity.Property(e => e.SolutionFk).HasColumnName("Solution_FK");

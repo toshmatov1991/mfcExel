@@ -24,6 +24,8 @@ public partial class Registry
 
     public DateTime? MailingDate { get; set; }
 
+    public DateTime? dateOfTheApp { get; set; }
+
     public virtual Applicant? ApplicantFkNavigation { get; set; }
 
     public virtual PayAmount? PayAmountFkNavigation { get; set; }

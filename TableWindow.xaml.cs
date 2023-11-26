@@ -41,6 +41,38 @@ namespace exel_for_mfc
             FilterStart();
         }
 
+
+        //Добавление новой пустой строки
+        private async void Button_Click(object sender, RoutedEventArgs e)
+        {
+            dataGrid.CanUserAddRows = true;
+            try
+            {
+                ExDbContext db = new();
+                //Вставка пустой записи в таблицу Заявитель
+                var inApp = await db.Database.ExecuteSqlInterpolatedAsync($"INSERT INTO Applicant(Firstname, Middlename, Lastname, Area_FK, Locality_FK, Adress, Snils, Privileges_FK) VALUES({null}, {null}, {null}, {null}, {null}, {null}, {null}, {null})");
+
+
+                //Запрос на получение Id последнего заявителя в таблице Applicant
+                var getIdLastApp = await db.Applicants.AsNoTracking().OrderBy(u => u.Id).LastOrDefaultAsync();
+
+                //Вставка пустой записи в таблицу Регистр
+                var inReg = await db.Database.ExecuteSqlInterpolatedAsync($"INSERT INTO Registry(Applicant_FK, SerialAndNumberSert, DateGetSert, PayAmount_FK, Solution_FK, DateAndNumbSolutionSert, Comment, Trek, MailingDate) VALUES({getIdLastApp.Id}, {null}, {null}, {null}, {null}, {null}, {null}, {null}, {null})");
+
+
+                Start();
+                dataGrid.CanUserAddRows = false;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+
+        }
+
+
+
+
         //Метод на всякий случай проверяет наличие пустых значений в таблицах-служанках, и если нету их, то добавляет
         private static async void CheckAndAddNullInTables()
         {
@@ -1642,31 +1674,6 @@ namespace exel_for_mfc
         }
         #endregion
 
-        private async void Button_Click(object sender, RoutedEventArgs e)
-        {
-            dataGrid.CanUserAddRows = true;
-            try
-            {
-                ExDbContext db = new();
-                //Вставка пустой записи в таблицу Заявитель
-                var inApp = await db.Database.ExecuteSqlInterpolatedAsync($"INSERT INTO Applicant(Firstname, Middlename, Lastname, Area_FK, Locality_FK, Adress, Snils, Privileges_FK) VALUES({null}, {null}, {null}, {null}, {null}, {null}, {null}, {null})");
-
-
-                //Запрос на получение Id последнего заявителя в таблице Applicant
-                var getIdLastApp = await db.Applicants.AsNoTracking().OrderBy(u => u.Id).LastOrDefaultAsync();
-
-                //Вставка пустой записи в таблицу Регистр
-                var inReg = await db.Database.ExecuteSqlInterpolatedAsync($"INSERT INTO Registry(Applicant_FK, SerialAndNumberSert, DateGetSert, PayAmount_FK, Solution_FK, DateAndNumbSolutionSert, Comment, Trek, MailingDate) VALUES({getIdLastApp.Id}, {null}, {null}, {null}, {null}, {null}, {null}, {null}, {null})");
-
-                
-                Start();
-                dataGrid.CanUserAddRows = false;
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message);
-            }
-            
-        }
+      
     }
 }
