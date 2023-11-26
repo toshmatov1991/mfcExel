@@ -148,7 +148,8 @@ namespace exel_for_mfc
         {
             //Считывание строки
             SClass? a = e.Row.Item as SClass;
-            if(temper != a.IdReg)
+            using ExDbContext db = new();
+            if (temper != a.IdReg)
             {
                 temper = a.IdReg;
                 flag = true;
@@ -167,7 +168,7 @@ namespace exel_for_mfc
                     && a.Local != null
                     && !string.IsNullOrEmpty(a.Snils))
                 {
-                    using ExDbContext db = new();
+                    
                     //Проверка-запрос ФИО Адрес Снилс
                     var myQuery = await db.Applicants.FromSqlRaw("SELECT * FROM Applicant WHERE Firstname LIKE {0} AND Middlename LIKE {1} AND Lastname LIKE {2} AND Adress LIKE {3} AND Snils LIKE {4}", a.Family, a.Name, a.Lastname, a.Adress, a.Snils).AsNoTracking().FirstOrDefaultAsync();
 
@@ -389,7 +390,7 @@ namespace exel_for_mfc
                         }
                     }
 
-                    // 5) Если нет такой записи, добавляем новую запись
+                    // 5) Если нет такой записи, просто обновляем запись
                     else
                     {
                         //Обновление таблицы Заявитель
@@ -402,11 +403,24 @@ namespace exel_for_mfc
                             MessageBox.Show("Произошла ошибка при обновлении таблицы(Регистр)\nПовторите попытку");
                     }
                 }
+
+
+                else
+                {
+                    //Обновление таблицы Заявитель
+                    var upApp = await db.Database.ExecuteSqlRawAsync("UPDATE Applicant SET Firstname = {0}, Middlename = {1}, Lastname = {2}, Adress = {3}, Snils = {4} WHERE Id = {5}", a.Family, a.Name, a.Lastname, a.Adress, a.Snils, a.IdApplicant);
+                    if (upApp == 0)
+                        MessageBox.Show("Произошла ошибка при обновлении таблицы(Заявитель)\nПовторите попытку");
+                    //Обновление таблицы Регистр
+                    var upReg = await db.Database.ExecuteSqlRawAsync("UPDATE Registry SET SerialAndNumberSert = {0}, DateGetSert = {1}, DateAndNumbSolutionSert = {2}, Comment = {3}, Trek = {4}, MailingDate = {5}, dateOfTheApp = {6} WHERE Id = {7}", a.Sernumb, a.DateGetSert, a.DateAndNumbSolutionSert, a.Comment, a.Trek, a.MailingDate == null ? null : Convert.ToDateTime(a.MailingDate).ToString("d", new CultureInfo("ru-Ru")), a.DateOfTheApp == null ? null : Convert.ToDateTime(a.DateOfTheApp).ToString("d", new CultureInfo("ru-Ru")), a.IdReg);
+                    if (upReg == 0)
+                        MessageBox.Show("Произошла ошибка при обновлении таблицы(Регистр)\nПовторите попытку");
+                }
             }
         }       
 
                  
-#endregion
+            #endregion
 
             //Возвращю тип решения (строку)
             static string ReturnStr(int? t)
