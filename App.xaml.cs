@@ -6,6 +6,7 @@ namespace exel_for_mfc
     {
         public App()
         {
+
             Dispatcher.UnhandledException += OnDispatcherUnhandledException;
         }
         void OnDispatcherUnhandledException(object sender, System.Windows.Threading.DispatcherUnhandledExceptionEventArgs e)

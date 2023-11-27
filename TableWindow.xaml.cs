@@ -1426,7 +1426,11 @@ namespace exel_for_mfc
                 areaFilter.ItemsSource = await db.AreaFs.OrderBy(u => u.Name).ToListAsync();
             }
             else
-                areaFilter.ItemsSource = await db.AreaFs.Where(a => a.Name.Contains(AreaSearchXaml.Text)).ToListAsync();
+            {
+                var sesese = await db.AreaFs.OrderBy(u => u.Name).ToListAsync();
+                areaFilter.ItemsSource = sesese.Where(a => a.Name.ToLower().Contains(AreaSearchXaml.Text.ToLower())).ToList();
+            }
+                
         }
 
         //Событие поиска по населенному пункту
@@ -1440,7 +1444,11 @@ namespace exel_for_mfc
             }
 
             else
-                locFilter.ItemsSource = await db1.Localves.Where(a => a.Name.Contains(LocalSearchXaml.Text)).ToListAsync();
+            {
+                var sososo = await db1.Localves.OrderBy(u => u.Name).ToListAsync();
+                locFilter.ItemsSource = sososo.Where(a => a.Name.ToLower().Contains(LocalSearchXaml.Text.ToLower())).ToList();
+            }
+                
         }
 
         #endregion

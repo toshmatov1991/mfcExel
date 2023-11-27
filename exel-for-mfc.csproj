@@ -9,15 +9,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="FilterDB\fdb.db" />
     <None Remove="Resources\123.jpg" />
     <None Remove="Resources\logomfc.png" />
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="FilterDB\fdb.db">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
     <Content Include="Resources\123.jpg">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
