@@ -42,12 +42,23 @@ namespace exel_for_mfc
         {
             if(str != string.Empty)
             {
+                using ExDbContext db = new();
                 using SLDocument doc = new();
 
-                doc.SetCellValue("A1", "Тимур");
+
+                var getMyArea = db.Areas.Where(u => u.HidingArea == 1).OrderBy(u => u.AreaName).ToList();
+
+
+                doc.SetCellValue("A1", "Район");
+
+                int i = 2;
+                foreach (var item in getMyArea)
+                {
+                    doc.SetCellValue($"A{i}", item.AreaName);
+                    i++;
+                }
+
                 doc.SaveAs(str);
-
-
 
             }
 
