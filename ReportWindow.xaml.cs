@@ -18,9 +18,13 @@ namespace exel_for_mfc
 {
     public partial class ReportWindow : Window
     {
+
+        private DateTime yearCodeBehind = DateTime.Today;
+
         public ReportWindow()
         {
             InitializeComponent();
+            TotalAmountForAllTime.Text = yearCodeBehind.Year.ToString();
         }
 
         //Генерация шаблона для отчета
@@ -34,7 +38,6 @@ namespace exel_for_mfc
             if (saveFile.ShowDialog() == true)
             {
                 CreateFile(saveFile.FileName);
-
             }
         }
 
@@ -42,6 +45,9 @@ namespace exel_for_mfc
         {
             if(str != string.Empty)
             {
+                //var u = DateTime.Now.Month;
+
+
                 using ExDbContext db = new();
                 using SLDocument doc = new();
 
@@ -58,12 +64,31 @@ namespace exel_for_mfc
                     i++;
                 }
 
+
+
+
+
+
                 doc.SaveAs(str);
 
             }
 
 
 
+        }
+
+        //Кнопка влево
+        private void Button_Click_1(object sender, RoutedEventArgs e)
+        {
+            yearCodeBehind = yearCodeBehind.AddYears(-1);
+            TotalAmountForAllTime.Text = yearCodeBehind.Year.ToString();
+        }
+
+        //Кнопка вправо
+        private void Button_Click_2(object sender, RoutedEventArgs e)
+        {
+            yearCodeBehind = yearCodeBehind.AddYears(1);
+            TotalAmountForAllTime.Text = yearCodeBehind.Year.ToString();
         }
     }
 }

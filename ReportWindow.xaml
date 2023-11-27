@@ -3,16 +3,128 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:exel_for_mfc" ResizeMode="CanResize"
-        mc:Ignorable="d" Icon="Resources\logomfc.png" WindowStartupLocation="CenterScreen"
-        Title="Отчет" Height="700" Width="1200">
-    <Grid>
-        <Button Content="Генерация шаблона для отчета"
-                HorizontalAlignment="Left"
-                Margin="154,88,0,0"
-                VerticalAlignment="Top"
-                Background="DarkBlue"
-                Foreground="White"
-                RenderTransformOrigin="-0.341,0.328" Height="44" Width="187" Click="Button_Click"/>
-    </Grid>
+        ResizeMode="CanMinimize" mc:Ignorable="d" 
+        Icon="Resources\logomfc.png" 
+        WindowStartupLocation="CenterScreen"
+        Title="Генерация отчета" Height="888" Width="1200">
+    <Window.Resources>
+        <StreamGeometry x:Key="Geometry">M12,24 L36,0 L36,48 Z</StreamGeometry>
+        <Style x:Key="FocusVisual">
+            <Setter Property="Control.Template">
+                <Setter.Value>
+                    <ControlTemplate>
+                        <Path Stroke="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}" StrokeThickness="1" StrokeDashArray="1 2" Data="{StaticResource Geometry}" Width="48"/>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <SolidColorBrush x:Key="Button.Static.Background" Color="#FFDDDDDD"/>
+        <SolidColorBrush x:Key="Button.Static.Border" Color="#FF707070"/>
+        <SolidColorBrush x:Key="Button.MouseOver.Background" Color="#FFBEE6FD"/>
+        <SolidColorBrush x:Key="Button.MouseOver.Border" Color="#FF3C7FB1"/>
+        <SolidColorBrush x:Key="Button.Pressed.Background" Color="#FFC4E5F6"/>
+        <SolidColorBrush x:Key="Button.Pressed.Border" Color="#FF2C628B"/>
+        <SolidColorBrush x:Key="Button.Disabled.Background" Color="#FFF4F4F4"/>
+        <SolidColorBrush x:Key="Button.Disabled.Border" Color="#FFADB2B5"/>
+        <Style x:Key="TriangleButtonStyle" TargetType="{x:Type Button}">
+            <Setter Property="FocusVisualStyle" Value="{StaticResource FocusVisual}"/>
+            <Setter Property="Background" Value="{StaticResource Button.Static.Background}"/>
+            <Setter Property="BorderBrush" Value="{StaticResource Button.Static.Border}"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type Button}">
+                        <Path Name="border" Stroke="{TemplateBinding BorderBrush}" Fill="{TemplateBinding Background}" Data="{StaticResource Geometry}" Width="48"/>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsDefaulted" Value="true">
+                                <Setter Property="Stroke" TargetName="border" Value="{DynamicResource {x:Static SystemColors.HighlightBrushKey}}"/>
+                            </Trigger>
+                            <Trigger Property="IsMouseOver" Value="true">
+                                <Setter Property="Fill" TargetName="border" Value="{StaticResource Button.MouseOver.Background}"/>
+                                <Setter Property="Stroke" TargetName="border" Value="{StaticResource Button.MouseOver.Border}"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="true">
+                                <Setter Property="Fill" TargetName="border" Value="{StaticResource Button.Pressed.Background}"/>
+                                <Setter Property="Stroke" TargetName="border" Value="{StaticResource Button.Pressed.Border}"/>
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="false">
+                                <Setter Property="Fill" TargetName="border" Value="{StaticResource Button.Disabled.Background}"/>
+                                <Setter Property="Stroke" TargetName="border" Value="{StaticResource Button.Disabled.Border}"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <RotateTransform x:Key="Rotate090" CenterX="24" CenterY="24" Angle="090"/>
+        <RotateTransform x:Key="Rotate180" CenterX="24" CenterY="24" Angle="180"/>
+        <RotateTransform x:Key="Rotate270" CenterX="24" CenterY="24" Angle="270"/>
+    </Window.Resources>
+    <Border Padding="7">
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+
+
+
+
+
+            <!--  Кнопки стрелки  -->
+            <Button Grid.Row="0"
+                    Grid.Column="1"
+                    HorizontalAlignment="Right"
+                    VerticalAlignment="Center"
+                    Background="Black"
+                    Style="{DynamicResource TriangleButtonStyle}" 
+                    Click="Button_Click_1"/>
+
+            <Button Grid.Row="0" 
+                    Style="{DynamicResource TriangleButtonStyle}" 
+                    RenderTransform="{StaticResource Rotate180}" 
+                    Grid.Column="3"
+                    Background="Black"
+                    VerticalAlignment="Center"
+                    HorizontalAlignment="Left"
+                    Click="Button_Click_2"/>
+
+            <!--  Года  -->
+            <TextBlock HorizontalAlignment="Left" 
+                       VerticalAlignment="Center"
+                       FontSize="20"
+                       Height="23"
+                       FontStyle="Italic"
+                       x:Name="TotalAmountForAllTime" 
+                       Grid.Column="2" Width="88" Margin="87,0,0,0"/>
+
+
+
+
+
+            <!--  Кнопка генерации отчета  -->
+            <Button Content="Генерация шаблона для отчета"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    Background="DarkBlue"
+                    Foreground="White"
+                    RenderTransformOrigin="-0.341,0.328" 
+                    Height="44" 
+                    Width="187" 
+                    Click="Button_Click"
+                    Grid.Column="2"
+                    Grid.Row="4"/>
+
+        </Grid>
+    </Border>
+
 </Window>
