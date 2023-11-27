@@ -3,9 +3,8 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:exel_for_mfc"
-        mc:Ignorable="d" Icon="Resources\logomfc.png" WindowStartupLocation="Manual"
-        Title="Главное окно" Height="850" MinHeight="850" MaxHeight="920" Width="1500">
+        mc:Ignorable="d" Icon="Resources\logomfc.png" WindowStartupLocation="CenterScreen"
+        Title="Главное окно" Height="900" MinHeight="850" MaxHeight="950" Width="1600">
     <Border Padding="3">
         <Grid Background="LightSkyBlue">
             <Grid.ColumnDefinitions>
@@ -38,6 +37,24 @@
 
             <!--Меню-->
             <!-- Район -->
+
+            <TextBlock Text="Поиск по Фильтру - Районы"
+                       Grid.Row="11"
+                       VerticalAlignment="Top"
+                       HorizontalAlignment="Left"
+                       FontStyle="Italic"/>
+            <TextBox x:Name="AreaSearchXaml" 
+           HorizontalAlignment="Left"
+           VerticalAlignment="Top"
+           Grid.Row="11"
+           Width="136"
+           KeyUp="AreaSearch"
+           Margin="4,15,0,0"/>
+
+
+
+
+
             <DataGrid x:Name="areaFilter"
                       AutoGenerateColumns="False"
                       HorizontalAlignment="Left"
@@ -78,7 +95,7 @@
                       Grid.ColumnSpan="2"
                       Grid.Column="1">
                 <DataGrid.Columns>
-                    <DataGridTextColumn Binding="{Binding Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"  Width="140" IsReadOnly="True" Header="Насел/пункт"/>
+                    <DataGridTextColumn Binding="{Binding Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"  Width="140" IsReadOnly="True" Header="Населенный пункт"/>
                     <DataGridTemplateColumn>
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
@@ -92,13 +109,7 @@
             <!-- Район -->
 
 
-            <TextBox x:Name="AreaSearchXaml" 
-                     HorizontalAlignment="Left"
-                     VerticalAlignment="Top"
-                     Grid.Row="11"
-                     Width="136"
-                     KeyUp="AreaSearch" Margin="4,3,0,0"
-                     />
+
 
 
 
@@ -480,13 +491,20 @@
                     Grid.RowSpan="2"/>
 
             <TextBox x:Name="LocalSearchXaml"
-            HorizontalAlignment="Left" 
-            Margin="24,3,0,0"
+            HorizontalAlignment="Center"
             VerticalAlignment="Top"
             Width="153"
             Grid.Row="11"
             Grid.Column="1" 
-            KeyUp="LocalSearch"/>
+            KeyUp="LocalSearch" Margin="0,15,0,0"/>
+
+            <TextBlock
+                Grid.Row="11"
+                VerticalAlignment="Top"
+                HorizontalAlignment="Left"
+                FontStyle="Italic" 
+                Grid.Column="1" Margin="24,0,0,58" 
+                Grid.RowSpan="2"><Run Text="Поиск по Фильтру - "/><Run Language="ru-ru" Text="Нас"/><Run Text="/"/><Run Language="ru-ru" Text="пункт"/></TextBlock>
 
 
 
