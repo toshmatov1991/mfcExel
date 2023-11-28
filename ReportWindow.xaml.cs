@@ -339,7 +339,7 @@ namespace exel_for_mfc
                             {
                                 doc.SetCellValue($"A{nextLine1}", item.PrivilegesName);
                                 doc.SetCellStyle($"A{nextLine1}", liderStyle);
-                                doc.SetRowHeight(nextLine1, 25);
+                                doc.SetRowHeight(nextLine1, 50);
                             }
 
                             // Получить Id Льготы
@@ -359,8 +359,10 @@ namespace exel_for_mfc
 
 
                             doc.SetCellValue($"{chars[ch]}{nextLine1}", countSertPriv.Count());
+                            doc.SetRowHeight(nextLine1, 55);
                             doc.SetCellStyle($"{chars[ch]}{nextLine1}", strokeStyle);
-                            doc.SetRowHeight(nextLine1, 25);
+                            
+                            
 
 
                             nextLine1++;
@@ -370,18 +372,6 @@ namespace exel_for_mfc
                         dewq = false;
                         ch++;
                     }
-
-
-
-
-
-
-
-
-
-
-
-
 
 
                     // Сохранение документа
