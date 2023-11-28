@@ -139,6 +139,17 @@
                     Click="Button_Click"
                     Grid.Column="2"
                     Grid.Row="4"/>
+            
+            <!-- Кнопка для выделения всех или снятия галочек -->
+            <Button Grid.Column="3" 
+                    Content="Отметить все галочки" 
+                    Background="White"
+                    x:Name="allCheckOrNo"
+                    HorizontalAlignment="Center" 
+                    Margin="0,93,0,0" Grid.Row="1" 
+                    VerticalAlignment="Top" 
+                    Height="45" 
+                    Width="149" Click="AllCheckOrNo_Click"/>
 
         </Grid>
     </Border>
