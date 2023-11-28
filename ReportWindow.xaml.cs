@@ -137,6 +137,15 @@ namespace exel_for_mfc
             payStyle.SetVerticalAlignment(DocumentFormat.OpenXml.Spreadsheet.VerticalAlignmentValues.Center);
             payStyle.SetHorizontalAlignment(DocumentFormat.OpenXml.Spreadsheet.HorizontalAlignmentValues.Center);
 
+            //Стиль Итого
+            SLStyle totalStyle = new SLStyle();
+            totalStyle.Font.FontName = "Arial";
+            totalStyle.Font.FontSize = 12;
+            totalStyle.Font.Bold = true;
+            totalStyle.SetWrapText(true);
+            totalStyle.SetVerticalAlignment(DocumentFormat.OpenXml.Spreadsheet.VerticalAlignmentValues.Center);
+            totalStyle.SetHorizontalAlignment(DocumentFormat.OpenXml.Spreadsheet.HorizontalAlignmentValues.Center);
+
 
 
             #endregion
@@ -391,7 +400,7 @@ namespace exel_for_mfc
                     {
                         doc.SetCellValue($"{chars[ch]}{nextLine}", totalByMonth[ch]);
                         doc.SetRowHeight(nextLine, 25);
-                        doc.SetCellStyle($"{chars[ch]}{nextLine}", izNixStyle);
+                        doc.SetCellStyle($"{chars[ch]}{nextLine}", totalStyle);
 
                         ch++;
                     }
