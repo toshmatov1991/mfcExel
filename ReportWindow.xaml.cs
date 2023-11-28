@@ -314,6 +314,7 @@ namespace exel_for_mfc
                     dewq = true;
                     ch = 0;
 
+                    //Из них
                     doc.SetCellValue($"A{nextLine1}", "Из них");
                     doc.SetCellStyle($"A{nextLine1}", izNixStyle);
                     doc.SetRowHeight(nextLine1, 25);
@@ -325,12 +326,10 @@ namespace exel_for_mfc
 
 
 
-                    //Запрос на получение списка Выплат
+                    //Запрос на получение списка Льгот
                     var getMyPriv = db.Privileges.Where(u => u.HidingPriv == 1 && u.PrivilegesName != "").OrderBy(u => u.PrivilegesName).ToList();
 
-                    // Из Них
                     //Чтоб сохранить текущее состояние
-
                     i = nextLine1;
                     foreach (var a in analog)
                     {
@@ -344,31 +343,30 @@ namespace exel_for_mfc
                             }
 
                             // Получить Id Льготы
-                            var idPay = db.PayAmounts.Where(u => u.Pay == item.Pay).FirstOrDefault();
+                            var idPriv = db.Privileges.Where(u => u.PrivilegesName == item.PrivilegesName).FirstOrDefault();
 
 
-                            // Количество сертов по выплатам
+                            // Количество сертов по льготам
 
-                            var countSertPay = from r in db.Registries.Where(u => u.SerialAndNumberSert != null
-                                                                            && u.DateGetSert.Value.Year == yearCodeBehind.Year
-                                                                            && u.DateGetSert.Value.Month == a
-                                                                            && u.PayAmountFk == idPay.Id)
-                                               select new
-                                               {
-                                                   id = r.Id
-                                               };
-
-
-                            doc.SetCellValue($"{chars[ch]}{nextLine}", countSertPay.Count());
-                            doc.SetCellStyle($"{chars[ch]}{nextLine}", strokeStyle);
-                            doc.SetRowHeight(nextLine, 25);
+                            var countSertPriv = from r in db.Registries.Where(u => u.SerialAndNumberSert != null
+                                                                           && u.DateGetSert.Value.Year == yearCodeBehind.Year
+                                                                           && u.DateGetSert.Value.Month == a)
+                                            join ap in db.Applicants.Where(a => a.PrivilegesFk == idPriv.Id) on r.ApplicantFk equals ap.Id
+                                            select new
+                                            {
+                                                id = r.Id
+                                            };
 
 
-                            nextLine++;
+                            doc.SetCellValue($"{chars[ch]}{nextLine1}", countSertPriv.Count());
+                            doc.SetCellStyle($"{chars[ch]}{nextLine1}", strokeStyle);
+                            doc.SetRowHeight(nextLine1, 25);
+
+
+                            nextLine1++;
 
                         }
-                        nextLine1 = nextLine;
-                        nextLine = i;
+                        nextLine1 = i;
                         dewq = false;
                         ch++;
                     }
