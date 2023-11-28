@@ -6,7 +6,7 @@
         ResizeMode="CanMinimize" mc:Ignorable="d" 
         Icon="Resources\logomfc.png" 
         WindowStartupLocation="CenterScreen"
-        Title="Генерация отчета" Height="777" Width="800">
+        Title="Генерация отчета" Height="777" Width="1000">
     <Window.Resources>
         <StreamGeometry x:Key="Geometry">M12,24 L36,0 L36,48 Z</StreamGeometry>
         <Style x:Key="FocusVisual">
@@ -97,13 +97,13 @@
                     Click="Button_Click_2"/>
 
             <!--  Года  -->
-            <TextBlock HorizontalAlignment="Left" 
-                       VerticalAlignment="Center"
+            <TextBlock HorizontalAlignment="Center" 
+                       VerticalAlignment="Top"
                        FontSize="20"
                        Height="23"
                        FontStyle="Italic"
                        x:Name="TotalAmountForAllTime" 
-                       Grid.Column="2" Width="88" Margin="87,0,0,0"/>
+                       Grid.Column="2" Width="88" Margin="0,61,0,0"/>
 
             <!--  Месяцы  -->
             <StackPanel Orientation="Vertical"
@@ -135,11 +135,11 @@
                     Foreground="White"
                     RenderTransformOrigin="-0.341,0.328" 
                     Height="44" 
-                    Width="187" 
+                    Width="177" 
                     Click="Button_Click"
                     Grid.Column="2"
                     Grid.Row="4"/>
-            
+
             <!-- Кнопка для выделения всех или снятия галочек -->
             <Button Grid.Column="3" 
                     Content="Отметить все галочки" 
