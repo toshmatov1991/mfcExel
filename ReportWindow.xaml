@@ -78,8 +78,6 @@
 
 
 
-
-
             <!--  Кнопки стрелки  -->
             <Button Grid.Row="0"
                     Grid.Column="1"
@@ -107,7 +105,25 @@
                        x:Name="TotalAmountForAllTime" 
                        Grid.Column="2" Width="88" Margin="87,0,0,0"/>
 
-
+            <!--  Месяцы  -->
+            <StackPanel Orientation="Vertical"
+                        Grid.Column="2"
+                        Grid.Row="1"
+                        Grid.RowSpan="2"
+                        HorizontalAlignment="Center">
+                <CheckBox x:Name="checkBox1" IsChecked="False" Height="25" Content="Январь" />
+                <CheckBox x:Name="checkBox2" IsChecked="False" Height="25" Content="Февраль"/>
+                <CheckBox x:Name="checkBox3" IsChecked="False" Height="25" Content="Март"/>
+                <CheckBox x:Name="checkBox4" IsChecked="False" Height="25" Content="Апрель"/>
+                <CheckBox x:Name="checkBox5" IsChecked="False" Height="25" Content="Май"/>
+                <CheckBox x:Name="checkBox6" IsChecked="False" Height="25" Content="Июнь"/>
+                <CheckBox x:Name="checkBox7" IsChecked="False" Height="25" Content="Июль"/>
+                <CheckBox x:Name="checkBox8" IsChecked="False" Height="25" Content="Август"/>
+                <CheckBox x:Name="checkBox9" IsChecked="False" Height="25" Content="Сентябрь"/>
+                <CheckBox x:Name="checkBox10" IsChecked="False" Height="25" Content="Октябрь"/>
+                <CheckBox x:Name="checkBox11" IsChecked="False" Height="25" Content="Ноябрь"/>
+                <CheckBox x:Name="checkBox12" IsChecked="False" Height="25" Content="Декабрь"/>
+            </StackPanel>
 
 
 

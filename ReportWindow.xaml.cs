@@ -2,6 +2,7 @@
 using SpreadsheetLight;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -41,21 +42,47 @@ namespace exel_for_mfc
             }
         }
 
-        private static void CreateFile(string str)
+
+
+
+
+        private void CreateFile(string str)
         {
             if(str != string.Empty)
             {
+                //Получил список выбранных Месяцев
+                var listMouth = ListMouth();
+
+                //Генерация колонок в зависимости от выбора Месяцев
+                //Создаю объкт таблицы
+                DataTable dt = new();
+
+                //Затем в цикле надо задать колонки Месяцев
+                foreach (var item in listMouth)
+                {
+                    dt.Columns.Add(item, typeof(string));
+                }
+
+
+
                 //var u = DateTime.Now.Month;
+
+
+
 
 
                 using ExDbContext db = new();
                 using SLDocument doc = new();
-
+                doc.ImportDataTable(1, 1, dt, true);
 
                 var getMyArea = db.Areas.Where(u => u.HidingArea == 1).OrderBy(u => u.AreaName).ToList();
 
 
-                doc.SetCellValue("A1", "Район");
+                //doc.SetCellValue("A1", "Район");
+
+                doc.SetColumnWidth(1, 40);
+                doc.SetRowHeight(1, 30);
+                
 
                 int i = 2;
                 foreach (var item in getMyArea)
@@ -73,8 +100,60 @@ namespace exel_for_mfc
 
             }
 
+        }
 
 
+
+
+
+
+
+        #region Методы помошники
+        //Вернем список выбранных месяцев
+        private List<string> ListMouth()
+        {
+            List<string> strings = new();
+
+            strings.Add("Район");
+
+            if ((bool)checkBox1.IsChecked)
+                strings.Add((string)checkBox1.Content);
+
+            if ((bool)checkBox2.IsChecked)
+                strings.Add((string)checkBox2.Content);
+
+            if ((bool)checkBox3.IsChecked)
+                strings.Add((string)checkBox3.Content);
+
+            if ((bool)checkBox4.IsChecked)
+                strings.Add((string)checkBox4.Content);
+
+            if ((bool)checkBox5.IsChecked)
+                strings.Add((string)checkBox5.Content);
+
+            if ((bool)checkBox6.IsChecked)
+                strings.Add((string)checkBox6.Content);
+
+            if ((bool)checkBox7.IsChecked)
+                strings.Add((string)checkBox7.Content);
+
+            if ((bool)checkBox8.IsChecked)
+                strings.Add((string)checkBox8.Content);
+
+            if ((bool)checkBox9.IsChecked)
+                strings.Add((string)checkBox9.Content);
+
+            if ((bool)checkBox10.IsChecked)
+                strings.Add((string)checkBox10.Content);
+
+            if ((bool)checkBox11.IsChecked)
+                strings.Add((string)checkBox11.Content);
+
+            if ((bool)checkBox12.IsChecked)
+                strings.Add((string)checkBox12.Content);
+
+
+            return strings;
         }
 
         //Кнопка влево
@@ -90,5 +169,7 @@ namespace exel_for_mfc
             yearCodeBehind = yearCodeBehind.AddYears(1);
             TotalAmountForAllTime.Text = yearCodeBehind.Year.ToString();
         }
+        #endregion
+
     }
 }
