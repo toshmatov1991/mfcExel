@@ -28,7 +28,7 @@ namespace exel_for_mfc
 
         private List<string> listMouth = new();
 
-        private Dictionary<char, int> totalByMonth = new();
+        private List<int> totalByMonth = new();
 
         private int nextLine = 0;
 
@@ -235,7 +235,7 @@ namespace exel_for_mfc
                             i++;
                         }
                         nextLine = i;
-                        totalByMonth.Add(chars[ch], summTotal);
+                        totalByMonth.Add(summTotal);
                         i = 2;
                         ch++;
                         dewq = false;
@@ -368,10 +368,37 @@ namespace exel_for_mfc
                             nextLine1++;
 
                         }
+                        nextLine = nextLine1;
                         nextLine1 = i;
                         dewq = false;
                         ch++;
+
                     }
+
+
+                    /*****************ИТОГО******************/
+
+
+                    dewq = true;
+                    ch = 0;
+                    //Из них
+                    doc.SetCellValue($"A{nextLine}", "Итого");
+                    doc.SetCellStyle($"A{nextLine}", izNixStyle);
+                    doc.SetRowHeight(nextLine, 25);
+
+
+                    foreach (var a in analog)
+                    {
+                        doc.SetCellValue($"{chars[ch]}{nextLine}", totalByMonth[ch]);
+                        doc.SetRowHeight(nextLine, 25);
+                        doc.SetCellStyle($"{chars[ch]}{nextLine}", izNixStyle);
+
+                        ch++;
+                    }
+
+
+
+
 
 
                     // Сохранение документа
