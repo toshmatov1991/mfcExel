@@ -6,7 +6,7 @@
         ResizeMode="CanMinimize" mc:Ignorable="d" 
         Icon="Resources\logomfc.png" 
         WindowStartupLocation="CenterScreen"
-        Title="Генерация отчета" Height="888" Width="1200">
+        Title="Генерация отчета" Height="777" Width="800">
     <Window.Resources>
         <StreamGeometry x:Key="Geometry">M12,24 L36,0 L36,48 Z</StreamGeometry>
         <Style x:Key="FocusVisual">

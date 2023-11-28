@@ -7,6 +7,7 @@ using System.Data;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -65,15 +66,11 @@ namespace exel_for_mfc
 
                 if (saveFile.ShowDialog() == true)
                 {
-                    CreateFile(saveFile.FileName);
+                    new Thread(() => { CreateFile(saveFile.FileName); }) { IsBackground = true }.Start();
                 }
             }
 
         }
-
-
-
-
 
         private void CreateFile(string str)
         {
@@ -427,12 +424,6 @@ namespace exel_for_mfc
             }
 
         }
-
-
-
-
-
-
 
         #region Методы помошники
 
