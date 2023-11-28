@@ -91,11 +91,23 @@ namespace exel_for_mfc
             //Стиль значения
             SLStyle strokeStyle = new SLStyle();
             strokeStyle.Font.FontName = "Arial";
-            strokeStyle.Font.FontSize = 13;
-            strokeStyle.Font.Bold = true;
+            strokeStyle.Font.FontSize = 12;
+            strokeStyle.Font.Bold = false;
             strokeStyle.SetWrapText(true);
             strokeStyle.SetVerticalAlignment(DocumentFormat.OpenXml.Spreadsheet.VerticalAlignmentValues.Center);
             strokeStyle.SetHorizontalAlignment(DocumentFormat.OpenXml.Spreadsheet.HorizontalAlignmentValues.Center);
+
+            //Новый стиль
+            SLStyle liderStyle = new SLStyle();
+            liderStyle.Font.FontName = "Arial";
+            liderStyle.Font.FontSize = 13;
+            liderStyle.Font.Bold = false;
+            liderStyle.Font.Italic = true;
+            liderStyle.SetWrapText(true);
+            liderStyle.SetVerticalAlignment(DocumentFormat.OpenXml.Spreadsheet.VerticalAlignmentValues.Center);
+            liderStyle.SetHorizontalAlignment(DocumentFormat.OpenXml.Spreadsheet.HorizontalAlignmentValues.Left);
+
+
 
 
             #endregion
@@ -121,7 +133,7 @@ namespace exel_for_mfc
 
                     // Задать стиль района Главного Заголовка
                     doc.SetColumnWidth(1, 35);
-                    doc.SetRowHeight(1, 30);
+                    doc.SetRowHeight(1, 35);
                     doc.SetCellStyle(1, 1, titleStyle);
 
 
@@ -164,6 +176,8 @@ namespace exel_for_mfc
                             if (dewq)
                             {
                                 doc.SetCellValue($"A{i}", item.AreaName);
+                                doc.SetCellStyle($"A{i}", liderStyle);
+                                doc.SetRowHeight(i, 25);
                             }
                            
 
@@ -187,6 +201,7 @@ namespace exel_for_mfc
 
                             doc.SetCellValue($"{chars[ch]}{i}", countSert.Count());
                             doc.SetCellStyle($"{chars[ch]}{i}", strokeStyle);
+                            doc.SetRowHeight(i, 25);
 
                             i++;
                         }
