@@ -124,7 +124,15 @@ namespace exel_for_mfc
             izNixStyle.SetVerticalAlignment(DocumentFormat.OpenXml.Spreadsheet.VerticalAlignmentValues.Center);
             izNixStyle.SetHorizontalAlignment(DocumentFormat.OpenXml.Spreadsheet.HorizontalAlignmentValues.Center);
 
-
+            //Выплаты
+            SLStyle payStyle = new SLStyle();
+            payStyle.Font.FontName = "Arial";
+            payStyle.Font.FontSize = 13;
+            payStyle.Font.Bold = false;
+            payStyle.Font.Italic = true;
+            payStyle.SetWrapText(true);
+            payStyle.SetVerticalAlignment(DocumentFormat.OpenXml.Spreadsheet.VerticalAlignmentValues.Center);
+            payStyle.SetHorizontalAlignment(DocumentFormat.OpenXml.Spreadsheet.HorizontalAlignmentValues.Center);
 
 
 
@@ -252,7 +260,7 @@ namespace exel_for_mfc
                     var getMyPay = db.PayAmounts.Where(u => u.HidingPay == 1 && u.Pay != null).OrderBy(u => u.Pay).ToList();
 
                     // Из Них
-
+                    i = nextLine;
                     foreach (var a in analog)
                     {
                         foreach (var item in getMyPay)
@@ -260,7 +268,7 @@ namespace exel_for_mfc
                             if (dewq)
                             {
                                 doc.SetCellValue($"A{nextLine}", item.Pay.ToString());
-                                doc.SetCellStyle($"A{nextLine}", liderStyle);
+                                doc.SetCellStyle($"A{nextLine}", payStyle);
                                 doc.SetRowHeight(nextLine, 25);
                             }
 
@@ -282,13 +290,13 @@ namespace exel_for_mfc
 
                             doc.SetCellValue($"{chars[ch]}{nextLine}", countSertPay.Count());
                             doc.SetCellStyle($"{chars[ch]}{nextLine}", strokeStyle);
-                            doc.SetRowHeight(i, 25);
+                            doc.SetRowHeight(nextLine, 25);
 
 
                             nextLine++;
 
                         }
-                        nextLine = 2;
+                        nextLine = i;
                         dewq = false;
                         ch++;
                     }
