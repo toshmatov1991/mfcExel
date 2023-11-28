@@ -15,6 +15,7 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using System.Windows.Media.TextFormatting;
 using System.Windows.Shapes;
 
 namespace exel_for_mfc
@@ -27,6 +28,10 @@ namespace exel_for_mfc
 
         private List<string> listMouth = new();
 
+        private Dictionary<char, int> totalByMonth = new();
+
+        private int nextLine = 0;
+
         public ReportWindow()
         {
             InitializeComponent();
@@ -36,6 +41,9 @@ namespace exel_for_mfc
         //Генерация шаблона для отчета
         private void Button_Click(object sender, RoutedEventArgs e)
         {
+            //Чищу словарь итоговых результатов
+            totalByMonth.Clear();
+
             // Получил список выбранных Месяцев
             listMouth = ListMouth();
 
@@ -66,7 +74,6 @@ namespace exel_for_mfc
 
         private void CreateFile(string str)
         {
-
             #region Стили
             //Стиль главного заголовка
             SLStyle titleStyle = new SLStyle();
@@ -106,6 +113,17 @@ namespace exel_for_mfc
             liderStyle.SetWrapText(true);
             liderStyle.SetVerticalAlignment(DocumentFormat.OpenXml.Spreadsheet.VerticalAlignmentValues.Center);
             liderStyle.SetHorizontalAlignment(DocumentFormat.OpenXml.Spreadsheet.HorizontalAlignmentValues.Left);
+
+            //Из них
+            SLStyle izNixStyle = new SLStyle();
+            izNixStyle.Font.FontName = "Arial";
+            izNixStyle.Font.FontSize = 13;
+            izNixStyle.Font.Bold = true;
+            izNixStyle.Font.Italic = true;
+            izNixStyle.SetWrapText(true);
+            izNixStyle.SetVerticalAlignment(DocumentFormat.OpenXml.Spreadsheet.VerticalAlignmentValues.Center);
+            izNixStyle.SetHorizontalAlignment(DocumentFormat.OpenXml.Spreadsheet.HorizontalAlignmentValues.Center);
+
 
 
 
@@ -160,7 +178,7 @@ namespace exel_for_mfc
                     List<int> analog = IntMouth(listMouth);
 
                     char[] chars = { 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M'  };
-
+                    int summTotal = 0;
                     int ch = 0;
 
                     bool dewq = true;
@@ -169,6 +187,7 @@ namespace exel_for_mfc
                     // Заполнение колонки районами и значениями сразу //Индекс района
                     foreach (var a in analog)
                     {
+                        summTotal = 0;
                         foreach (var item in getMyArea)
                         {
                             /* A B C D E F G H I J K L M */
@@ -184,8 +203,6 @@ namespace exel_for_mfc
                             // Получить Id Района
                             var idArea = db.Areas.Where(u => u.AreaName == item.AreaName).FirstOrDefault();
 
-                            // Id Месяца
-                            //var idMouth = analog[a];
 
                             // Количество сертов
 
@@ -200,21 +217,78 @@ namespace exel_for_mfc
 
 
                             doc.SetCellValue($"{chars[ch]}{i}", countSert.Count());
+                            summTotal += countSert.Count();
                             doc.SetCellStyle($"{chars[ch]}{i}", strokeStyle);
                             doc.SetRowHeight(i, 25);
 
                             i++;
                         }
+                        nextLine = i;
+                        totalByMonth.Add(chars[ch], summTotal);
                         i = 2;
                         ch++;
                         dewq = false;
                     }
 
 
-                    //Данные о количестве записать сразу после обработки райнов или во время обработки
+                    //Данные о количестве записать сразу после обработки райнов или во время обработки, окех!
+
+                    /*#############################################################################*/
+                    /*********************************   ВЫПЛАТЫ   *********************************/
+                    /*#############################################################################*/
+                    dewq = true;
+                    ch = 0;
 
 
 
+                    //Запрос на получение списка Выплат
+                    var getMyPay = db.PayAmounts.Where(u => u.HidingPay == 1 && u.Pay != null).OrderBy(u => u.Pay).ToList();
+
+                    // Из Них
+                    foreach (var a in analog)
+                    {
+                        foreach (var item in getMyPay)
+                        {
+                            if (dewq)
+                            {
+                                doc.SetCellValue($"A{nextLine}", "Из них");
+                                doc.SetCellStyle($"A{nextLine}", izNixStyle);
+                                doc.SetRowHeight(nextLine, 25);
+                            }
+
+                            // Получить Id Выплаты
+                            var idPay = db.PayAmounts.Where(u => u.Pay == item.Pay).FirstOrDefault();
+
+
+                            // Количество сертов по выплатам
+
+                            var countSertPay = from r in db.Registries.Where(u => u.SerialAndNumberSert != null
+                                                                            && u.DateGetSert.Value.Year == yearCodeBehind.Year
+                                                                            && u.DateGetSert.Value.Month == a
+                                                                            && u.PayAmountFk == idPay.Id)
+                                            select new
+                                            {
+                                                id = r.Id
+                                            };
+
+
+                            doc.SetCellValue($"{chars[ch]}{nextLine}", countSertPay.Count());
+                            doc.SetCellStyle($"{chars[ch]}{nextLine}", strokeStyle);
+                            doc.SetRowHeight(i, 25);
+
+
+                            nextLine++;
+
+
+                        }
+                        nextLine = 2;
+                        dewq = false;
+                        ch++;
+                    }
+                    
+
+
+                   
 
 
 
