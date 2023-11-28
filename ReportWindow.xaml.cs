@@ -1,4 +1,4 @@
-﻿using DocumentFormat.OpenXml.Spreadsheet;
+﻿
 using Microsoft.Win32;
 using SpreadsheetLight;
 using System;
@@ -239,20 +239,28 @@ namespace exel_for_mfc
                     dewq = true;
                     ch = 0;
 
+                        doc.SetCellValue($"A{nextLine}", "Из них");
+                        doc.SetCellStyle($"A{nextLine}", izNixStyle);
+                        doc.SetRowHeight(nextLine, 25);
+
+                    
+
+                    nextLine++;
 
 
                     //Запрос на получение списка Выплат
                     var getMyPay = db.PayAmounts.Where(u => u.HidingPay == 1 && u.Pay != null).OrderBy(u => u.Pay).ToList();
 
                     // Из Них
+
                     foreach (var a in analog)
                     {
                         foreach (var item in getMyPay)
                         {
                             if (dewq)
                             {
-                                doc.SetCellValue($"A{nextLine}", "Из них");
-                                doc.SetCellStyle($"A{nextLine}", izNixStyle);
+                                doc.SetCellValue($"A{nextLine}", item.Pay.ToString());
+                                doc.SetCellStyle($"A{nextLine}", liderStyle);
                                 doc.SetRowHeight(nextLine, 25);
                             }
 
@@ -278,7 +286,6 @@ namespace exel_for_mfc
 
 
                             nextLine++;
-
 
                         }
                         nextLine = 2;
