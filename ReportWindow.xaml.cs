@@ -48,7 +48,21 @@ namespace exel_for_mfc
 
         private void CreateFile(string str)
         {
-            if(str != string.Empty)
+
+            #region Стили
+            SLStyle titleStyle = new SLStyle();
+            titleStyle.Font.FontName = "Arial";
+            titleStyle.Font.FontSize = 16;
+            titleStyle.Font.Bold = true;
+            titleStyle.SetWrapText(true);
+            titleStyle.SetVerticalAlignment(DocumentFormat.OpenXml.Spreadsheet.VerticalAlignmentValues.Center);
+            titleStyle.SetHorizontalAlignment(DocumentFormat.OpenXml.Spreadsheet.HorizontalAlignmentValues.Center);
+            #endregion
+
+
+
+
+            if (str != string.Empty)
             {
                 //Получил список выбранных Месяцев
                 var listMouth = ListMouth();
@@ -82,7 +96,7 @@ namespace exel_for_mfc
 
                 doc.SetColumnWidth(1, 40);
                 doc.SetRowHeight(1, 30);
-                
+                doc.SetCellStyle(1, 1, titleStyle);
 
                 int i = 2;
                 foreach (var item in getMyArea)
