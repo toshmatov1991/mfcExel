@@ -4,6 +4,7 @@ using SpreadsheetLight;
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -48,6 +49,7 @@ namespace exel_for_mfc
                 SaveFileDialog saveFile = new()
                 {
                     DefaultExt = "xlsx"
+                    
                 };
 
                 if (saveFile.ShowDialog() == true)
@@ -86,83 +88,144 @@ namespace exel_for_mfc
             itemRowHeaderStyle.Border.BottomBorder.BorderStyle = itemRowHeaderStyle.Border.TopBorder.BorderStyle = itemRowHeaderStyle.Border.LeftBorder.BorderStyle = itemRowHeaderStyle.Border.RightBorder.BorderStyle = DocumentFormat.OpenXml.Spreadsheet.BorderStyleValues.Thin;
             itemRowHeaderStyle.Border.BottomBorder.Color = itemRowHeaderStyle.Border.TopBorder.Color = itemRowHeaderStyle.Border.LeftBorder.Color = itemRowHeaderStyle.Border.RightBorder.Color = System.Drawing.Color.Black;
 
+            //Стиль значения
+            SLStyle strokeStyle = new SLStyle();
+            strokeStyle.Font.FontName = "Arial";
+            strokeStyle.Font.FontSize = 13;
+            strokeStyle.Font.Bold = true;
+            strokeStyle.SetWrapText(true);
+            strokeStyle.SetVerticalAlignment(DocumentFormat.OpenXml.Spreadsheet.VerticalAlignmentValues.Center);
+            strokeStyle.SetHorizontalAlignment(DocumentFormat.OpenXml.Spreadsheet.HorizontalAlignmentValues.Center);
 
 
             #endregion
 
             if (str != string.Empty)
             {
-                // Создаю документ
-                using SLDocument doc = new();
-
-
-                // Генерация колонок в зависимости от выбора Месяцев
-                // Создаю объкт таблицы
-                DataTable dt = new();
-
-                //Затем в цикле надо задать колонки Месяцев
-                foreach (var item in listMouth)
+                try
                 {
-                    dt.Columns.Add(item, typeof(string));
-                    
+                    // Создаю документ
+                    using SLDocument doc = new();
+
+
+                    // Генерация колонок в зависимости от выбора Месяцев
+                    // Создаю объкт таблицы
+                    DataTable dt = new();
+
+                    //Затем в цикле надо задать колонки Месяцев
+                    foreach (var item in listMouth)
+                    {
+                        dt.Columns.Add(item, typeof(string));
+
+                    }
+
+                    // Задать стиль района Главного Заголовка
+                    doc.SetColumnWidth(1, 35);
+                    doc.SetRowHeight(1, 30);
+                    doc.SetCellStyle(1, 1, titleStyle);
+
+
+                    // Задать стили заголовков месяцев колонок
+                    for (int j = 2; j < listMouth.Count + 1; j++)
+                    {
+                        doc.SetColumnWidth(j, 15);
+                        doc.SetCellStyle(1, j, itemRowHeaderStyle);
+                    }
+
+                    /////////////////-----  Заполнение районов и их значений ------///////////////////*****
+                    ///
+                    using ExDbContext db = new();
+
+                    //Задаю стиль заголовка
+                    doc.ImportDataTable(1, 1, dt, true);
+
+                    //Запрос на получение списка районов
+                    var getMyArea = db.Areas.Where(u => u.HidingArea == 1 && u.AreaName != "").OrderBy(u => u.AreaName).ToList();
+
+                    int i = 2;
+
+                    //Создаю список чисел аналогов Месяцам
+                    List<int> analog = IntMouth(listMouth);
+
+                    char[] chars = { 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M'  };
+
+                    int ch = 0;
+
+                    bool dewq = true;
+                    //Мне нужно получить количество сертификатов за определенный год и за определенный месяц
+
+                    // Заполнение колонки районами и значениями сразу //Индекс района
+                    foreach (var a in analog)
+                    {
+                        foreach (var item in getMyArea)
+                        {
+                            /* A B C D E F G H I J K L M */
+
+                            if (dewq)
+                            {
+                                doc.SetCellValue($"A{i}", item.AreaName);
+                            }
+                           
+
+                            // Получить Id Района
+                            var idArea = db.Areas.Where(u => u.AreaName == item.AreaName).FirstOrDefault();
+
+                            // Id Месяца
+                            //var idMouth = analog[a];
+
+                            // Количество сертов
+
+                            var countSert = from r in db.Registries.Where(u => u.SerialAndNumberSert != null
+                                                                            && u.DateGetSert.Value.Year == yearCodeBehind.Year
+                                                                            && u.DateGetSert.Value.Month == a)
+                                            join ap in db.Applicants.Where(a => a.AreaFk == idArea.Id) on r.ApplicantFk equals ap.Id
+                                            select new
+                                            {
+                                                id = r.Id
+                                            };
+
+
+                            doc.SetCellValue($"{chars[ch]}{i}", countSert.Count());
+                            doc.SetCellStyle($"{chars[ch]}{i}", strokeStyle);
+
+                            i++;
+                        }
+                        i = 2;
+                        ch++;
+                        dewq = false;
+                    }
+
+
+
+
+
+
+
+                    //var u = DateTime.Now.Month;
+                    //doc.SetCellValue("A1", "Район");
+
+
+
+
+
+
+
+
+
+
+                    // Сохранение документа
+                    doc.SaveAs(str);
+
+
+                    // Открыть файл
+                    Process.Start(new ProcessStartInfo { FileName = str, UseShellExecute = true });
+
                 }
-
-                // Задать стиль района Главного Заголовка
-                doc.SetColumnWidth(1, 35);
-                doc.SetRowHeight(1, 30);
-                doc.SetCellStyle(1, 1, titleStyle);
-
-
-                // Задать стили заголовков месяцев колонок
-                for (int j = 2; j < listMouth.Count + 1; j++)
+                catch (Exception ex)
                 {
-                   doc.SetColumnWidth(j, 15);
-                   doc.SetCellStyle(1, j, itemRowHeaderStyle);
+                    MessageBox.Show(ex.Message);
                 }
-
-                /////////////////-----  Заполнение районов и их значений ------///////////////////*****
-                ///
-                using ExDbContext db = new();
-
-                //Задаю стиль заголовка
-                doc.ImportDataTable(1, 1, dt, true);
-
-                //Запрос на получение списка районов
-                var getMyArea = db.Areas.Where(u => u.HidingArea == 1).OrderBy(u => u.AreaName).ToList();
-
-                int i = 2;
-
-                //Заполнение колонки районами
-                foreach (var item in getMyArea)
-                {
-                    doc.SetCellValue($"A{i}", item.AreaName);
-
-
-
-
-                    i++;
-                }
-
-
-
-
-
-
-
-                //var u = DateTime.Now.Month;
-                //doc.SetCellValue("A1", "Район");
-
-
-
-
-
-
-
-
-
-
-                //Сохранение документа
-                doc.SaveAs(str);
+              
 
             }
 
