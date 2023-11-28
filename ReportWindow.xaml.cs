@@ -32,6 +32,9 @@ namespace exel_for_mfc
 
         private int nextLine = 0;
 
+        private int nextLine1 = 0;
+        
+
         public ReportWindow()
         {
             InitializeComponent();
@@ -122,7 +125,7 @@ namespace exel_for_mfc
             izNixStyle.Font.Italic = true;
             izNixStyle.SetWrapText(true);
             izNixStyle.SetVerticalAlignment(DocumentFormat.OpenXml.Spreadsheet.VerticalAlignmentValues.Center);
-            izNixStyle.SetHorizontalAlignment(DocumentFormat.OpenXml.Spreadsheet.HorizontalAlignmentValues.Center);
+            izNixStyle.SetHorizontalAlignment(DocumentFormat.OpenXml.Spreadsheet.HorizontalAlignmentValues.Left);
 
             //Выплаты
             SLStyle payStyle = new SLStyle();
@@ -296,14 +299,84 @@ namespace exel_for_mfc
                             nextLine++;
 
                         }
+                        nextLine1 = nextLine;
                         nextLine = i;
                         dewq = false;
                         ch++;
                     }
-                    
 
 
-                   
+
+                    /*#############################################################################*/
+                    /*********************************   Льготы   *********************************/
+                    /*#############################################################################*/
+
+                    dewq = true;
+                    ch = 0;
+
+                    doc.SetCellValue($"A{nextLine1}", "Из них");
+                    doc.SetCellStyle($"A{nextLine1}", izNixStyle);
+                    doc.SetRowHeight(nextLine1, 25);
+
+
+
+                    nextLine1++;
+
+
+
+
+                    //Запрос на получение списка Выплат
+                    var getMyPriv = db.Privileges.Where(u => u.HidingPriv == 1 && u.PrivilegesName != "").OrderBy(u => u.PrivilegesName).ToList();
+
+                    // Из Них
+                    //Чтоб сохранить текущее состояние
+
+                    i = nextLine1;
+                    foreach (var a in analog)
+                    {
+                        foreach (var item in getMyPriv)
+                        {
+                            if (dewq)
+                            {
+                                doc.SetCellValue($"A{nextLine1}", item.PrivilegesName);
+                                doc.SetCellStyle($"A{nextLine1}", liderStyle);
+                                doc.SetRowHeight(nextLine1, 25);
+                            }
+
+                            // Получить Id Льготы
+                            var idPay = db.PayAmounts.Where(u => u.Pay == item.Pay).FirstOrDefault();
+
+
+                            // Количество сертов по выплатам
+
+                            var countSertPay = from r in db.Registries.Where(u => u.SerialAndNumberSert != null
+                                                                            && u.DateGetSert.Value.Year == yearCodeBehind.Year
+                                                                            && u.DateGetSert.Value.Month == a
+                                                                            && u.PayAmountFk == idPay.Id)
+                                               select new
+                                               {
+                                                   id = r.Id
+                                               };
+
+
+                            doc.SetCellValue($"{chars[ch]}{nextLine}", countSertPay.Count());
+                            doc.SetCellStyle($"{chars[ch]}{nextLine}", strokeStyle);
+                            doc.SetRowHeight(nextLine, 25);
+
+
+                            nextLine++;
+
+                        }
+                        nextLine1 = nextLine;
+                        nextLine = i;
+                        dewq = false;
+                        ch++;
+                    }
+
+
+
+
+
 
 
 
