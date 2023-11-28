@@ -23,6 +23,8 @@ namespace exel_for_mfc
 
         private DateTime yearCodeBehind = DateTime.Today;
 
+        private List<string> listMouth = new();
+
         public ReportWindow()
         {
             InitializeComponent();
@@ -32,15 +34,27 @@ namespace exel_for_mfc
         //Генерация шаблона для отчета
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            SaveFileDialog saveFile = new()
-            {
-                DefaultExt = "xlsx"
-            };
+            // Получил список выбранных Месяцев
+            listMouth = ListMouth();
 
-            if (saveFile.ShowDialog() == true)
+
+            if (listMouth.Count == 1)
+                MessageBox.Show("Нужно выбрать хотя бы один месяц для отчета\n Или выбрать все!", "Внимание", MessageBoxButton.OK, MessageBoxImage.Information);
+
+            else if (listMouth.Count > 1)
             {
-                CreateFile(saveFile.FileName);
+
+                SaveFileDialog saveFile = new()
+                {
+                    DefaultExt = "xlsx"
+                };
+
+                if (saveFile.ShowDialog() == true)
+                {
+                    CreateFile(saveFile.FileName);
+                }
             }
+
         }
 
 
@@ -75,17 +89,13 @@ namespace exel_for_mfc
 
             #endregion
 
-
-
-
             if (str != string.Empty)
             {
                 // Создаю документ
                 using SLDocument doc = new();
 
 
-                // Получил список выбранных Месяцев
-                var listMouth = ListMouth();
+               
 
                 // Генерация колонок в зависимости от выбора Месяцев
                 // Создаю объкт таблицы
@@ -259,8 +269,6 @@ namespace exel_for_mfc
             }
 
         }
-
-
         #endregion
 
 
