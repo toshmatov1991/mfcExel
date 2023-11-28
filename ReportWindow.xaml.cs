@@ -211,13 +211,9 @@ namespace exel_for_mfc
                     }
 
 
+                    //Данные о количестве записать сразу после обработки райнов или во время обработки
 
 
-
-
-
-                    //var u = DateTime.Now.Month;
-                    //doc.SetCellValue("A1", "Район");
 
 
 
