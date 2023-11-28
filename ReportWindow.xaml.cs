@@ -1,4 +1,5 @@
-﻿using Microsoft.Win32;
+﻿using DocumentFormat.OpenXml.Spreadsheet;
+using Microsoft.Win32;
 using SpreadsheetLight;
 using System;
 using System.Collections.Generic;
@@ -95,8 +96,6 @@ namespace exel_for_mfc
                 using SLDocument doc = new();
 
 
-               
-
                 // Генерация колонок в зависимости от выбора Месяцев
                 // Создаю объкт таблицы
                 DataTable dt = new();
@@ -121,32 +120,26 @@ namespace exel_for_mfc
                    doc.SetCellStyle(1, j, itemRowHeaderStyle);
                 }
 
-
-
-                //var u = DateTime.Now.Month;
-
-
-
-
-
+                /////////////////-----  Заполнение районов и их значений ------///////////////////*****
+                ///
                 using ExDbContext db = new();
 
+                //Задаю стиль заголовка
                 doc.ImportDataTable(1, 1, dt, true);
 
+                //Запрос на получение списка районов
                 var getMyArea = db.Areas.Where(u => u.HidingArea == 1).OrderBy(u => u.AreaName).ToList();
 
-
-                //doc.SetCellValue("A1", "Район");
-
-              
-
-
-                
-
                 int i = 2;
+
+                //Заполнение колонки районами
                 foreach (var item in getMyArea)
                 {
                     doc.SetCellValue($"A{i}", item.AreaName);
+
+
+
+
                     i++;
                 }
 
@@ -155,6 +148,20 @@ namespace exel_for_mfc
 
 
 
+
+                //var u = DateTime.Now.Month;
+                //doc.SetCellValue("A1", "Район");
+
+
+
+
+
+
+
+
+
+
+                //Сохранение документа
                 doc.SaveAs(str);
 
             }
@@ -168,6 +175,7 @@ namespace exel_for_mfc
 
 
         #region Методы помошники
+
         //Вернем список выбранных месяцев
         private List<string> ListMouth()
         {
@@ -213,6 +221,72 @@ namespace exel_for_mfc
 
 
             return strings;
+        }
+
+        //Метод для возврата чисел аналогов Месяцам
+        private static List<int> IntMouth(List<string> arft)
+        {
+            List<int> ints = new();
+
+            foreach (var item in arft)
+            {
+                switch (item)
+                {
+                    case "Район": break;
+                        
+                    case "Январь":
+                        ints.Add(1);
+                        break;
+
+                    case "Февраль":
+                        ints.Add(2);
+                        break;
+
+                    case "Март":
+                        ints.Add(3);
+                        break;
+
+                    case "Апрель":
+                        ints.Add(4);
+                        break;
+
+                    case "Май":
+                        ints.Add(5);
+                        break;
+
+                    case "Июнь":
+                        ints.Add(6);
+                        break;
+
+                    case "Июль":
+                        ints.Add(7);
+                        break;
+
+                    case "Август":
+                        ints.Add(8);
+                        break;
+
+                    case "Сентябрь":
+                        ints.Add(9);
+                        break;
+
+                    case "Октябрь":
+                        ints.Add(10);
+                        break;
+
+                    case "Ноябрь":
+                        ints.Add(11);
+                        break;
+
+                    case "Декабрь":
+                        ints.Add(12);
+                        break;
+
+                    default: break;
+                }
+            }
+
+            return ints;
         }
 
         //Кнопка влево
