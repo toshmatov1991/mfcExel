@@ -1016,7 +1016,7 @@ namespace exel_for_mfc
                     {
                         await db1.Database.ExecuteSqlRawAsync("INSERT INTO PayF(id, name, flag) VALUES ({0}, {1}, {2})", item.Id, item.Pay.ToString(), 0);
                     }
-                    payFilter.ItemsSource = db1.PayFs.Where(s => s.Name != null) .OrderBy(u => u.Name).ToList();
+                    payFilter.ItemsSource = db1.PayFs.Where(s => s.Name != null).OrderBy(u => u.Name).ToList();
 
                     //Льготы
                     var priv = await db.Privileges.FromSqlRaw("SELECT * FROM Privileges").Where(u => u.HidingPriv == 1 && u.PrivilegesName != "").ToListAsync();
@@ -1141,12 +1141,16 @@ namespace exel_for_mfc
                     List<long> payIdL = new();
                     List<long> solIdl = new();
 
+                    solIdl = await db1.Solves.Where(u => u.Flag == 1).Select(c => c.Id).ToListAsync();
                     areaIdL = await db1.AreaFs.Where(u => u.Flag == 1).Select(c => c.Id).ToListAsync();
                     localIdL = await db1.Localves.Where(u => u.Flag == 1).Select(c => c.Id).ToListAsync();
                     privIdL = await db1.PrivFs.Where(u => u.Flag == 1).Select(c => c.Id).ToListAsync();
                     payIdL = await db1.PayFs.Where(u => u.Flag == 1).Select(c => c.Id).ToListAsync();
-                    solIdl = await db1.Solves.Where(u => u.Flag == 1).Select(c => c.Id).ToListAsync();
+                   
 
+
+                    if (solIdl.Count != 0)
+                        predicate = predicate.And(e => solIdl.Contains((long)e.Solution));
 
                     if (areaIdL.Count != 0)
                         predicate = predicate.And(e => areaIdL.Contains((long)e.Area));
@@ -1180,8 +1184,7 @@ namespace exel_for_mfc
                     //    predicate = predicate.Or(e => payIdL.Contains((long)e.Pay));
                     //}
 
-                    if (solIdl.Count != 0)
-                        predicate = predicate.And(e => solIdl.Contains((long)e.Solution));
+                   
                     //else
                     //{
                     //    solIdl = db1.Solves.Select(c => c.Id - 1).ToList();
@@ -1191,16 +1194,10 @@ namespace exel_for_mfc
 
                 Dispatcher.Invoke(() =>
                 {
-                    //Проверка пустые оба
-                    if (dateStart.Text == "" & dateEnd.Text == "")
-                    {
-                        dateStart.Text = "10.10.2003";
-                        dateEnd.Text = "10.10.2030";
-                        predicate = predicate.And(e => e.DateGetSert >= Convert.ToDateTime(dateStart.Text) && e.DateGetSert <= Convert.ToDateTime(dateEnd.Text));
-                    }
+                   
 
                     //Иначе если Даты заполнены то беру их
-                    else if (dateStart.Text != "" & dateEnd.Text != "")
+                    if (dateStart.Text != "" & dateEnd.Text != "")
                     {
                         predicate = predicate.And(e => e.DateGetSert >= Convert.ToDateTime(dateStart.Text) && e.DateGetSert <= Convert.ToDateTime(dateEnd.Text));
                     }
@@ -1210,17 +1207,16 @@ namespace exel_for_mfc
                     //Если пустая дата начала
                     else if (dateStart.Text == "" & dateEnd.Text != "")
                     {
-                        dateStart.Text = "10.10.2003";
                         predicate = predicate.And(e => e.DateGetSert <= Convert.ToDateTime(dateEnd.Text));
                     }
-                       
+
 
                     //Если пустая дата окончания
-                     else if (dateStart.Text != "" & dateEnd.Text == "")
+                    else if (dateStart.Text != "" & dateEnd.Text == "")
                     {
-                        dateEnd.Text = "10.10.2030";
                         predicate = predicate.And(e => e.DateGetSert >= Convert.ToDateTime(dateStart.Text));
                     }
+
 
                     using (ExDbContext db = new())
                     {
@@ -1246,14 +1242,15 @@ namespace exel_for_mfc
                                       Trek = reg.Trek,
                                       MailingDate = reg.MailingDate,
                                       IdApplicant = appl.Id
-                                  }).AsExpandable().Where(predicate).ToList();
+                                  }).Where(predicate).ToList();
                     };
+
                 });
 
-                   
 
 
-                    if (MyList.Count == 0)
+
+                if (MyList.Count == 0)
                         MessageBox.Show("По вашему запросу ничего не найдено :(");
                     else
                     {
