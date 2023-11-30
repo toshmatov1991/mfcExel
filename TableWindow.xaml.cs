@@ -1199,7 +1199,7 @@ namespace exel_for_mfc
                     //Иначе если Даты заполнены то беру их
                     if (dateStart.Text != "" & dateEnd.Text != "")
                     {
-                        predicate = predicate.And(e => e.DateGetSert >= Convert.ToDateTime(dateStart.Text) && e.DateGetSert <= Convert.ToDateTime(dateEnd.Text));
+                        predicate = predicate.And(e => e.DateGetSert >= Convert.ToDateTime(dateStart.Text) && e.DateGetSert <= Convert.ToDateTime(dateEnd.Text) || e.DateGetSert == null);
                     }
 
 
@@ -1207,15 +1207,18 @@ namespace exel_for_mfc
                     //Если пустая дата начала
                     else if (dateStart.Text == "" & dateEnd.Text != "")
                     {
-                        predicate = predicate.And(e => e.DateGetSert <= Convert.ToDateTime(dateEnd.Text));
+                        predicate = predicate.And(e => e.DateGetSert <= Convert.ToDateTime(dateEnd.Text) || e.DateGetSert == null);
                     }
 
 
                     //Если пустая дата окончания
                     else if (dateStart.Text != "" & dateEnd.Text == "")
                     {
-                        predicate = predicate.And(e => e.DateGetSert >= Convert.ToDateTime(dateStart.Text));
+                        predicate = predicate.And(e => e.DateGetSert >= Convert.ToDateTime(dateStart.Text) || e.DateGetSert == null);
                     }
+
+                   
+
 
 
                     using (ExDbContext db = new())
