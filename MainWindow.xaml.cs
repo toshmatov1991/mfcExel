@@ -14,10 +14,7 @@ namespace exel_for_mfc
         public MainWindow()
         {
             InitializeComponent();
-            TableWindow tableWindow = new TableWindow();
-            tableWindow.Show();
-            //Start();
-            Close();
+            Start();
         }
 
         //Войти
