@@ -1264,9 +1264,19 @@ namespace exel_for_mfc
                     }
             });
         }
-            
-        #endregion  
+
+        #endregion
         #region Обработка возможных исключений и другие мелочи
+
+        //Событие закрытия окна и открытия окна авторизации
+        private void TableClose(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            MainWindow mainWindow = new();
+            mainWindow.Show();
+        }
+
+
+
         //Очистить фильтр
         private void Button_Click_5(object sender, RoutedEventArgs e)
         {
@@ -1452,5 +1462,7 @@ namespace exel_for_mfc
         }
 
         #endregion
+
+      
     }
 }

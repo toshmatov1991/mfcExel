@@ -822,6 +822,14 @@ namespace exel_for_mfc
         }
         #endregion
         #region Разное
+
+
+        private void AdminClose(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            MainWindow mainWindow = new();
+            mainWindow.Show();
+        }
+
         //Поставить все галочки
         private async void Button_Click_1(object sender, RoutedEventArgs e)
         {
@@ -920,5 +928,6 @@ namespace exel_for_mfc
         }
         #endregion
 
+       
     }
 }
